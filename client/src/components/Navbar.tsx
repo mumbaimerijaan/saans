@@ -132,10 +132,10 @@ export const Navbar: React.FC = () => {
                   title="Go to dashboard"
                 >
                   <div className="w-6 h-6 rounded-full bg-teal-500/20 text-teal-300 flex items-center justify-center text-xs font-bold uppercase">
-                    {user.fullName.charAt(0)}
+                    {(user.fullName || (user as any).full_name || user.email || 'U').charAt(0)}
                   </div>
                   <span className="text-xs font-semibold text-slate-200 hidden md:inline truncate max-w-[100px]">
-                    {user.fullName.split(' ')[0]}
+                    {(user.fullName || (user as any).full_name || user.email || 'User').split(' ')[0]}
                   </span>
                 </Link>
                 <button

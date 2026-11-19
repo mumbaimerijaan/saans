@@ -184,7 +184,7 @@ export const Dashboard: React.FC = () => {
               <span>{user.accountType} Dashboard</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
-              Welcome back, {user.fullName}
+              Welcome back, {user.fullName || (user as any).full_name || 'Member'}
             </h1>
             <p className="text-xs text-slate-400">
               Location: <strong>{user.neighbourhood}, {user.city}</strong> &bull; Member since 2026
