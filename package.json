@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "SAANS - AI-Powered Community Clean Air & Pollution Protection Platform",
   "scripts": {
-    "dev:server": "cd server && npm.cmd run dev",
-    "dev:client": "cd client && npm.cmd run dev",
-    "build:server": "cd server && npm.cmd run build",
-    "build:client": "cd client && npm.cmd run build",
-    "build": "cd server && npm.cmd run build && cd ../client && npm.cmd run build",
-    "start": "cd server && npm.cmd start",
-    "test": "cd server && npm.cmd test"
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "build:server": "cd server && npm run build",
+    "build:client": "cd client && npm run build",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "test": "cd server && npm test"
   },
   "keywords": ["clean-air", "ai", "aqi", "community", "purifier", "mumbai"],
   "author": "SAANS Community Team",

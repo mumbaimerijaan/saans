@@ -1,6 +1,7 @@
 import { AQIReport, AssistanceRequest, Equipment, Facility, CommunityReport, Notification, SystemStatus, User } from '../types';
 
-const API_BASE = '/api';
+const rawBase = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
+const API_BASE = rawBase ? (rawBase.endsWith('/api') ? rawBase : `${rawBase}/api`) : '/api';
 
 function getAuthHeaders(): HeadersInit {
   const token = localStorage.getItem('saans_token');
