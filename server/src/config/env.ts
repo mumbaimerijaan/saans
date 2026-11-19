@@ -17,8 +17,8 @@ export const config = {
   
   // AI (OpenRouter)
   openrouterApiKey: process.env.OPENROUTER_API_KEY || '',
-  openrouterModel: process.env.OPENROUTER_MODEL || 'google/gemini-2.0-flash-exp:free',
-  openrouterFallbackModel: process.env.OPENROUTER_FALLBACK_MODEL || 'meta-llama/llama-3.3-70b-instruct:free',
+  openrouterModel: process.env.OPENROUTER_MODEL || 'nvidia/nemotron-3.5-lightning:free',
+  openrouterFallbackModel: process.env.OPENROUTER_FALLBACK_MODEL || 'google/gemma-4-31b-it:free',
   
   // Air Quality
   openaqApiKey: process.env.OPENAQ_API_KEY || '',
