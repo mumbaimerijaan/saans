@@ -31,7 +31,7 @@
       "updated_at": "2026-11-19T08:05:03.625Z"
     },
     {
-      "id": "v0000000-0000-0000-0000-000000000003",
+      "id": "b0000003-0000-0000-0000-000000000003",
       "email": "rahul.deshmukh@example.com",
       "password_hash": "$2a$10$wT282mH48.o57476eXnCbeG1W5e.O1K33sWc5V/7y257P5gqjK5kO",
       "full_name": "Rahul Deshmukh",
@@ -76,7 +76,7 @@
     },
     {
       "id": "ur-3",
-      "user_id": "v0000000-0000-0000-0000-000000000003",
+      "user_id": "b0000003-0000-0000-0000-000000000003",
       "role": "volunteer",
       "granted_at": "2026-11-19T08:05:03.625Z"
     },
@@ -105,7 +105,7 @@
   "volunteer_profiles": [
     {
       "id": "b0000000-0000-0000-0000-000000000001",
-      "user_id": "v0000000-0000-0000-0000-000000000003",
+      "user_id": "b0000003-0000-0000-0000-000000000003",
       "service_radius_km": 15,
       "experience_years": 3,
       "bio": "Electrical technician and clean air activist in Mumbai. Specializing in Corsi-Rosenthal boxes and filter installations.",
@@ -160,7 +160,7 @@
   ],
   "assistance_requests": [
     {
-      "id": "r0000000-0000-0000-0000-000000000001",
+      "id": "a1111111-0000-0000-0000-000000000001",
       "user_id": "c0000000-0000-0000-0000-000000000002",
       "category": "purifier_loan",
       "description": "Elderly parent has severe asthma exacerbation during winter smog inversion. Living room facing heavy traffic corridor.",
@@ -361,7 +361,7 @@
   "facility_verifications": [],
   "community_reports": [
     {
-      "id": "p0000000-0000-0000-0000-000000000001",
+      "id": "a2222222-0000-0000-0000-000000000001",
       "reporter_id": "c0000000-0000-0000-0000-000000000002",
       "category": "garbage_burning",
       "description": "Uncontrolled waste burning near railway tracks creating thick acrid smoke settling into residential colony.",
@@ -376,7 +376,7 @@
       "updated_at": "2026-11-19T08:05:03.625Z"
     },
     {
-      "id": "p0000000-0000-0000-0000-000000000002",
+      "id": "a2222222-0000-0000-0000-000000000002",
       "reporter_id": "c0000000-0000-0000-0000-000000000002",
       "category": "construction_dust",
       "description": "Uncovered metro station construction piling without dust suppression sprinklers or green netting barriers.",
@@ -391,7 +391,7 @@
   ],
   "community_initiatives": [
     {
-      "id": "i0000000-0000-0000-0000-000000000001",
+      "id": "a4444444-0000-0000-0000-000000000001",
       "title": "Mumbai Winter Smog DIY Purifier Workshop",
       "description": "Hands-on community workshop where 25 families build and take home affordable Corsi-Rosenthal box purifiers.",
       "city": "Mumbai",
@@ -405,7 +405,7 @@
       "created_at": "2026-11-19T08:05:03.625Z"
     },
     {
-      "id": "i0000000-0000-0000-0000-000000000002",
+      "id": "a4444444-0000-0000-0000-000000000002",
       "title": "Bandra High-Traffic School Clean Air Corridor",
       "description": "Installation of indoor air purifiers and planting micro-green air screens in 3 community primary schools.",
       "city": "Mumbai",
@@ -435,9 +435,9 @@
       "id": "notif-1",
       "user_id": "c0000000-0000-0000-0000-000000000002",
       "title": "Assistance Request Approved",
-      "message": "Your air purifier loan request #r0000000-0000-0000-0000-000000000001 has been reviewed and approved. Matching volunteer shortly.",
+      "message": "Your air purifier loan request #a1111111-0000-0000-0000-000000000001 has been reviewed and approved. Matching volunteer shortly.",
       "event_type": "request_approved",
-      "related_entity_id": "r0000000-0000-0000-0000-000000000001",
+      "related_entity_id": "a1111111-0000-0000-0000-000000000001",
       "is_read": false,
       "created_at": "2026-11-19T08:05:03.625Z"
     }

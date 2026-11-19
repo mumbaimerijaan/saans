@@ -417,7 +417,7 @@ export class DatabaseStore {
           updated_at: now
         },
         {
-          id: 'v0000000-0000-0000-0000-000000000003',
+          id: 'b0000003-0000-0000-0000-000000000003',
           email: 'rahul.deshmukh@example.com',
           password_hash: '$2a$10$wT282mH48.o57476eXnCbeG1W5e.O1K33sWc5V/7y257P5gqjK5kO', // password123
           full_name: 'Rahul Deshmukh',
@@ -450,7 +450,7 @@ export class DatabaseStore {
       user_roles: [
         { id: 'ur-1', user_id: 'a0000000-0000-0000-0000-000000000001', role: 'admin', granted_at: now },
         { id: 'ur-2', user_id: 'c0000000-0000-0000-0000-000000000002', role: 'citizen', granted_at: now },
-        { id: 'ur-3', user_id: 'v0000000-0000-0000-0000-000000000003', role: 'volunteer', granted_at: now },
+        { id: 'ur-3', user_id: 'b0000003-0000-0000-0000-000000000003', role: 'volunteer', granted_at: now },
         { id: 'ur-4', user_id: 'd0000000-0000-0000-0000-000000000004', role: 'donor', granted_at: now }
       ],
       household_profiles: [
@@ -471,7 +471,7 @@ export class DatabaseStore {
       volunteer_profiles: [
         {
           id: 'b0000000-0000-0000-0000-000000000001',
-          user_id: 'v0000000-0000-0000-0000-000000000003',
+          user_id: 'b0000003-0000-0000-0000-000000000003',
           service_radius_km: 15,
           experience_years: 3,
           bio: 'Electrical technician and clean air activist in Mumbai. Specializing in Corsi-Rosenthal boxes and filter installations.',
@@ -504,7 +504,7 @@ export class DatabaseStore {
       ],
       assistance_requests: [
         {
-          id: 'r0000000-0000-0000-0000-000000000001',
+          id: 'a1111111-0000-0000-0000-000000000001',
           user_id: 'c0000000-0000-0000-0000-000000000002',
           category: 'purifier_loan',
           description: 'Elderly parent has severe asthma exacerbation during winter smog inversion. Living room facing heavy traffic corridor.',
@@ -689,7 +689,7 @@ export class DatabaseStore {
       facility_verifications: [],
       community_reports: [
         {
-          id: 'p0000000-0000-0000-0000-000000000001',
+          id: 'a2222222-0000-0000-0000-000000000001',
           reporter_id: 'c0000000-0000-0000-0000-000000000002',
           category: 'garbage_burning',
           description: 'Uncontrolled waste burning near railway tracks creating thick acrid smoke settling into residential colony.',
@@ -704,7 +704,7 @@ export class DatabaseStore {
           updated_at: now
         },
         {
-          id: 'p0000000-0000-0000-0000-000000000002',
+          id: 'a2222222-0000-0000-0000-000000000002',
           reporter_id: 'c0000000-0000-0000-0000-000000000002',
           category: 'construction_dust',
           description: 'Uncovered metro station construction piling without dust suppression sprinklers or green netting barriers.',
@@ -719,7 +719,7 @@ export class DatabaseStore {
       ],
       community_initiatives: [
         {
-          id: 'i0000000-0000-0000-0000-000000000001',
+          id: 'a4444444-0000-0000-0000-000000000001',
           title: 'Mumbai Winter Smog DIY Purifier Workshop',
           description: 'Hands-on community workshop where 25 families build and take home affordable Corsi-Rosenthal box purifiers.',
           city: 'Mumbai',
@@ -733,7 +733,7 @@ export class DatabaseStore {
           created_at: now
         },
         {
-          id: 'i0000000-0000-0000-0000-000000000002',
+          id: 'a4444444-0000-0000-0000-000000000002',
           title: 'Bandra High-Traffic School Clean Air Corridor',
           description: 'Installation of indoor air purifiers and planting micro-green air screens in 3 community primary schools.',
           city: 'Mumbai',
@@ -763,9 +763,9 @@ export class DatabaseStore {
           id: 'notif-1',
           user_id: 'c0000000-0000-0000-0000-000000000002',
           title: 'Assistance Request Approved',
-          message: 'Your air purifier loan request #r0000000-0000-0000-0000-000000000001 has been reviewed and approved. Matching volunteer shortly.',
+          message: 'Your air purifier loan request #a1111111-0000-0000-0000-000000000001 has been reviewed and approved. Matching volunteer shortly.',
           event_type: 'request_approved',
-          related_entity_id: 'r0000000-0000-0000-0000-000000000001',
+          related_entity_id: 'a1111111-0000-0000-0000-000000000001',
           is_read: false,
           created_at: now
         }

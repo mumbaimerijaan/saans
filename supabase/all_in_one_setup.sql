@@ -476,7 +476,7 @@ INSERT INTO profiles (id, email, full_name, phone, city, neighbourhood, preferre
 VALUES
 ('a0000000-0000-0000-0000-000000000001', 'admin@saans.org', 'Admin SAANS', '+91 98200 11223', 'Mumbai', 'Bandra West', 'en', 'admin', 19.0596, 72.8295),
 ('c0000000-0000-0000-0000-000000000002', 'priya.sharma@example.com', 'Priya Sharma', '+91 98333 44556', 'Mumbai', 'Kurla West', 'hi', 'citizen', 19.0657, 72.8794),
-('v0000000-0000-0000-0000-000000000003', 'rahul.deshmukh@example.com', 'Rahul Deshmukh', '+91 99201 55667', 'Mumbai', 'Dadar', 'mr', 'volunteer', 19.0178, 72.8478),
+('b0000003-0000-0000-0000-000000000003', 'rahul.deshmukh@example.com', 'Rahul Deshmukh', '+91 99201 55667', 'Mumbai', 'Dadar', 'mr', 'volunteer', 19.0178, 72.8478),
 ('d0000000-0000-0000-0000-000000000004', 'cleanair.mumbai@example.com', 'CleanAir NGO Mumbai', '+91 98199 77889', 'Mumbai', 'Andheri East', 'en', 'donor', 19.1136, 72.8697)
 ON CONFLICT (id) DO NOTHING;
 
@@ -485,7 +485,7 @@ INSERT INTO user_roles (user_id, role)
 VALUES
 ('a0000000-0000-0000-0000-000000000001', 'admin'),
 ('c0000000-0000-0000-0000-000000000002', 'citizen'),
-('v0000000-0000-0000-0000-000000000003', 'volunteer'),
+('b0000003-0000-0000-0000-000000000003', 'volunteer'),
 ('d0000000-0000-0000-0000-000000000004', 'donor')
 ON CONFLICT DO NOTHING;
 
@@ -498,7 +498,7 @@ ON CONFLICT DO NOTHING;
 -- Volunteer Profile for Rahul
 INSERT INTO volunteer_profiles (id, user_id, service_radius_km, experience_years, bio, languages, organisation_affiliation, is_verified, status)
 VALUES
-('b0000000-0000-0000-0000-000000000001', 'v0000000-0000-0000-0000-000000000003', 15, 3, 'Electrical technician and clean air activist in Mumbai. Specializing in Corsi-Rosenthal boxes and filter installations.', ARRAY['en', 'hi', 'mr'], 'Mumbai Breathing Initiative', true, 'active')
+('b0000000-0000-0000-0000-000000000001', 'b0000003-0000-0000-0000-000000000003', 15, 3, 'Electrical technician and clean air activist in Mumbai. Specializing in Corsi-Rosenthal boxes and filter installations.', ARRAY['en', 'hi', 'mr'], 'Mumbai Breathing Initiative', true, 'active')
 ON CONFLICT DO NOTHING;
 
 -- Volunteer Skills for Rahul
@@ -530,21 +530,21 @@ ON CONFLICT DO NOTHING;
 -- Initial Assistance Request for Priya Sharma
 INSERT INTO assistance_requests (id, user_id, category, description, location_city, location_neighbourhood, latitude, longitude, urgency, household_type, existing_equipment, contact_method, consent_shared, status)
 VALUES
-('r0000000-0000-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000002', 'purifier_loan', 'Elderly parent has severe asthma exacerbation during winter smog inversion. Living room facing heavy traffic corridor.', 'Mumbai', 'Kurla West', 19.0657, 72.8794, 'high', 'Family with elderly & child', 'Only ceiling fans', 'Phone call or In-app', true, 'approved')
+('a1111111-0000-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000002', 'purifier_loan', 'Elderly parent has severe asthma exacerbation during winter smog inversion. Living room facing heavy traffic corridor.', 'Mumbai', 'Kurla West', 19.0657, 72.8794, 'high', 'Family with elderly & child', 'Only ceiling fans', 'Phone call or In-app', true, 'approved')
 ON CONFLICT DO NOTHING;
 
 -- Community Pollution Reports
 INSERT INTO community_reports (id, reporter_id, category, description, city, neighbourhood, latitude, longitude, status, resolution_notes)
 VALUES
-('p0000000-0000-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000002', 'garbage_burning', 'Uncontrolled waste burning near railway tracks creating thick acrid smoke settling into residential colony.', 'Mumbai', 'Kurla West', 19.0680, 72.8810, 'verified', 'Reported to Ward L municipal sanitary officer and local resident association notified.'),
-('p0000000-0000-0000-0000-000000000002', 'c0000000-0000-0000-0000-000000000002', 'construction_dust', 'Uncovered metro station construction piling without dust suppression sprinklers or green netting barriers.', 'Mumbai', 'Andheri East', 19.1120, 72.8680, 'under_review', NULL)
+('a2222222-0000-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000002', 'garbage_burning', 'Uncontrolled waste burning near railway tracks creating thick acrid smoke settling into residential colony.', 'Mumbai', 'Kurla West', 19.0680, 72.8810, 'verified', 'Reported to Ward L municipal sanitary officer and local resident association notified.'),
+('a2222222-0000-0000-0000-000000000002', 'c0000000-0000-0000-0000-000000000002', 'construction_dust', 'Uncovered metro station construction piling without dust suppression sprinklers or green netting barriers.', 'Mumbai', 'Andheri East', 19.1120, 72.8680, 'under_review', NULL)
 ON CONFLICT DO NOTHING;
 
 -- Community Initiatives
 INSERT INTO community_initiatives (id, title, description, city, neighbourhood, organiser_id, start_date, end_date, target_participants, current_participants, status)
 VALUES
-('i0000000-0000-0000-0000-000000000001', 'Mumbai Winter Smog DIY Purifier Workshop', 'Hands-on community workshop where 25 families build and take home affordable Corsi-Rosenthal box purifiers.', 'Mumbai', 'Dadar', 'a0000000-0000-0000-0000-000000000001', NOW() + INTERVAL '3 days', NOW() + INTERVAL '3 days 4 hours', 50, 34, 'active'),
-('i0000000-0000-0000-0000-000000000002', 'Bandra High-Traffic School Clean Air Corridor', 'Installation of indoor air purifiers and planting micro-green air screens in 3 community primary schools.', 'Mumbai', 'Bandra West', 'd0000000-0000-0000-0000-000000000004', NOW() + INTERVAL '10 days', NOW() + INTERVAL '12 days', 80, 62, 'upcoming')
+('a4444444-0000-0000-0000-000000000001', 'Mumbai Winter Smog DIY Purifier Workshop', 'Hands-on community workshop where 25 families build and take home affordable Corsi-Rosenthal box purifiers.', 'Mumbai', 'Dadar', 'a0000000-0000-0000-0000-000000000001', NOW() + INTERVAL '3 days', NOW() + INTERVAL '3 days 4 hours', 50, 34, 'active'),
+('a4444444-0000-0000-0000-000000000002', 'Bandra High-Traffic School Clean Air Corridor', 'Installation of indoor air purifiers and planting micro-green air screens in 3 community primary schools.', 'Mumbai', 'Bandra West', 'd0000000-0000-0000-0000-000000000004', NOW() + INTERVAL '10 days', NOW() + INTERVAL '12 days', 80, 62, 'upcoming')
 ON CONFLICT DO NOTHING;
 
 -- Initial Verified Impact Records
