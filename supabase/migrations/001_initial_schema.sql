@@ -346,3 +346,28 @@ CREATE INDEX IF NOT EXISTS idx_facilities_verified ON facilities(is_verified);
 CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, is_read);
 CREATE INDEX IF NOT EXISTS idx_aq_cache_coords ON air_quality_cache(latitude, longitude, expires_at);
 CREATE INDEX IF NOT EXISTS idx_reports_status ON community_reports(status);
+
+-- Enable Row Level Security (RLS) across all tables
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_roles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE household_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE volunteer_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE volunteer_skills ENABLE ROW LEVEL SECURITY;
+ALTER TABLE organisations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE assistance_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE request_assignments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE equipment ENABLE ROW LEVEL SECURITY;
+ALTER TABLE equipment_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE equipment_transactions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE equipment_maintenance ENABLE ROW LEVEL SECURITY;
+ALTER TABLE facilities ENABLE ROW LEVEL SECURITY;
+ALTER TABLE facility_verifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE community_reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE community_initiatives ENABLE ROW LEVEL SECURITY;
+ALTER TABLE donations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE conversations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE conversation_messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE air_quality_cache ENABLE ROW LEVEL SECURITY;
+ALTER TABLE impact_records ENABLE ROW LEVEL SECURITY;
+ALTER TABLE audit_logs ENABLE ROW LEVEL SECURITY;
