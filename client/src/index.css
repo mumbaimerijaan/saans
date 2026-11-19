@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#080c0e] text-slate-100 transition-colors duration-200;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Light mode overrides */
+  html:not(.dark) body {
+    @apply bg-slate-50 text-slate-900;
+  }
+}
+
+/* Custom airflow background effect */
+.bg-airflow-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(13, 148, 136, 0.15) 0%, rgba(8, 12, 14, 0) 70%);
+}
+
+.bg-hero-gradient {
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, rgba(13, 148, 136, 0.04) 50%, rgba(8, 12, 14, 0) 100%);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(17, 24, 28, 0.8);
+}
+::-webkit-scrollbar-thumb {
+  background: #223238;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0d9488;
+}
+
+/* Leaflet map styles */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.75rem;
+  background-color: #11181c !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background-color: #162024 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #223238 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+}
+.leaflet-popup-tip {
+  background-color: #162024 !important;
+}

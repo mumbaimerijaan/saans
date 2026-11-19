@@ -1,0 +1,1034 @@
+{
+  "profiles": [
+    {
+      "id": "a0000000-0000-0000-0000-000000000001",
+      "email": "admin@saans.org",
+      "password_hash": "$2a$10$wT282mH48.o57476eXnCbeG1W5e.O1K33sWc5V/7y257P5gqjK5kO",
+      "full_name": "Admin SAANS",
+      "phone": "+91 98200 11223",
+      "city": "Mumbai",
+      "neighbourhood": "Bandra West",
+      "preferred_language": "en",
+      "account_type": "admin",
+      "latitude": 19.0596,
+      "longitude": 72.8295,
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "c0000000-0000-0000-0000-000000000002",
+      "email": "priya.sharma@example.com",
+      "password_hash": "$2a$10$wT282mH48.o57476eXnCbeG1W5e.O1K33sWc5V/7y257P5gqjK5kO",
+      "full_name": "Priya Sharma",
+      "phone": "+91 98333 44556",
+      "city": "Mumbai",
+      "neighbourhood": "Kurla West",
+      "preferred_language": "hi",
+      "account_type": "citizen",
+      "latitude": 19.0657,
+      "longitude": 72.8794,
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "v0000000-0000-0000-0000-000000000003",
+      "email": "rahul.deshmukh@example.com",
+      "password_hash": "$2a$10$wT282mH48.o57476eXnCbeG1W5e.O1K33sWc5V/7y257P5gqjK5kO",
+      "full_name": "Rahul Deshmukh",
+      "phone": "+91 99201 55667",
+      "city": "Mumbai",
+      "neighbourhood": "Dadar",
+      "preferred_language": "mr",
+      "account_type": "volunteer",
+      "latitude": 19.0178,
+      "longitude": 72.8478,
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "d0000000-0000-0000-0000-000000000004",
+      "email": "cleanair.mumbai@example.com",
+      "password_hash": "$2a$10$wT282mH48.o57476eXnCbeG1W5e.O1K33sWc5V/7y257P5gqjK5kO",
+      "full_name": "CleanAir NGO Mumbai",
+      "phone": "+91 98199 77889",
+      "city": "Mumbai",
+      "neighbourhood": "Andheri East",
+      "preferred_language": "en",
+      "account_type": "donor",
+      "latitude": 19.1136,
+      "longitude": 72.8697,
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    }
+  ],
+  "user_roles": [
+    {
+      "id": "ur-1",
+      "user_id": "a0000000-0000-0000-0000-000000000001",
+      "role": "admin",
+      "granted_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "ur-2",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "role": "citizen",
+      "granted_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "ur-3",
+      "user_id": "v0000000-0000-0000-0000-000000000003",
+      "role": "volunteer",
+      "granted_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "ur-4",
+      "user_id": "d0000000-0000-0000-0000-000000000004",
+      "role": "donor",
+      "granted_at": "2026-11-19T08:05:03.625Z"
+    }
+  ],
+  "household_profiles": [
+    {
+      "id": "hp-1",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "member_count": 4,
+      "elderly_present": true,
+      "children_present": true,
+      "sensitive_persons": true,
+      "housing_type": "2BHK Apartment near Western Express Highway",
+      "room_size_sqft": 280,
+      "existing_purifiers": "None",
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    }
+  ],
+  "volunteer_profiles": [
+    {
+      "id": "b0000000-0000-0000-0000-000000000001",
+      "user_id": "v0000000-0000-0000-0000-000000000003",
+      "service_radius_km": 15,
+      "experience_years": 3,
+      "bio": "Electrical technician and clean air activist in Mumbai. Specializing in Corsi-Rosenthal boxes and filter installations.",
+      "languages": [
+        "en",
+        "hi",
+        "mr"
+      ],
+      "organisation_affiliation": "Mumbai Breathing Initiative",
+      "is_verified": true,
+      "status": "active",
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    }
+  ],
+  "volunteer_skills": [
+    {
+      "id": "vs-1",
+      "volunteer_id": "b0000000-0000-0000-0000-000000000001",
+      "skill_category": "installation",
+      "proficiency_level": "expert",
+      "created_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "vs-2",
+      "volunteer_id": "b0000000-0000-0000-0000-000000000001",
+      "skill_category": "electrical",
+      "proficiency_level": "expert",
+      "created_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "vs-3",
+      "volunteer_id": "b0000000-0000-0000-0000-000000000001",
+      "skill_category": "repair",
+      "proficiency_level": "intermediate",
+      "created_at": "2026-11-19T08:05:03.625Z"
+    }
+  ],
+  "organisations": [
+    {
+      "id": "org-1",
+      "name": "CleanAir NGO Mumbai",
+      "contact_email": "cleanair.mumbai@example.com",
+      "contact_phone": "+91 98199 77889",
+      "city": "Mumbai",
+      "address": "Chakala, Andheri East, Mumbai 400093",
+      "registration_number": "MH-MUM-2023-8871",
+      "is_verified": true,
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    }
+  ],
+  "assistance_requests": [
+    {
+      "id": "r0000000-0000-0000-0000-000000000001",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "category": "purifier_loan",
+      "description": "Elderly parent has severe asthma exacerbation during winter smog inversion. Living room facing heavy traffic corridor.",
+      "location_city": "Mumbai",
+      "location_neighbourhood": "Kurla West",
+      "latitude": 19.0657,
+      "longitude": 72.8794,
+      "urgency": "high",
+      "household_type": "Family with elderly & child",
+      "existing_equipment": "Only ceiling fans",
+      "contact_method": "Phone call or In-app",
+      "consent_shared": true,
+      "status": "approved",
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    }
+  ],
+  "request_assignments": [],
+  "equipment": [
+    {
+      "id": "e0000000-0000-0000-0000-000000000001",
+      "donor_id": "d0000000-0000-0000-0000-000000000004",
+      "name": "Philips Series 2000i HEPA Purifier",
+      "category": "hepa_purifier",
+      "description": "High CADR purifier suitable for master bedroom or living room up to 350 sq ft. Real-time PM2.5 feedback display.",
+      "manufacturer_model": "Philips AC2887/20",
+      "condition": "like_new",
+      "type": "loan",
+      "max_loan_duration_days": 30,
+      "location_city": "Mumbai",
+      "location_neighbourhood": "Andheri East",
+      "latitude": 19.1136,
+      "longitude": 72.8697,
+      "image_url": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80",
+      "status": "available",
+      "is_verified": true,
+      "cadr_rating": 333,
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "e0000000-0000-0000-0000-000000000002",
+      "donor_id": "d0000000-0000-0000-0000-000000000004",
+      "name": "Corsi-Rosenthal DIY Box System (MERV 13)",
+      "category": "diy_filtration",
+      "description": "Community assembled 4-filter high-flow cube with Orient box fan. Ultra-low resistance, high particulate throughput.",
+      "manufacturer_model": "SAANS-CR-4x",
+      "condition": "new",
+      "type": "donation",
+      "location_city": "Mumbai",
+      "location_neighbourhood": "Dadar",
+      "latitude": 19.0178,
+      "longitude": 72.8478,
+      "image_url": "https://images.unsplash.com/photo-1545259741-2ea3ebf61fa3?auto=format&fit=crop&w=600&q=80",
+      "status": "available",
+      "is_verified": true,
+      "cadr_rating": 420,
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "e0000000-0000-0000-0000-000000000003",
+      "donor_id": "d0000000-0000-0000-0000-000000000004",
+      "name": "Laser Particle Sensor IAQ Monitor",
+      "category": "iaq_monitor",
+      "description": "Accurate laser scattering particulate sensor measuring PM1.0, PM2.5 and PM10 with OLED read-out.",
+      "manufacturer_model": "Temtop LKC-1000S+",
+      "condition": "good",
+      "type": "loan",
+      "max_loan_duration_days": 14,
+      "location_city": "Mumbai",
+      "location_neighbourhood": "Bandra West",
+      "latitude": 19.0596,
+      "longitude": 72.8295,
+      "image_url": "https://images.unsplash.com/photo-1584727638096-042c45049ebe?auto=format&fit=crop&w=600&q=80",
+      "status": "available",
+      "is_verified": true,
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "e0000000-0000-0000-0000-000000000004",
+      "donor_id": "d0000000-0000-0000-0000-000000000004",
+      "name": "N95 / FFP2 Respirator Family Pack (50 Pcs)",
+      "category": "protective_gear",
+      "description": "Certified ISI-approved particulate respirator masks with comfortable headband for outdoor commuting.",
+      "manufacturer_model": "Venus V-4400",
+      "condition": "new",
+      "type": "donation",
+      "location_city": "Mumbai",
+      "location_neighbourhood": "Kurla West",
+      "latitude": 19.0657,
+      "longitude": 72.8794,
+      "image_url": "https://images.unsplash.com/photo-1584634731339-252c581abfc5?auto=format&fit=crop&w=600&q=80",
+      "status": "available",
+      "is_verified": true,
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    }
+  ],
+  "equipment_requests": [],
+  "equipment_transactions": [],
+  "equipment_maintenance": [],
+  "facilities": [
+    {
+      "id": "f0000000-0000-0000-0000-000000000001",
+      "name": "Bandra Public Library Clean Air Zone",
+      "facility_type": "library",
+      "address": "Near Hill Road, Bandra West, Mumbai 400050",
+      "city": "Mumbai",
+      "neighbourhood": "Bandra West",
+      "latitude": 19.0558,
+      "longitude": 72.83,
+      "contact_phone": "+91 22 2640 1234",
+      "contact_email": "bandra.library@mumbai.gov.in",
+      "operating_hours": "08:00 AM - 08:00 PM",
+      "accessibility_features": [
+        "wheelchair_accessible",
+        "drinking_water",
+        "restrooms",
+        "wifi"
+      ],
+      "filtration_equipment_details": "Triple HEPA H13 Air Purifiers + Positive Pressure Airflow System",
+      "capacity": 45,
+      "is_verified": true,
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "f0000000-0000-0000-0000-000000000002",
+      "name": "Dadar Community Wellness Centre",
+      "facility_type": "community_hall",
+      "address": "Gokhale Road North, Dadar, Mumbai 400028",
+      "city": "Mumbai",
+      "neighbourhood": "Dadar",
+      "latitude": 19.0195,
+      "longitude": 72.8428,
+      "contact_phone": "+91 22 2430 5678",
+      "contact_email": "dadar.wellness@saans.community",
+      "operating_hours": "07:00 AM - 09:00 PM",
+      "accessibility_features": [
+        "wheelchair_accessible",
+        "seating_area",
+        "medical_first_aid"
+      ],
+      "filtration_equipment_details": "Dual Industrial CADR 650 m3/h Filtration Units with Carbon Bed",
+      "capacity": 60,
+      "is_verified": true,
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "f0000000-0000-0000-0000-000000000003",
+      "name": "Chembur Senior Citizens Respite Shelter",
+      "facility_type": "clinic",
+      "address": "Near Chembur Naka, Chembur, Mumbai 400071",
+      "city": "Mumbai",
+      "neighbourhood": "Chembur",
+      "latitude": 19.0622,
+      "longitude": 72.8992,
+      "contact_phone": "+91 22 2522 9988",
+      "contact_email": "chembur.respite@saans.community",
+      "operating_hours": "09:00 AM - 06:00 PM",
+      "accessibility_features": [
+        "wheelchair_accessible",
+        "nursing_assistant",
+        "oxygen_support"
+      ],
+      "filtration_equipment_details": "Medical Grade HEPA + Activated Carbon, Low Noise Operation",
+      "capacity": 30,
+      "is_verified": true,
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "f0000000-0000-0000-0000-000000000004",
+      "name": "Andheri East NGO Learning Centre",
+      "facility_type": "school",
+      "address": "Chakala, Andheri East, Mumbai 400093",
+      "city": "Mumbai",
+      "neighbourhood": "Andheri East",
+      "latitude": 19.1158,
+      "longitude": 72.8654,
+      "contact_phone": "+91 22 2822 4411",
+      "contact_email": "learning@cleanairandheri.org",
+      "operating_hours": "08:30 AM - 05:30 PM",
+      "accessibility_features": [
+        "wheelchair_accessible",
+        "children_study_tables"
+      ],
+      "filtration_equipment_details": "4x Corsi-Rosenthal DIY Box Purifiers with MERV-13 Filters",
+      "capacity": 40,
+      "is_verified": true,
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    }
+  ],
+  "facility_verifications": [],
+  "community_reports": [
+    {
+      "id": "p0000000-0000-0000-0000-000000000001",
+      "reporter_id": "c0000000-0000-0000-0000-000000000002",
+      "category": "garbage_burning",
+      "description": "Uncontrolled waste burning near railway tracks creating thick acrid smoke settling into residential colony.",
+      "city": "Mumbai",
+      "neighbourhood": "Kurla West",
+      "latitude": 19.068,
+      "longitude": 72.881,
+      "image_url": "https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&w=600&q=80",
+      "status": "verified",
+      "resolution_notes": "Reported to Ward L municipal sanitary officer and local resident association notified.",
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "p0000000-0000-0000-0000-000000000002",
+      "reporter_id": "c0000000-0000-0000-0000-000000000002",
+      "category": "construction_dust",
+      "description": "Uncovered metro station construction piling without dust suppression sprinklers or green netting barriers.",
+      "city": "Mumbai",
+      "neighbourhood": "Andheri East",
+      "latitude": 19.112,
+      "longitude": 72.868,
+      "status": "under_review",
+      "created_at": "2026-11-19T08:05:03.625Z",
+      "updated_at": "2026-11-19T08:05:03.625Z"
+    }
+  ],
+  "community_initiatives": [
+    {
+      "id": "i0000000-0000-0000-0000-000000000001",
+      "title": "Mumbai Winter Smog DIY Purifier Workshop",
+      "description": "Hands-on community workshop where 25 families build and take home affordable Corsi-Rosenthal box purifiers.",
+      "city": "Mumbai",
+      "neighbourhood": "Dadar",
+      "organiser_id": "a0000000-0000-0000-0000-000000000001",
+      "start_date": "2026-11-22T08:05:03.626Z",
+      "end_date": "2026-11-22T12:05:03.626Z",
+      "target_participants": 50,
+      "current_participants": 34,
+      "status": "active",
+      "created_at": "2026-11-19T08:05:03.625Z"
+    },
+    {
+      "id": "i0000000-0000-0000-0000-000000000002",
+      "title": "Bandra High-Traffic School Clean Air Corridor",
+      "description": "Installation of indoor air purifiers and planting micro-green air screens in 3 community primary schools.",
+      "city": "Mumbai",
+      "neighbourhood": "Bandra West",
+      "organiser_id": "d0000000-0000-0000-0000-000000000004",
+      "start_date": "2026-11-29T08:05:03.626Z",
+      "end_date": "2026-12-01T08:05:03.626Z",
+      "target_participants": 80,
+      "current_participants": 62,
+      "status": "upcoming",
+      "created_at": "2026-11-19T08:05:03.625Z"
+    }
+  ],
+  "donations": [
+    {
+      "id": "don-1",
+      "donor_id": "d0000000-0000-0000-0000-000000000004",
+      "item_type": "masks",
+      "quantity": 200,
+      "description": "Certified N95 particulate respirators for sanitation workers in Kurla",
+      "status": "allocated",
+      "created_at": "2026-11-19T08:05:03.625Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif-1",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "title": "Assistance Request Approved",
+      "message": "Your air purifier loan request #r0000000-0000-0000-0000-000000000001 has been reviewed and approved. Matching volunteer shortly.",
+      "event_type": "request_approved",
+      "related_entity_id": "r0000000-0000-0000-0000-000000000001",
+      "is_read": false,
+      "created_at": "2026-11-19T08:05:03.625Z"
+    }
+  ],
+  "conversations": [],
+  "conversation_messages": [],
+  "air_quality_cache": [
+    {
+      "id": "cache-1795075504541",
+      "city": "Mumbai",
+      "neighbourhood": "Bandra West",
+      "latitude": 19.076,
+      "longitude": 72.8777,
+      "data_source": "Open-Meteo Air Quality & CPCB/MPCB Network Data",
+      "aqi_index": 303,
+      "aqi_category": "Very Poor",
+      "pollutants": {
+        "pm2_5": {
+          "code": "pm2_5",
+          "name": "Particulate Matter (PM2.5)",
+          "concentration": 63.3,
+          "unit": "µg/m³",
+          "subIndex": 109,
+          "category": "Moderate",
+          "sourceType": "modelled_forecast"
+        },
+        "pm10": {
+          "code": "pm10",
+          "name": "Particulate Matter (PM10)",
+          "concentration": 70.5,
+          "unit": "µg/m³",
+          "subIndex": 71,
+          "category": "Satisfactory",
+          "sourceType": "modelled_forecast"
+        },
+        "no2": {
+          "code": "no2",
+          "name": "Nitrogen Dioxide (NO2)",
+          "concentration": 19.5,
+          "unit": "µg/m³",
+          "subIndex": 24,
+          "category": "Good",
+          "sourceType": "modelled_forecast"
+        },
+        "so2": {
+          "code": "so2",
+          "name": "Sulphur Dioxide (SO2)",
+          "concentration": 28.5,
+          "unit": "µg/m³",
+          "subIndex": 36,
+          "category": "Good",
+          "sourceType": "modelled_forecast"
+        },
+        "co": {
+          "code": "co",
+          "name": "Carbon Monoxide (CO)",
+          "concentration": 0.28,
+          "unit": "mg/m³",
+          "subIndex": 14,
+          "category": "Good",
+          "sourceType": "modelled_forecast"
+        },
+        "o3": {
+          "code": "o3",
+          "name": "Ozone (O3)",
+          "concentration": 221,
+          "unit": "µg/m³",
+          "subIndex": 303,
+          "category": "Very Poor",
+          "sourceType": "modelled_forecast"
+        }
+      },
+      "forecast": [
+        {
+          "time": "2026-11-19T00:00",
+          "pm25": 61,
+          "pm10": 65,
+          "no2": 15.7,
+          "predictedIndianAqi": 101
+        },
+        {
+          "time": "2026-11-19T01:00",
+          "pm25": 64.3,
+          "pm10": 68.7,
+          "no2": 17.8,
+          "predictedIndianAqi": 112
+        },
+        {
+          "time": "2026-11-19T02:00",
+          "pm25": 66.4,
+          "pm10": 71.2,
+          "no2": 19.2,
+          "predictedIndianAqi": 119
+        },
+        {
+          "time": "2026-11-19T03:00",
+          "pm25": 67.5,
+          "pm10": 72.6,
+          "no2": 18.4,
+          "predictedIndianAqi": 123
+        },
+        {
+          "time": "2026-11-19T04:00",
+          "pm25": 67.1,
+          "pm10": 72.6,
+          "no2": 17,
+          "predictedIndianAqi": 122
+        },
+        {
+          "time": "2026-11-19T05:00",
+          "pm25": 66.1,
+          "pm10": 71.9,
+          "no2": 17.3,
+          "predictedIndianAqi": 118
+        },
+        {
+          "time": "2026-11-19T06:00",
+          "pm25": 65.4,
+          "pm10": 71,
+          "no2": 21.8,
+          "predictedIndianAqi": 116
+        },
+        {
+          "time": "2026-11-19T07:00",
+          "pm25": 66.8,
+          "pm10": 72.6,
+          "no2": 28,
+          "predictedIndianAqi": 121
+        },
+        {
+          "time": "2026-11-19T08:00",
+          "pm25": 68.5,
+          "pm10": 74,
+          "no2": 31.4,
+          "predictedIndianAqi": 127
+        },
+        {
+          "time": "2026-11-19T09:00",
+          "pm25": 69.4,
+          "pm10": 75,
+          "no2": 29.1,
+          "predictedIndianAqi": 130
+        },
+        {
+          "time": "2026-11-19T10:00",
+          "pm25": 67.5,
+          "pm10": 74.3,
+          "no2": 23.9,
+          "predictedIndianAqi": 123
+        },
+        {
+          "time": "2026-11-19T11:00",
+          "pm25": 64.5,
+          "pm10": 71.9,
+          "no2": 20.1,
+          "predictedIndianAqi": 113
+        },
+        {
+          "time": "2026-11-19T12:00",
+          "pm25": 62.4,
+          "pm10": 70.1,
+          "no2": 19.2,
+          "predictedIndianAqi": 106
+        },
+        {
+          "time": "2026-11-19T13:00",
+          "pm25": 63.3,
+          "pm10": 70.5,
+          "no2": 19.5,
+          "predictedIndianAqi": 109
+        },
+        {
+          "time": "2026-11-19T14:00",
+          "pm25": 66.8,
+          "pm10": 73.6,
+          "no2": 20.6,
+          "predictedIndianAqi": 121
+        },
+        {
+          "time": "2026-11-19T15:00",
+          "pm25": 67.3,
+          "pm10": 73.8,
+          "no2": 23.1,
+          "predictedIndianAqi": 123
+        },
+        {
+          "time": "2026-11-19T16:00",
+          "pm25": 63.3,
+          "pm10": 70.1,
+          "no2": 26.2,
+          "predictedIndianAqi": 109
+        },
+        {
+          "time": "2026-11-19T17:00",
+          "pm25": 56.5,
+          "pm10": 63.8,
+          "no2": 27.6,
+          "predictedIndianAqi": 94
+        },
+        {
+          "time": "2026-11-19T18:00",
+          "pm25": 50.3,
+          "pm10": 58.6,
+          "no2": 25.4,
+          "predictedIndianAqi": 84
+        },
+        {
+          "time": "2026-11-19T19:00",
+          "pm25": 46.3,
+          "pm10": 54.6,
+          "no2": 21.4,
+          "predictedIndianAqi": 77
+        },
+        {
+          "time": "2026-11-19T20:00",
+          "pm25": 43.2,
+          "pm10": 50.3,
+          "no2": 18.4,
+          "predictedIndianAqi": 72
+        },
+        {
+          "time": "2026-11-19T21:00",
+          "pm25": 39.5,
+          "pm10": 43.8,
+          "no2": 17.9,
+          "predictedIndianAqi": 65
+        },
+        {
+          "time": "2026-11-19T22:00",
+          "pm25": 38.9,
+          "pm10": 41.8,
+          "no2": 18.4,
+          "predictedIndianAqi": 64
+        },
+        {
+          "time": "2026-11-19T23:00",
+          "pm25": 39.2,
+          "pm10": 41.9,
+          "no2": 18.5,
+          "predictedIndianAqi": 65
+        }
+      ],
+      "raw_response": {
+        "city": "Mumbai",
+        "neighbourhood": "Bandra West",
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "timestamp": "2026-11-19T13:30",
+        "sourceAttribution": {
+          "primaryProvider": "Open-Meteo Air Quality & CPCB/MPCB Network Data",
+          "modelOrStationName": "ECMWF CAMS Regional Forecast Model & CAAQMS Ground Stations",
+          "isModelledForecast": true,
+          "license": "Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)"
+        },
+        "indianAqi": {
+          "index": 303,
+          "category": "Very Poor",
+          "dominantPollutant": "Ozone",
+          "isAvailable": true,
+          "methodology": "Computed strictly following official CPCB (Central Pollution Control Board) 24h breakpoint equations with minimum 3-pollutant validation rule."
+        },
+        "foreignIndices": {
+          "europeanAqi": 141,
+          "usAqi": 162,
+          "note": "Foreign indices (US EPA AQI & European CAQI) are shown for comparative perspective only. Do NOT confuse with Indian National AQI."
+        },
+        "pollutants": {
+          "pm2_5": {
+            "code": "pm2_5",
+            "name": "Particulate Matter (PM2.5)",
+            "concentration": 63.3,
+            "unit": "µg/m³",
+            "subIndex": 109,
+            "category": "Moderate",
+            "sourceType": "modelled_forecast"
+          },
+          "pm10": {
+            "code": "pm10",
+            "name": "Particulate Matter (PM10)",
+            "concentration": 70.5,
+            "unit": "µg/m³",
+            "subIndex": 71,
+            "category": "Satisfactory",
+            "sourceType": "modelled_forecast"
+          },
+          "no2": {
+            "code": "no2",
+            "name": "Nitrogen Dioxide (NO2)",
+            "concentration": 19.5,
+            "unit": "µg/m³",
+            "subIndex": 24,
+            "category": "Good",
+            "sourceType": "modelled_forecast"
+          },
+          "so2": {
+            "code": "so2",
+            "name": "Sulphur Dioxide (SO2)",
+            "concentration": 28.5,
+            "unit": "µg/m³",
+            "subIndex": 36,
+            "category": "Good",
+            "sourceType": "modelled_forecast"
+          },
+          "co": {
+            "code": "co",
+            "name": "Carbon Monoxide (CO)",
+            "concentration": 0.28,
+            "unit": "mg/m³",
+            "subIndex": 14,
+            "category": "Good",
+            "sourceType": "modelled_forecast"
+          },
+          "o3": {
+            "code": "o3",
+            "name": "Ozone (O3)",
+            "concentration": 221,
+            "unit": "µg/m³",
+            "subIndex": 303,
+            "category": "Very Poor",
+            "sourceType": "modelled_forecast"
+          }
+        },
+        "hourlyForecast": [
+          {
+            "time": "2026-11-19T00:00",
+            "pm25": 61,
+            "pm10": 65,
+            "no2": 15.7,
+            "predictedIndianAqi": 101
+          },
+          {
+            "time": "2026-11-19T01:00",
+            "pm25": 64.3,
+            "pm10": 68.7,
+            "no2": 17.8,
+            "predictedIndianAqi": 112
+          },
+          {
+            "time": "2026-11-19T02:00",
+            "pm25": 66.4,
+            "pm10": 71.2,
+            "no2": 19.2,
+            "predictedIndianAqi": 119
+          },
+          {
+            "time": "2026-11-19T03:00",
+            "pm25": 67.5,
+            "pm10": 72.6,
+            "no2": 18.4,
+            "predictedIndianAqi": 123
+          },
+          {
+            "time": "2026-11-19T04:00",
+            "pm25": 67.1,
+            "pm10": 72.6,
+            "no2": 17,
+            "predictedIndianAqi": 122
+          },
+          {
+            "time": "2026-11-19T05:00",
+            "pm25": 66.1,
+            "pm10": 71.9,
+            "no2": 17.3,
+            "predictedIndianAqi": 118
+          },
+          {
+            "time": "2026-11-19T06:00",
+            "pm25": 65.4,
+            "pm10": 71,
+            "no2": 21.8,
+            "predictedIndianAqi": 116
+          },
+          {
+            "time": "2026-11-19T07:00",
+            "pm25": 66.8,
+            "pm10": 72.6,
+            "no2": 28,
+            "predictedIndianAqi": 121
+          },
+          {
+            "time": "2026-11-19T08:00",
+            "pm25": 68.5,
+            "pm10": 74,
+            "no2": 31.4,
+            "predictedIndianAqi": 127
+          },
+          {
+            "time": "2026-11-19T09:00",
+            "pm25": 69.4,
+            "pm10": 75,
+            "no2": 29.1,
+            "predictedIndianAqi": 130
+          },
+          {
+            "time": "2026-11-19T10:00",
+            "pm25": 67.5,
+            "pm10": 74.3,
+            "no2": 23.9,
+            "predictedIndianAqi": 123
+          },
+          {
+            "time": "2026-11-19T11:00",
+            "pm25": 64.5,
+            "pm10": 71.9,
+            "no2": 20.1,
+            "predictedIndianAqi": 113
+          },
+          {
+            "time": "2026-11-19T12:00",
+            "pm25": 62.4,
+            "pm10": 70.1,
+            "no2": 19.2,
+            "predictedIndianAqi": 106
+          },
+          {
+            "time": "2026-11-19T13:00",
+            "pm25": 63.3,
+            "pm10": 70.5,
+            "no2": 19.5,
+            "predictedIndianAqi": 109
+          },
+          {
+            "time": "2026-11-19T14:00",
+            "pm25": 66.8,
+            "pm10": 73.6,
+            "no2": 20.6,
+            "predictedIndianAqi": 121
+          },
+          {
+            "time": "2026-11-19T15:00",
+            "pm25": 67.3,
+            "pm10": 73.8,
+            "no2": 23.1,
+            "predictedIndianAqi": 123
+          },
+          {
+            "time": "2026-11-19T16:00",
+            "pm25": 63.3,
+            "pm10": 70.1,
+            "no2": 26.2,
+            "predictedIndianAqi": 109
+          },
+          {
+            "time": "2026-11-19T17:00",
+            "pm25": 56.5,
+            "pm10": 63.8,
+            "no2": 27.6,
+            "predictedIndianAqi": 94
+          },
+          {
+            "time": "2026-11-19T18:00",
+            "pm25": 50.3,
+            "pm10": 58.6,
+            "no2": 25.4,
+            "predictedIndianAqi": 84
+          },
+          {
+            "time": "2026-11-19T19:00",
+            "pm25": 46.3,
+            "pm10": 54.6,
+            "no2": 21.4,
+            "predictedIndianAqi": 77
+          },
+          {
+            "time": "2026-11-19T20:00",
+            "pm25": 43.2,
+            "pm10": 50.3,
+            "no2": 18.4,
+            "predictedIndianAqi": 72
+          },
+          {
+            "time": "2026-11-19T21:00",
+            "pm25": 39.5,
+            "pm10": 43.8,
+            "no2": 17.9,
+            "predictedIndianAqi": 65
+          },
+          {
+            "time": "2026-11-19T22:00",
+            "pm25": 38.9,
+            "pm10": 41.8,
+            "no2": 18.4,
+            "predictedIndianAqi": 64
+          },
+          {
+            "time": "2026-11-19T23:00",
+            "pm25": 39.2,
+            "pm10": 41.9,
+            "no2": 18.5,
+            "predictedIndianAqi": 65
+          }
+        ],
+        "nearbyStations": [
+          {
+            "id": "station-bandra-cpcb",
+            "name": "Bandra Kalanagar CPCB/MPCB CAAQMS",
+            "distanceKm": 2.8,
+            "latitude": 19.0607,
+            "longitude": 72.848,
+            "lastUpdated": "2026-11-19T08:05:04.540Z",
+            "measurements": {
+              "pm2_5": 66,
+              "pm10": 72,
+              "no2": 21,
+              "so2": 29
+            }
+          },
+          {
+            "id": "station-kurla-mpcb",
+            "name": "Kurla CST Road Monitoring Station",
+            "distanceKm": 4.1,
+            "latitude": 19.0726,
+            "longitude": 72.8845,
+            "lastUpdated": "2026-11-19T08:05:04.540Z",
+            "measurements": {
+              "pm2_5": 73,
+              "pm10": 83,
+              "no2": 23,
+              "so2": 30
+            }
+          },
+          {
+            "id": "station-worli-iitb",
+            "name": "Worli Coastal Boundary Station",
+            "distanceKm": 6.4,
+            "latitude": 19.0166,
+            "longitude": 72.8166,
+            "lastUpdated": "2026-11-19T08:05:04.540Z",
+            "measurements": {
+              "pm2_5": 56,
+              "pm10": 63,
+              "no2": 17,
+              "so2": 26
+            }
+          }
+        ]
+      },
+      "fetched_at": "2026-11-19T08:05:03.654Z",
+      "expires_at": "2026-11-19T08:20:03.654Z"
+    }
+  ],
+  "impact_records": [
+    {
+      "id": "imp-1",
+      "metric_type": "equipment_donated",
+      "value": 18,
+      "recorded_at": "2026-11-19T08:05:03.625Z",
+      "methodology_notes": "Verified records of donor equipment delivered to citizens in need."
+    },
+    {
+      "id": "imp-2",
+      "metric_type": "equipment_loaned",
+      "value": 34,
+      "recorded_at": "2026-11-19T08:05:03.625Z",
+      "methodology_notes": "Active and completed air purifier loans with signed handovers."
+    },
+    {
+      "id": "imp-3",
+      "metric_type": "diy_assembled",
+      "value": 52,
+      "recorded_at": "2026-11-19T08:05:03.625Z",
+      "methodology_notes": "Completed DIY Corsi-Rosenthal purifiers recorded via community workshops."
+    },
+    {
+      "id": "imp-4",
+      "metric_type": "requests_fulfilled",
+      "value": 47,
+      "recorded_at": "2026-11-19T08:05:03.625Z",
+      "methodology_notes": "Citizen assistance requests successfully marked completed with verification notes."
+    },
+    {
+      "id": "imp-5",
+      "metric_type": "volunteer_tasks_completed",
+      "value": 68,
+      "recorded_at": "2026-11-19T08:05:03.625Z",
+      "methodology_notes": "Field tasks completed by verified SAANS volunteers across Mumbai."
+    },
+    {
+      "id": "imp-6",
+      "metric_type": "facilities_onboarded",
+      "value": 4,
+      "recorded_at": "2026-11-19T08:05:03.625Z",
+      "methodology_notes": "Verified clean air sanctuaries audited and approved in platform registry."
+    }
+  ],
+  "audit_logs": [
+    {
+      "id": "aud-1",
+      "action": "SEED_INITIALIZATION",
+      "entity_type": "system",
+      "created_at": "2026-11-19T08:05:03.625Z"
+    }
+  ]
+}

@@ -1,0 +1,832 @@
+import fs from 'fs';
+import path from 'path';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { config } from '../config/env.js';
+
+export interface Profile {
+  id: string;
+  email: string;
+  password_hash?: string;
+  full_name: string;
+  phone?: string;
+  city: string;
+  neighbourhood: string;
+  preferred_language: 'en' | 'hi' | 'mr';
+  account_type: 'citizen' | 'volunteer' | 'donor' | 'admin';
+  latitude?: number;
+  longitude?: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserRole {
+  id: string;
+  user_id: string;
+  role: 'citizen' | 'volunteer' | 'donor' | 'admin';
+  granted_at: string;
+}
+
+export interface HouseholdProfile {
+  id: string;
+  user_id: string;
+  member_count: number;
+  elderly_present: boolean;
+  children_present: boolean;
+  sensitive_persons: boolean;
+  housing_type: string;
+  room_size_sqft: number;
+  existing_purifiers?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VolunteerProfile {
+  id: string;
+  user_id: string;
+  service_radius_km: number;
+  experience_years: number;
+  bio?: string;
+  languages: string[];
+  organisation_affiliation?: string;
+  is_verified: boolean;
+  status: 'active' | 'busy' | 'inactive';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VolunteerSkill {
+  id: string;
+  volunteer_id: string;
+  skill_category: 'electrical' | 'installation' | 'repair' | 'awareness' | 'logistics' | 'health_edu' | 'general';
+  proficiency_level: 'beginner' | 'intermediate' | 'expert';
+  created_at: string;
+}
+
+export interface Organisation {
+  id: string;
+  name: string;
+  contact_email: string;
+  contact_phone?: string;
+  city: string;
+  address: string;
+  registration_number?: string;
+  is_verified: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AssistanceRequest {
+  id: string;
+  user_id: string;
+  category: 'purifier_loan' | 'purifier_donation' | 'diy_installation' | 'filter_replacement' | 'equipment_repair' | 'protective_gear' | 'iaq_assessment' | 'facility_access' | 'other';
+  description: string;
+  location_city: string;
+  location_neighbourhood: string;
+  latitude?: number;
+  longitude?: number;
+  urgency: 'low' | 'medium' | 'high' | 'critical';
+  household_type?: string;
+  existing_equipment?: string;
+  contact_method: string;
+  consent_shared: boolean;
+  status: 'submitted' | 'under_review' | 'approved' | 'assigned' | 'in_progress' | 'completed' | 'rejected' | 'cancelled' | 'on_hold';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RequestAssignment {
+  id: string;
+  request_id: string;
+  volunteer_id: string;
+  status: 'assigned' | 'accepted' | 'rejected' | 'completed';
+  assigned_at: string;
+  updated_at: string;
+  completion_notes?: string;
+  completion_photo_url?: string;
+}
+
+export interface Equipment {
+  id: string;
+  donor_id?: string;
+  name: string;
+  category: 'hepa_purifier' | 'diy_filtration' | 'replacement_filter' | 'fan_component' | 'iaq_monitor' | 'protective_gear';
+  description: string;
+  manufacturer_model?: string;
+  condition: 'new' | 'like_new' | 'good' | 'fair';
+  type: 'donation' | 'loan';
+  max_loan_duration_days?: number;
+  location_city: string;
+  location_neighbourhood: string;
+  latitude?: number;
+  longitude?: number;
+  image_url?: string;
+  status: 'available' | 'requested' | 'reserved' | 'issued' | 'returned' | 'maintenance';
+  is_verified: boolean;
+  cadr_rating?: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EquipmentRequest {
+  id: string;
+  equipment_id: string;
+  requester_id: string;
+  status: 'pending' | 'approved' | 'rejected' | 'cancelled' | 'fulfilled';
+  requested_duration_days?: number;
+  purpose: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EquipmentTransaction {
+  id: string;
+  equipment_id: string;
+  from_user_id?: string;
+  to_user_id?: string;
+  transaction_type: 'loan' | 'donation_transfer' | 'return';
+  issue_date: string;
+  expected_return_date?: string;
+  actual_return_date?: string;
+  notes?: string;
+  created_at: string;
+}
+
+export interface EquipmentMaintenance {
+  id: string;
+  equipment_id: string;
+  performed_by?: string;
+  maintenance_type: 'filter_change' | 'motor_repair' | 'cleaning' | 'safety_inspection';
+  notes?: string;
+  performed_at: string;
+  next_due_at?: string;
+}
+
+export interface Facility {
+  id: string;
+  name: string;
+  facility_type: 'library' | 'community_hall' | 'school' | 'clinic' | 'housing_society' | 'ngo_centre';
+  address: string;
+  city: string;
+  neighbourhood: string;
+  latitude: number;
+  longitude: number;
+  contact_phone?: string;
+  contact_email?: string;
+  operating_hours: string;
+  accessibility_features: string[];
+  filtration_equipment_details: string;
+  capacity: number;
+  is_verified: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FacilityVerification {
+  id: string;
+  facility_id: string;
+  verified_by: string;
+  verification_date: string;
+  status: 'approved' | 'rejected' | 'pending';
+  inspection_notes?: string;
+}
+
+export interface CommunityReport {
+  id: string;
+  reporter_id: string;
+  category: 'garbage_burning' | 'construction_dust' | 'industrial_smoke' | 'roadside_burning' | 'excessive_dust' | 'other';
+  description: string;
+  city: string;
+  neighbourhood: string;
+  latitude: number;
+  longitude: number;
+  image_url?: string;
+  status: 'submitted' | 'under_review' | 'verified' | 'rejected' | 'resolved';
+  resolution_notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CommunityInitiative {
+  id: string;
+  title: string;
+  description: string;
+  city: string;
+  neighbourhood: string;
+  organiser_id: string;
+  start_date: string;
+  end_date?: string;
+  target_participants: number;
+  current_participants: number;
+  status: 'upcoming' | 'active' | 'completed';
+  created_at: string;
+}
+
+export interface Donation {
+  id: string;
+  donor_id: string;
+  item_type: 'funds' | 'filters' | 'masks' | 'purifiers' | 'accessories';
+  quantity: number;
+  description: string;
+  status: 'pledged' | 'received' | 'allocated';
+  allocated_to_request_id?: string;
+  created_at: string;
+}
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  title: string;
+  message: string;
+  event_type: string;
+  related_entity_id?: string;
+  is_read: boolean;
+  created_at: string;
+}
+
+export interface Conversation {
+  id: string;
+  user_id: string;
+  title: string;
+  language: 'en' | 'hi' | 'mr';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ConversationMessage {
+  id: string;
+  conversation_id: string;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  structured_data?: any;
+  created_at: string;
+}
+
+export interface AirQualityCache {
+  id: string;
+  city: string;
+  neighbourhood?: string;
+  latitude: number;
+  longitude: number;
+  data_source: string;
+  aqi_index?: number;
+  aqi_category?: string;
+  pollutants: Record<string, any>;
+  forecast?: any;
+  raw_response?: any;
+  fetched_at: string;
+  expires_at: string;
+}
+
+export interface ImpactRecord {
+  id: string;
+  metric_type: 'equipment_donated' | 'equipment_loaned' | 'equipment_repaired' | 'diy_assembled' | 'requests_fulfilled' | 'volunteer_tasks_completed' | 'facilities_onboarded' | 'reports_resolved' | 'people_reached';
+  value: number;
+  related_entity_type?: string;
+  related_entity_id?: string;
+  recorded_at: string;
+  methodology_notes: string;
+}
+
+export interface AuditLog {
+  id: string;
+  user_id?: string;
+  action: string;
+  entity_type: string;
+  entity_id?: string;
+  old_values?: any;
+  new_values?: any;
+  ip_address?: string;
+  created_at: string;
+}
+
+export interface DatabaseState {
+  profiles: Profile[];
+  user_roles: UserRole[];
+  household_profiles: HouseholdProfile[];
+  volunteer_profiles: VolunteerProfile[];
+  volunteer_skills: VolunteerSkill[];
+  organisations: Organisation[];
+  assistance_requests: AssistanceRequest[];
+  request_assignments: RequestAssignment[];
+  equipment: Equipment[];
+  equipment_requests: EquipmentRequest[];
+  equipment_transactions: EquipmentTransaction[];
+  equipment_maintenance: EquipmentMaintenance[];
+  facilities: Facility[];
+  facility_verifications: FacilityVerification[];
+  community_reports: CommunityReport[];
+  community_initiatives: CommunityInitiative[];
+  donations: Donation[];
+  notifications: Notification[];
+  conversations: Conversation[];
+  conversation_messages: ConversationMessage[];
+  air_quality_cache: AirQualityCache[];
+  impact_records: ImpactRecord[];
+  audit_logs: AuditLog[];
+}
+
+export class DatabaseStore {
+  private static instance: DatabaseStore;
+  private dbPath: string;
+  private state: DatabaseState;
+  public supabase: SupabaseClient | null = null;
+
+  private constructor() {
+    const dataDir = path.resolve(process.cwd(), 'data');
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    this.dbPath = path.join(dataDir, 'saans_db.json');
+    this.state = this.loadState();
+
+    if (config.supabaseUrl && (config.supabaseServiceRoleKey || config.supabaseAnonKey)) {
+      try {
+        this.supabase = createClient(
+          config.supabaseUrl,
+          config.supabaseServiceRoleKey || config.supabaseAnonKey
+        );
+      } catch (err) {
+        console.warn('Supabase client initialization skipped/failed:', err);
+      }
+    }
+  }
+
+  public static getInstance(): DatabaseStore {
+    if (!DatabaseStore.instance) {
+      DatabaseStore.instance = new DatabaseStore();
+    }
+    return DatabaseStore.instance;
+  }
+
+  private loadState(): DatabaseState {
+    if (fs.existsSync(this.dbPath)) {
+      try {
+        const raw = fs.readFileSync(this.dbPath, 'utf-8');
+        return JSON.parse(raw);
+      } catch (e) {
+        console.error('Failed reading existing db file, initializing seed:', e);
+      }
+    }
+    return this.getSeedData();
+  }
+
+  public save(): void {
+    try {
+      fs.writeFileSync(this.dbPath, JSON.stringify(this.state, null, 2), 'utf-8');
+    } catch (e) {
+      console.error('Error saving database state:', e);
+    }
+  }
+
+  public getState(): DatabaseState {
+    return this.state;
+  }
+
+  private getSeedData(): DatabaseState {
+    const now = new Date().toISOString();
+    return {
+      profiles: [
+        {
+          id: 'a0000000-0000-0000-0000-000000000001',
+          email: 'admin@saans.org',
+          password_hash: '$2a$10$wT282mH48.o57476eXnCbeG1W5e.O1K33sWc5V/7y257P5gqjK5kO', // password123
+          full_name: 'Admin SAANS',
+          phone: '+91 98200 11223',
+          city: 'Mumbai',
+          neighbourhood: 'Bandra West',
+          preferred_language: 'en',
+          account_type: 'admin',
+          latitude: 19.0596,
+          longitude: 72.8295,
+          created_at: now,
+          updated_at: now
+        },
+        {
+          id: 'c0000000-0000-0000-0000-000000000002',
+          email: 'priya.sharma@example.com',
+          password_hash: '$2a$10$wT282mH48.o57476eXnCbeG1W5e.O1K33sWc5V/7y257P5gqjK5kO', // password123
+          full_name: 'Priya Sharma',
+          phone: '+91 98333 44556',
+          city: 'Mumbai',
+          neighbourhood: 'Kurla West',
+          preferred_language: 'hi',
+          account_type: 'citizen',
+          latitude: 19.0657,
+          longitude: 72.8794,
+          created_at: now,
+          updated_at: now
+        },
+        {
+          id: 'v0000000-0000-0000-0000-000000000003',
+          email: 'rahul.deshmukh@example.com',
+          password_hash: '$2a$10$wT282mH48.o57476eXnCbeG1W5e.O1K33sWc5V/7y257P5gqjK5kO', // password123
+          full_name: 'Rahul Deshmukh',
+          phone: '+91 99201 55667',
+          city: 'Mumbai',
+          neighbourhood: 'Dadar',
+          preferred_language: 'mr',
+          account_type: 'volunteer',
+          latitude: 19.0178,
+          longitude: 72.8478,
+          created_at: now,
+          updated_at: now
+        },
+        {
+          id: 'd0000000-0000-0000-0000-000000000004',
+          email: 'cleanair.mumbai@example.com',
+          password_hash: '$2a$10$wT282mH48.o57476eXnCbeG1W5e.O1K33sWc5V/7y257P5gqjK5kO', // password123
+          full_name: 'CleanAir NGO Mumbai',
+          phone: '+91 98199 77889',
+          city: 'Mumbai',
+          neighbourhood: 'Andheri East',
+          preferred_language: 'en',
+          account_type: 'donor',
+          latitude: 19.1136,
+          longitude: 72.8697,
+          created_at: now,
+          updated_at: now
+        }
+      ],
+      user_roles: [
+        { id: 'ur-1', user_id: 'a0000000-0000-0000-0000-000000000001', role: 'admin', granted_at: now },
+        { id: 'ur-2', user_id: 'c0000000-0000-0000-0000-000000000002', role: 'citizen', granted_at: now },
+        { id: 'ur-3', user_id: 'v0000000-0000-0000-0000-000000000003', role: 'volunteer', granted_at: now },
+        { id: 'ur-4', user_id: 'd0000000-0000-0000-0000-000000000004', role: 'donor', granted_at: now }
+      ],
+      household_profiles: [
+        {
+          id: 'hp-1',
+          user_id: 'c0000000-0000-0000-0000-000000000002',
+          member_count: 4,
+          elderly_present: true,
+          children_present: true,
+          sensitive_persons: true,
+          housing_type: '2BHK Apartment near Western Express Highway',
+          room_size_sqft: 280,
+          existing_purifiers: 'None',
+          created_at: now,
+          updated_at: now
+        }
+      ],
+      volunteer_profiles: [
+        {
+          id: 'b0000000-0000-0000-0000-000000000001',
+          user_id: 'v0000000-0000-0000-0000-000000000003',
+          service_radius_km: 15,
+          experience_years: 3,
+          bio: 'Electrical technician and clean air activist in Mumbai. Specializing in Corsi-Rosenthal boxes and filter installations.',
+          languages: ['en', 'hi', 'mr'],
+          organisation_affiliation: 'Mumbai Breathing Initiative',
+          is_verified: true,
+          status: 'active',
+          created_at: now,
+          updated_at: now
+        }
+      ],
+      volunteer_skills: [
+        { id: 'vs-1', volunteer_id: 'b0000000-0000-0000-0000-000000000001', skill_category: 'installation', proficiency_level: 'expert', created_at: now },
+        { id: 'vs-2', volunteer_id: 'b0000000-0000-0000-0000-000000000001', skill_category: 'electrical', proficiency_level: 'expert', created_at: now },
+        { id: 'vs-3', volunteer_id: 'b0000000-0000-0000-0000-000000000001', skill_category: 'repair', proficiency_level: 'intermediate', created_at: now }
+      ],
+      organisations: [
+        {
+          id: 'org-1',
+          name: 'CleanAir NGO Mumbai',
+          contact_email: 'cleanair.mumbai@example.com',
+          contact_phone: '+91 98199 77889',
+          city: 'Mumbai',
+          address: 'Chakala, Andheri East, Mumbai 400093',
+          registration_number: 'MH-MUM-2023-8871',
+          is_verified: true,
+          created_at: now,
+          updated_at: now
+        }
+      ],
+      assistance_requests: [
+        {
+          id: 'r0000000-0000-0000-0000-000000000001',
+          user_id: 'c0000000-0000-0000-0000-000000000002',
+          category: 'purifier_loan',
+          description: 'Elderly parent has severe asthma exacerbation during winter smog inversion. Living room facing heavy traffic corridor.',
+          location_city: 'Mumbai',
+          location_neighbourhood: 'Kurla West',
+          latitude: 19.0657,
+          longitude: 72.8794,
+          urgency: 'high',
+          household_type: 'Family with elderly & child',
+          existing_equipment: 'Only ceiling fans',
+          contact_method: 'Phone call or In-app',
+          consent_shared: true,
+          status: 'approved',
+          created_at: now,
+          updated_at: now
+        }
+      ],
+      request_assignments: [],
+      equipment: [
+        {
+          id: 'e0000000-0000-0000-0000-000000000001',
+          donor_id: 'd0000000-0000-0000-0000-000000000004',
+          name: 'Philips Series 2000i HEPA Purifier',
+          category: 'hepa_purifier',
+          description: 'High CADR purifier suitable for master bedroom or living room up to 350 sq ft. Real-time PM2.5 feedback display.',
+          manufacturer_model: 'Philips AC2887/20',
+          condition: 'like_new',
+          type: 'loan',
+          max_loan_duration_days: 30,
+          location_city: 'Mumbai',
+          location_neighbourhood: 'Andheri East',
+          latitude: 19.1136,
+          longitude: 72.8697,
+          image_url: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80',
+          status: 'available',
+          is_verified: true,
+          cadr_rating: 333,
+          created_at: now,
+          updated_at: now
+        },
+        {
+          id: 'e0000000-0000-0000-0000-000000000002',
+          donor_id: 'd0000000-0000-0000-0000-000000000004',
+          name: 'Corsi-Rosenthal DIY Box System (MERV 13)',
+          category: 'diy_filtration',
+          description: 'Community assembled 4-filter high-flow cube with Orient box fan. Ultra-low resistance, high particulate throughput.',
+          manufacturer_model: 'SAANS-CR-4x',
+          condition: 'new',
+          type: 'donation',
+          location_city: 'Mumbai',
+          location_neighbourhood: 'Dadar',
+          latitude: 19.0178,
+          longitude: 72.8478,
+          image_url: 'https://images.unsplash.com/photo-1545259741-2ea3ebf61fa3?auto=format&fit=crop&w=600&q=80',
+          status: 'available',
+          is_verified: true,
+          cadr_rating: 420,
+          created_at: now,
+          updated_at: now
+        },
+        {
+          id: 'e0000000-0000-0000-0000-000000000003',
+          donor_id: 'd0000000-0000-0000-0000-000000000004',
+          name: 'Laser Particle Sensor IAQ Monitor',
+          category: 'iaq_monitor',
+          description: 'Accurate laser scattering particulate sensor measuring PM1.0, PM2.5 and PM10 with OLED read-out.',
+          manufacturer_model: 'Temtop LKC-1000S+',
+          condition: 'good',
+          type: 'loan',
+          max_loan_duration_days: 14,
+          location_city: 'Mumbai',
+          location_neighbourhood: 'Bandra West',
+          latitude: 19.0596,
+          longitude: 72.8295,
+          image_url: 'https://images.unsplash.com/photo-1584727638096-042c45049ebe?auto=format&fit=crop&w=600&q=80',
+          status: 'available',
+          is_verified: true,
+          created_at: now,
+          updated_at: now
+        },
+        {
+          id: 'e0000000-0000-0000-0000-000000000004',
+          donor_id: 'd0000000-0000-0000-0000-000000000004',
+          name: 'N95 / FFP2 Respirator Family Pack (50 Pcs)',
+          category: 'protective_gear',
+          description: 'Certified ISI-approved particulate respirator masks with comfortable headband for outdoor commuting.',
+          manufacturer_model: 'Venus V-4400',
+          condition: 'new',
+          type: 'donation',
+          location_city: 'Mumbai',
+          location_neighbourhood: 'Kurla West',
+          latitude: 19.0657,
+          longitude: 72.8794,
+          image_url: 'https://images.unsplash.com/photo-1584634731339-252c581abfc5?auto=format&fit=crop&w=600&q=80',
+          status: 'available',
+          is_verified: true,
+          created_at: now,
+          updated_at: now
+        }
+      ],
+      equipment_requests: [],
+      equipment_transactions: [],
+      equipment_maintenance: [],
+      facilities: [
+        {
+          id: 'f0000000-0000-0000-0000-000000000001',
+          name: 'Bandra Public Library Clean Air Zone',
+          facility_type: 'library',
+          address: 'Near Hill Road, Bandra West, Mumbai 400050',
+          city: 'Mumbai',
+          neighbourhood: 'Bandra West',
+          latitude: 19.0558,
+          longitude: 72.8300,
+          contact_phone: '+91 22 2640 1234',
+          contact_email: 'bandra.library@mumbai.gov.in',
+          operating_hours: '08:00 AM - 08:00 PM',
+          accessibility_features: ['wheelchair_accessible', 'drinking_water', 'restrooms', 'wifi'],
+          filtration_equipment_details: 'Triple HEPA H13 Air Purifiers + Positive Pressure Airflow System',
+          capacity: 45,
+          is_verified: true,
+          created_at: now,
+          updated_at: now
+        },
+        {
+          id: 'f0000000-0000-0000-0000-000000000002',
+          name: 'Dadar Community Wellness Centre',
+          facility_type: 'community_hall',
+          address: 'Gokhale Road North, Dadar, Mumbai 400028',
+          city: 'Mumbai',
+          neighbourhood: 'Dadar',
+          latitude: 19.0195,
+          longitude: 72.8428,
+          contact_phone: '+91 22 2430 5678',
+          contact_email: 'dadar.wellness@saans.community',
+          operating_hours: '07:00 AM - 09:00 PM',
+          accessibility_features: ['wheelchair_accessible', 'seating_area', 'medical_first_aid'],
+          filtration_equipment_details: 'Dual Industrial CADR 650 m3/h Filtration Units with Carbon Bed',
+          capacity: 60,
+          is_verified: true,
+          created_at: now,
+          updated_at: now
+        },
+        {
+          id: 'f0000000-0000-0000-0000-000000000003',
+          name: 'Chembur Senior Citizens Respite Shelter',
+          facility_type: 'clinic',
+          address: 'Near Chembur Naka, Chembur, Mumbai 400071',
+          city: 'Mumbai',
+          neighbourhood: 'Chembur',
+          latitude: 19.0622,
+          longitude: 72.8992,
+          contact_phone: '+91 22 2522 9988',
+          contact_email: 'chembur.respite@saans.community',
+          operating_hours: '09:00 AM - 06:00 PM',
+          accessibility_features: ['wheelchair_accessible', 'nursing_assistant', 'oxygen_support'],
+          filtration_equipment_details: 'Medical Grade HEPA + Activated Carbon, Low Noise Operation',
+          capacity: 30,
+          is_verified: true,
+          created_at: now,
+          updated_at: now
+        },
+        {
+          id: 'f0000000-0000-0000-0000-000000000004',
+          name: 'Andheri East NGO Learning Centre',
+          facility_type: 'school',
+          address: 'Chakala, Andheri East, Mumbai 400093',
+          city: 'Mumbai',
+          neighbourhood: 'Andheri East',
+          latitude: 19.1158,
+          longitude: 72.8654,
+          contact_phone: '+91 22 2822 4411',
+          contact_email: 'learning@cleanairandheri.org',
+          operating_hours: '08:30 AM - 05:30 PM',
+          accessibility_features: ['wheelchair_accessible', 'children_study_tables'],
+          filtration_equipment_details: '4x Corsi-Rosenthal DIY Box Purifiers with MERV-13 Filters',
+          capacity: 40,
+          is_verified: true,
+          created_at: now,
+          updated_at: now
+        }
+      ],
+      facility_verifications: [],
+      community_reports: [
+        {
+          id: 'p0000000-0000-0000-0000-000000000001',
+          reporter_id: 'c0000000-0000-0000-0000-000000000002',
+          category: 'garbage_burning',
+          description: 'Uncontrolled waste burning near railway tracks creating thick acrid smoke settling into residential colony.',
+          city: 'Mumbai',
+          neighbourhood: 'Kurla West',
+          latitude: 19.0680,
+          longitude: 72.8810,
+          image_url: 'https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&w=600&q=80',
+          status: 'verified',
+          resolution_notes: 'Reported to Ward L municipal sanitary officer and local resident association notified.',
+          created_at: now,
+          updated_at: now
+        },
+        {
+          id: 'p0000000-0000-0000-0000-000000000002',
+          reporter_id: 'c0000000-0000-0000-0000-000000000002',
+          category: 'construction_dust',
+          description: 'Uncovered metro station construction piling without dust suppression sprinklers or green netting barriers.',
+          city: 'Mumbai',
+          neighbourhood: 'Andheri East',
+          latitude: 19.1120,
+          longitude: 72.8680,
+          status: 'under_review',
+          created_at: now,
+          updated_at: now
+        }
+      ],
+      community_initiatives: [
+        {
+          id: 'i0000000-0000-0000-0000-000000000001',
+          title: 'Mumbai Winter Smog DIY Purifier Workshop',
+          description: 'Hands-on community workshop where 25 families build and take home affordable Corsi-Rosenthal box purifiers.',
+          city: 'Mumbai',
+          neighbourhood: 'Dadar',
+          organiser_id: 'a0000000-0000-0000-0000-000000000001',
+          start_date: new Date(Date.now() + 3 * 86400000).toISOString(),
+          end_date: new Date(Date.now() + 3 * 86400000 + 4 * 3600000).toISOString(),
+          target_participants: 50,
+          current_participants: 34,
+          status: 'active',
+          created_at: now
+        },
+        {
+          id: 'i0000000-0000-0000-0000-000000000002',
+          title: 'Bandra High-Traffic School Clean Air Corridor',
+          description: 'Installation of indoor air purifiers and planting micro-green air screens in 3 community primary schools.',
+          city: 'Mumbai',
+          neighbourhood: 'Bandra West',
+          organiser_id: 'd0000000-0000-0000-0000-000000000004',
+          start_date: new Date(Date.now() + 10 * 86400000).toISOString(),
+          end_date: new Date(Date.now() + 12 * 86400000).toISOString(),
+          target_participants: 80,
+          current_participants: 62,
+          status: 'upcoming',
+          created_at: now
+        }
+      ],
+      donations: [
+        {
+          id: 'don-1',
+          donor_id: 'd0000000-0000-0000-0000-000000000004',
+          item_type: 'masks',
+          quantity: 200,
+          description: 'Certified N95 particulate respirators for sanitation workers in Kurla',
+          status: 'allocated',
+          created_at: now
+        }
+      ],
+      notifications: [
+        {
+          id: 'notif-1',
+          user_id: 'c0000000-0000-0000-0000-000000000002',
+          title: 'Assistance Request Approved',
+          message: 'Your air purifier loan request #r0000000-0000-0000-0000-000000000001 has been reviewed and approved. Matching volunteer shortly.',
+          event_type: 'request_approved',
+          related_entity_id: 'r0000000-0000-0000-0000-000000000001',
+          is_read: false,
+          created_at: now
+        }
+      ],
+      conversations: [],
+      conversation_messages: [],
+      air_quality_cache: [],
+      impact_records: [
+        {
+          id: 'imp-1',
+          metric_type: 'equipment_donated',
+          value: 18,
+          recorded_at: now,
+          methodology_notes: 'Verified records of donor equipment delivered to citizens in need.'
+        },
+        {
+          id: 'imp-2',
+          metric_type: 'equipment_loaned',
+          value: 34,
+          recorded_at: now,
+          methodology_notes: 'Active and completed air purifier loans with signed handovers.'
+        },
+        {
+          id: 'imp-3',
+          metric_type: 'diy_assembled',
+          value: 52,
+          recorded_at: now,
+          methodology_notes: 'Completed DIY Corsi-Rosenthal purifiers recorded via community workshops.'
+        },
+        {
+          id: 'imp-4',
+          metric_type: 'requests_fulfilled',
+          value: 47,
+          recorded_at: now,
+          methodology_notes: 'Citizen assistance requests successfully marked completed with verification notes.'
+        },
+        {
+          id: 'imp-5',
+          metric_type: 'volunteer_tasks_completed',
+          value: 68,
+          recorded_at: now,
+          methodology_notes: 'Field tasks completed by verified SAANS volunteers across Mumbai.'
+        },
+        {
+          id: 'imp-6',
+          metric_type: 'facilities_onboarded',
+          value: 4,
+          recorded_at: now,
+          methodology_notes: 'Verified clean air sanctuaries audited and approved in platform registry.'
+        }
+      ],
+      audit_logs: [
+        {
+          id: 'aud-1',
+          action: 'SEED_INITIALIZATION',
+          entity_type: 'system',
+          created_at: now
+        }
+      ]
+    };
+  }
+}
+
+export const db = DatabaseStore.getInstance();
