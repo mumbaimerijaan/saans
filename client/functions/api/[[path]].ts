@@ -174,8 +174,8 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
   }
 
   // Supabase Client helper
-  const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL || '';
-  const supabaseKey = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY || '';
+  const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL || 'https://txlzkrcyhaafyogilieh.supabase.co';
+  const supabaseKey = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_CvbIQMFueDHRNzSIt83Q1A_msamUZwz';
   let supabase: any = null;
   if (supabaseUrl && supabaseKey) {
     try {
@@ -188,11 +188,32 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
   try {
     // 1. Health check
     if (path === '/health' || path === '') {
+      let liveDbOk = false;
+      let dbError: string | null = null;
+      let facilitiesCount = 0;
+      if (supabase) {
+        try {
+          const { data, error } = await supabase.from('facilities').select('*');
+          if (!error && data) {
+            liveDbOk = true;
+            facilitiesCount = data.length;
+          } else if (error) {
+            dbError = error.message;
+          }
+        } catch (e: any) {
+          dbError = e.message;
+        }
+      }
+
       return jsonResponse({
         status: 'ok',
         service: 'SAANS Cloudflare Pages Edge API',
         version: '1.0.0',
-        supabase_connected: !!supabase,
+        supabase_connected: liveDbOk,
+        supabase_error: dbError,
+        facilities_in_db: facilitiesCount,
+        has_openrouter_key: !!(env.OPENROUTER_API_KEY || env.VITE_OPENROUTER_API_KEY),
+        env_keys_received: Object.keys(env || {}),
         timestamp: new Date().toISOString()
       });
     }
@@ -309,8 +330,8 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
       const messages = body.messages || [];
       const language = body.language || 'en';
 
-      const apiKey = env.OPENROUTER_API_KEY || '';
-      const model = env.OPENROUTER_MODEL || 'nvidia/nemotron-3.5-lightning:free';
+      const apiKey = env.OPENROUTER_API_KEY || (env as any).VITE_OPENROUTER_API_KEY || '';
+      const model = env.OPENROUTER_MODEL || (env as any).VITE_OPENROUTER_MODEL || 'nvidia/nemotron-3.5-lightning:free';
 
       const systemPrompt = `You are SAANS AI, an intelligent community clean air assistant for Mumbai, India.
 Guidelines:
