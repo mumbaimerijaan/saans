@@ -102,9 +102,9 @@ async function runTests() {
 
   // Test 10: Request Lifecycle & Transition State Machine Verification
   console.log('Test 10: Request Status Transition State Machine Verification...');
-  const { ALLOWED_TRANSITIONS, VALID_REQUEST_STATUSES } = await import('../src/routes/requests.js');
+  const { ALLOWED_TRANSITIONS, VALID_REQUEST_STATUSES, validateStatusTransition } = await import('../src/routes/requests.js');
   
-  // Verify state machine definition
+  // 1. Verify state machine definition
   assert.ok(VALID_REQUEST_STATUSES.includes('in_progress'));
   assert.ok(VALID_REQUEST_STATUSES.includes('completed'));
   assert.deepStrictEqual(ALLOWED_TRANSITIONS.completed, [], 'Completed must be a terminal state');
@@ -112,7 +112,99 @@ async function runTests() {
   assert.ok(ALLOWED_TRANSITIONS.assigned.includes('in_progress'), 'Assigned must allow transition to in_progress');
   assert.ok(!ALLOWED_TRANSITIONS.assigned.includes('completed'), 'Assigned must NOT allow direct transition to completed');
   assert.ok(ALLOWED_TRANSITIONS.in_progress.includes('completed'), 'in_progress must allow transition to completed');
-  console.log('✅ Passed: Request Status State Machine and Allowed Transitions Verified.\n');
+
+  // 2. Test: Citizen cannot cancel an in-progress request
+  const ownerInProgressCancel = validateStatusTransition('in_progress', 'cancelled', {
+    isAdmin: false,
+    isOwner: true,
+    isAssignedVolunteer: false
+  });
+  assert.strictEqual(ownerInProgressCancel.valid, false, 'Citizen must not be allowed to cancel in_progress request');
+  assert.strictEqual(ownerInProgressCancel.statusCode, 400);
+
+  // 3. Test: Citizen cannot cancel a completed request
+  const ownerCompletedCancel = validateStatusTransition('completed', 'cancelled', {
+    isAdmin: false,
+    isOwner: true,
+    isAssignedVolunteer: false
+  });
+  assert.strictEqual(ownerCompletedCancel.valid, false, 'Cannot modify completed request');
+
+  // 4. Test: Citizen cannot approve or advance their own request
+  const ownerApprove = validateStatusTransition('submitted', 'approved', {
+    isAdmin: false,
+    isOwner: true,
+    isAssignedVolunteer: false
+  });
+  assert.strictEqual(ownerApprove.valid, false, 'Citizen cannot approve requests');
+  assert.strictEqual(ownerApprove.statusCode, 403);
+
+  // 5. Test: Citizen CAN cancel their submitted request
+  const ownerSubmittedCancel = validateStatusTransition('submitted', 'cancelled', {
+    isAdmin: false,
+    isOwner: true,
+    isAssignedVolunteer: false
+  });
+  assert.strictEqual(ownerSubmittedCancel.valid, true, 'Citizen should be able to cancel submitted request');
+
+  // 6. Test: Assigned volunteer CANNOT jump directly from assigned to completed
+  const volDirectComplete = validateStatusTransition('assigned', 'completed', {
+    isAdmin: false,
+    isOwner: false,
+    isAssignedVolunteer: true
+  });
+  assert.strictEqual(volDirectComplete.valid, false, 'Volunteer cannot jump from assigned directly to completed');
+  assert.strictEqual(volDirectComplete.statusCode, 400);
+
+  // 7. Test: Assigned volunteer CAN advance from assigned to in_progress
+  const volStart = validateStatusTransition('assigned', 'in_progress', {
+    isAdmin: false,
+    isOwner: false,
+    isAssignedVolunteer: true
+  });
+  assert.strictEqual(volStart.valid, true, 'Volunteer can move from assigned to in_progress');
+
+  // 8. Test: Assigned volunteer CAN advance from in_progress to completed
+  const volComplete = validateStatusTransition('in_progress', 'completed', {
+    isAdmin: false,
+    isOwner: false,
+    isAssignedVolunteer: true
+  });
+  assert.strictEqual(volComplete.valid, true, 'Volunteer can move from in_progress to completed');
+
+  // 9. Test: Unrelated third-party user cannot modify request status
+  const unauthorizedUser = validateStatusTransition('submitted', 'cancelled', {
+    isAdmin: false,
+    isOwner: false,
+    isAssignedVolunteer: false
+  });
+  assert.strictEqual(unauthorizedUser.valid, false, 'Unrelated user must be rejected');
+  assert.strictEqual(unauthorizedUser.statusCode, 403);
+
+  // 10. Test: Admin cannot transition terminal states or invalid jumps
+  const adminTerminal = validateStatusTransition('completed', 'assigned', {
+    isAdmin: true,
+    isOwner: false,
+    isAssignedVolunteer: false
+  });
+  assert.strictEqual(adminTerminal.valid, false, 'Admin cannot assign a completed request');
+
+  const adminIllegalJump = validateStatusTransition('submitted', 'completed', {
+    isAdmin: true,
+    isOwner: false,
+    isAssignedVolunteer: false
+  });
+  assert.strictEqual(adminIllegalJump.valid, false, 'Admin cannot jump directly from submitted to completed');
+
+  // 11. Test: Admin CAN assign an approved request
+  const adminValidAssign = validateStatusTransition('approved', 'assigned', {
+    isAdmin: true,
+    isOwner: false,
+    isAssignedVolunteer: false
+  });
+  assert.strictEqual(adminValidAssign.valid, true, 'Admin can transition approved request to assigned');
+
+  console.log('✅ Passed: Request Status State Machine, Role Permissions, and Transition Engine Fully Verified.\n');
 
   console.log('🎉 ALL 10 CORE BACKEND & ALGORITHM TESTS PASSED SUCCESSFULLY!');
 }

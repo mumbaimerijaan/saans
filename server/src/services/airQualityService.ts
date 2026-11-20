@@ -158,30 +158,11 @@ export class AirQualityService {
 
     let report: AQIReport;
 
-    // Neighbourhood micro-climate calibration to mirror localized ground CAAQMS variations
-    const NEIGHBOURHOOD_MODS: Record<string, { pm25Mult: number; pm10Mult: number; no2Mult: number; o3Mult: number; station: string }> = {
-      'Kurla West': { pm25Mult: 1.38, pm10Mult: 1.45, no2Mult: 1.50, o3Mult: 0.78, station: 'Kurla CST Road Monitoring Grid' },
-      'Andheri East': { pm25Mult: 1.48, pm10Mult: 1.55, no2Mult: 1.62, o3Mult: 0.72, station: 'Chakala Andheri CAAQMS Reference Grid' },
-      'Dadar': { pm25Mult: 1.18, pm10Mult: 1.22, no2Mult: 1.25, o3Mult: 0.85, station: 'Dadar TT Circle Monitoring Hub' },
-      'Chembur': { pm25Mult: 1.58, pm10Mult: 1.65, no2Mult: 1.42, o3Mult: 0.70, station: 'Chembur Naka Industrial Air Station' },
-      'Worli': { pm25Mult: 0.85, pm10Mult: 0.88, no2Mult: 0.80, o3Mult: 1.05, station: 'Worli Coastal Boundary Reference Grid' },
-      'Colaba': { pm25Mult: 0.76, pm10Mult: 0.78, no2Mult: 0.72, o3Mult: 1.02, station: 'Colaba Navy Nagar Marine Station' },
-      'Thane West': { pm25Mult: 1.32, pm10Mult: 1.40, no2Mult: 1.35, o3Mult: 0.82, station: 'Thane Majiwada Traffic Junction' },
-      'Bandra West': { pm25Mult: 1.0, pm10Mult: 1.0, no2Mult: 1.0, o3Mult: 0.95, station: 'Bandra Kalanagar CPCB Reference Grid' }
-    };
-
-    const mod = NEIGHBOURHOOD_MODS[neighbourhood] || { pm25Mult: 1.0, pm10Mult: 1.0, no2Mult: 1.0, o3Mult: 1.0, station: `${neighbourhood} Environmental Reference Grid` };
-
-    let cityMult = 1.0;
-    if (city.toLowerCase().includes('delhi')) cityMult = 2.8;
-    else if (city.toLowerCase().includes('pune')) cityMult = 1.15;
-    else if (city.toLowerCase().includes('bengaluru') || city.toLowerCase().includes('bangalore')) cityMult = 0.92;
-
     try {
-      // 1. Fetch live Open-Meteo Air Quality
+      // 1. Fetch live Open-Meteo Air Quality directly using geographic coordinates
       const url = `${config.openMeteoBaseUrl}?latitude=${lat}&longitude=${lon}&current=european_aqi,us_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone&hourly=pm10,pm2_5,nitrogen_dioxide,european_aqi,us_aqi&timezone=Asia%2FKolkata&forecast_days=2`;
       
-      const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+      const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
       if (!res.ok) {
         throw new Error(`Open-Meteo responded with status ${res.status}`);
       }
@@ -190,17 +171,17 @@ export class AirQualityService {
       const current = data.current || {};
       const hourly = data.hourly || {};
 
-      const rawPm25 = current.pm2_5 ?? 85.4;
-      const rawPm10 = current.pm10 ?? 142.1;
-      const rawNo2 = current.nitrogen_dioxide ?? 48.2;
-      const rawO3 = current.ozone ?? 38.0;
+      if (current.pm2_5 === undefined || current.pm2_5 === null) {
+        throw new Error('Open-Meteo returned incomplete telemetry: pm2_5 is missing');
+      }
 
-      const pm25 = parseFloat((rawPm25 * mod.pm25Mult * cityMult).toFixed(1));
-      const pm10 = parseFloat((rawPm10 * mod.pm10Mult * cityMult).toFixed(1));
-      const no2 = parseFloat((rawNo2 * mod.no2Mult * cityMult).toFixed(1));
-      const so2 = current.sulphur_dioxide ?? 14.5;
-      const co = current.carbon_monoxide ? current.carbon_monoxide / 1000 : 1.4; // convert to mg/m3
-      const o3 = parseFloat((rawO3 * mod.o3Mult).toFixed(1));
+      // Unadulterated atmospheric concentrations directly from Open-Meteo regional dispersion model
+      const pm25 = parseFloat(current.pm2_5.toFixed(1));
+      const pm10 = current.pm10 !== undefined && current.pm10 !== null ? parseFloat(current.pm10.toFixed(1)) : 0;
+      const no2 = current.nitrogen_dioxide !== undefined && current.nitrogen_dioxide !== null ? parseFloat(current.nitrogen_dioxide.toFixed(1)) : 0;
+      const so2 = current.sulphur_dioxide !== undefined && current.sulphur_dioxide !== null ? parseFloat(current.sulphur_dioxide.toFixed(1)) : 0;
+      const co = current.carbon_monoxide !== undefined && current.carbon_monoxide !== null ? parseFloat((current.carbon_monoxide / 1000).toFixed(2)) : 0; // convert to mg/m3
+      const o3 = current.ozone !== undefined && current.ozone !== null ? parseFloat(current.ozone.toFixed(1)) : 0;
 
       // CPCB criteria verification
       const validSubIndices: Array<{ code: string; name: string; subIndex: number }> = [];
@@ -400,22 +381,9 @@ export class AirQualityService {
         nearbyStations
       };
 
-    } catch (error) {
-      console.warn('Live Open-Meteo call failed or timed out, returning high-accuracy calibrated Mumbai winter profile:', error);
+    } catch (error: any) {
+      console.warn('Live Open-Meteo telemetry call failed or timed out:', error?.message || error);
       
-      // Fallback realistic winter smog measurements for Mumbai
-      const pm25 = 118.0;
-      const pm10 = 195.0;
-      const no2 = 54.0;
-      const so2 = 18.0;
-      const co = 1.6;
-      const o3 = 32.0;
-
-      const sub25 = this.calculateCpcbSubIndex('pm2_5', pm25)!;
-      const sub10 = this.calculateCpcbSubIndex('pm10', pm10)!;
-      const subNo2 = this.calculateCpcbSubIndex('no2', no2)!;
-      const indianAqi = Math.max(sub25, sub10, subNo2);
-
       report = {
         city,
         neighbourhood,
@@ -423,124 +391,50 @@ export class AirQualityService {
         longitude: lon,
         timestamp: new Date().toISOString(),
         sourceAttribution: {
-          primaryProvider: 'SAANS Environmental Intelligence (Calibrated Baseline)',
-          modelOrStationName: 'Mumbai Urban Meteorological Reference Model',
+          primaryProvider: 'Atmospheric Data Unavailable',
+          modelOrStationName: 'Upstream Open-Meteo API unreachable',
           isModelledForecast: true,
+          provenanceNotice: 'Live atmospheric model data is currently unreachable. SAANS strictly refrains from presenting fabricated fallback values as live air quality telemetry.',
           license: 'CC BY-NC 4.0'
         },
         indianAqi: {
-          index: indianAqi,
-          category: this.getCpcbCategory(indianAqi),
-          dominantPollutant: 'PM2.5',
-          isAvailable: true,
-          methodology: 'Computed strictly following official CPCB (Central Pollution Control Board) 24h breakpoint equations.'
+          index: null,
+          category: 'Data Unavailable',
+          dominantPollutant: null,
+          isAvailable: false,
+          methodology: 'Data withheld: Live external atmospheric telemetry is currently unavailable. No synthetic readings substituted.'
         },
         foreignIndices: {
-          europeanAqi: 75,
-          usAqi: 184,
-          note: 'Foreign indices are shown for comparative perspective only. Do NOT confuse with Indian National AQI.'
+          europeanAqi: null,
+          usAqi: null,
+          note: 'Live telemetry unavailable.'
         },
-        pollutants: {
-          pm2_5: {
-            code: 'pm2_5',
-            name: 'Particulate Matter (PM2.5)',
-            concentration: pm25,
-            unit: 'µg/m³',
-            subIndex: sub25,
-            category: this.getCpcbCategory(sub25),
-            sourceType: 'modelled_forecast'
-          },
-          pm10: {
-            code: 'pm10',
-            name: 'Particulate Matter (PM10)',
-            concentration: pm10,
-            unit: 'µg/m³',
-            subIndex: sub10,
-            category: this.getCpcbCategory(sub10),
-            sourceType: 'modelled_forecast'
-          },
-          no2: {
-            code: 'no2',
-            name: 'Nitrogen Dioxide (NO2)',
-            concentration: no2,
-            unit: 'µg/m³',
-            subIndex: subNo2,
-            category: this.getCpcbCategory(subNo2),
-            sourceType: 'modelled_forecast'
-          },
-          so2: {
-            code: 'so2',
-            name: 'Sulphur Dioxide (SO2)',
-            concentration: so2,
-            unit: 'µg/m³',
-            subIndex: this.calculateCpcbSubIndex('so2', so2)!,
-            category: 'Good',
-            sourceType: 'modelled_forecast'
-          },
-          co: {
-            code: 'co',
-            name: 'Carbon Monoxide (CO)',
-            concentration: co,
-            unit: 'mg/m³',
-            subIndex: this.calculateCpcbSubIndex('co', co)!,
-            category: 'Satisfactory',
-            sourceType: 'modelled_forecast'
-          },
-          o3: {
-            code: 'o3',
-            name: 'Ozone (O3)',
-            concentration: o3,
-            unit: 'µg/m³',
-            subIndex: this.calculateCpcbSubIndex('o3', o3)!,
-            category: 'Good',
-            sourceType: 'modelled_forecast'
-          }
-        },
-        hourlyForecast: Array.from({ length: 24 }).map((_, idx) => {
-          const d = new Date(Date.now() + idx * 3600000);
-          const factor = 1 + 0.25 * Math.sin((idx + 8) / 3.8); // diurnal variation peak morning/evening
-          return {
-            time: d.toISOString(),
-            pm25: Math.round(pm25 * factor),
-            pm10: Math.round(pm10 * factor),
-            no2: Math.round(no2 * factor),
-            predictedIndianAqi: Math.round(indianAqi * factor)
-          };
-        }),
-        nearbyStations: [
-          {
-            id: 'station-bandra-cpcb',
-            name: 'Bandra Kalanagar CPCB Reference Grid',
-            distanceKm: 2.8,
-            latitude: 19.0607,
-            longitude: 72.8480,
-            stationType: 'micro_climate_spatial_estimate',
-            provenance: 'Model-derived micro-climate estimate anchored to CPCB Station #MH001 coordinates (Bandra Kalanagar)',
-            lastUpdated: new Date().toISOString(),
-            measurements: { pm2_5: 124, pm10: 202, no2: 58 }
-          }
-        ]
+        pollutants: {},
+        hourlyForecast: [],
+        nearbyStations: []
       };
     }
 
-    // Cache the report for 15 minutes
-    const expiresAt = new Date(now + 15 * 60 * 1000).toISOString();
-    state.air_quality_cache.push({
-      id: `cache-${Date.now()}`,
-      city,
-      neighbourhood,
-      latitude: lat,
-      longitude: lon,
-      data_source: report.sourceAttribution.primaryProvider,
-      aqi_index: report.indianAqi.index ?? undefined,
-      aqi_category: report.indianAqi.category,
-      pollutants: report.pollutants,
-      forecast: report.hourlyForecast,
-      raw_response: report,
-      fetched_at: new Date(now).toISOString(),
-      expires_at: expiresAt
-    });
-    db.save();
+    // Cache the report only when live data was successfully retrieved
+    if (report.indianAqi.isAvailable) {
+      const expiresAt = new Date(now + 15 * 60 * 1000).toISOString();
+      state.air_quality_cache.push({
+        id: `cache-${Date.now()}`,
+        city,
+        neighbourhood,
+        latitude: lat,
+        longitude: lon,
+        data_source: report.sourceAttribution.primaryProvider,
+        aqi_index: report.indianAqi.index ?? undefined,
+        aqi_category: report.indianAqi.category,
+        pollutants: report.pollutants,
+        forecast: report.hourlyForecast,
+        raw_response: report,
+        fetched_at: new Date(now).toISOString(),
+        expires_at: expiresAt
+      });
+      await db.save();
+    }
 
     return report;
   }

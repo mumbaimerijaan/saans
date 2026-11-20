@@ -32,6 +32,114 @@ export const ALLOWED_TRANSITIONS: Record<RequestStatus, RequestStatus[]> = {
   cancelled: []  // Terminal state
 };
 
+export interface TransitionContext {
+  isAdmin: boolean;
+  isOwner: boolean;
+  isAssignedVolunteer: boolean;
+}
+
+export function validateStatusTransition(
+  currentStatus: RequestStatus,
+  targetStatus: RequestStatus,
+  context: TransitionContext
+): { valid: boolean; statusCode?: number; error?: string } {
+  if (!VALID_REQUEST_STATUSES.includes(targetStatus)) {
+    return {
+      valid: false,
+      statusCode: 400,
+      error: `Invalid status '${targetStatus}'. Must be one of: ${VALID_REQUEST_STATUSES.join(', ')}`
+    };
+  }
+
+  if (currentStatus === targetStatus) {
+    return {
+      valid: false,
+      statusCode: 400,
+      error: `Request is already in '${currentStatus}' status`
+    };
+  }
+
+  if (['completed', 'cancelled'].includes(currentStatus)) {
+    return {
+      valid: false,
+      statusCode: 400,
+      error: `Invalid transition: Request is in terminal state '${currentStatus}' and cannot be modified.`
+    };
+  }
+
+  const { isAdmin, isOwner, isAssignedVolunteer } = context;
+
+  if (!isAdmin && !isOwner && !isAssignedVolunteer) {
+    return {
+      valid: false,
+      statusCode: 403,
+      error: 'Unauthorized: You do not have permission to modify this request status'
+    };
+  }
+
+  // Citizens can ONLY cancel their own requests
+  if (isOwner && !isAdmin && !isAssignedVolunteer) {
+    if (targetStatus !== 'cancelled') {
+      return {
+        valid: false,
+        statusCode: 403,
+        error: 'Citizens can only cancel their own requests'
+      };
+    }
+    if (currentStatus === 'in_progress') {
+      return {
+        valid: false,
+        statusCode: 400,
+        error: 'Active requests in progress cannot be directly cancelled by the citizen. Please contact your coordinator or volunteer.'
+      };
+    }
+    return { valid: true };
+  }
+
+  // Assigned Volunteers
+  if (isAssignedVolunteer && !isAdmin) {
+    if (['assigned', 'matched'].includes(currentStatus)) {
+      if (targetStatus !== 'in_progress') {
+        return {
+          valid: false,
+          statusCode: 400,
+          error: `Invalid transition: Assigned volunteer must first transition the request to 'in_progress' before marking it 'completed'.`
+        };
+      }
+    } else if (currentStatus === 'in_progress') {
+      if (targetStatus !== 'completed') {
+        return {
+          valid: false,
+          statusCode: 400,
+          error: `Invalid transition: Volunteers can only mark an 'in_progress' request as 'completed'.`
+        };
+      }
+    } else {
+      return {
+        valid: false,
+        statusCode: 403,
+        error: `Volunteers cannot modify requests in '${currentStatus}' status.`
+      };
+    }
+    return { valid: true };
+  }
+
+  // Admin
+  if (isAdmin) {
+    const allowed = ALLOWED_TRANSITIONS[currentStatus] || [];
+    if (!allowed.includes(targetStatus)) {
+      return {
+        valid: false,
+        statusCode: 400,
+        error: `Invalid status transition: Cannot transition request from '${currentStatus}' to '${targetStatus}'. Allowed transitions: ${allowed.join(', ') || 'none (terminal state)'}`
+      };
+    }
+    return { valid: true };
+  }
+
+  return { valid: false, statusCode: 403, error: 'Unauthorized status transition' };
+}
+
 const CreateRequestSchema = z.object({
   category: z.enum([
     'purifier_loan', 'purifier_donation', 'diy_installation',
@@ -204,88 +312,21 @@ router.patch('/:id/status', authenticate, async (req: AuthenticatedRequest, res)
     const currentStatus = request.status as RequestStatus;
     const targetStatus = status as RequestStatus;
 
-    // 1. Format validation against allowed statuses
-    if (!VALID_REQUEST_STATUSES.includes(targetStatus)) {
-      res.status(400).json({
-        error: `Invalid status '${status}'. Must be one of: ${VALID_REQUEST_STATUSES.join(', ')}`
-      });
-      return;
-    }
-
-    // 2. Reject no-op update
-    if (currentStatus === targetStatus) {
-      res.status(400).json({
-        error: `Request is already in '${currentStatus}' status`
-      });
-      return;
-    }
-
-    // 3. Terminal state check: completed or cancelled requests cannot transition
-    if (['completed', 'cancelled'].includes(currentStatus)) {
-      res.status(400).json({
-        error: `Invalid transition: Request is in terminal state '${currentStatus}' and cannot be modified.`
-      });
-      return;
-    }
-
     const isAdmin = user.roles.includes('admin') || user.account_type === 'admin';
     const isOwner = request.user_id === user.id;
     const assignment = state.request_assignments.find(a => a.request_id === request.id);
     const vProfile = state.volunteer_profiles.find(v => v.user_id === user.id);
     const isAssignedVolunteer = !!(assignment && vProfile && assignment.volunteer_id === vProfile.id);
 
-    // 4. Strict Authorization Check: Caller MUST be Admin, Owner, or Assigned Volunteer
-    if (!isAdmin && !isOwner && !isAssignedVolunteer) {
-      res.status(403).json({ error: 'Unauthorized: You do not have permission to modify this request status' });
-      return;
-    }
+    const validation = validateStatusTransition(currentStatus, targetStatus, {
+      isAdmin,
+      isOwner,
+      isAssignedVolunteer
+    });
 
-    // 5. Role-specific transition rules
-    if (isOwner && !isAdmin && !isAssignedVolunteer) {
-      // Citizens can ONLY cancel their own requests
-      if (targetStatus !== 'cancelled') {
-        res.status(403).json({ error: 'Citizens can only cancel their own requests' });
-        return;
-      }
-      // Citizens cannot cancel requests actively in progress
-      if (currentStatus === 'in_progress') {
-        res.status(400).json({
-          error: 'Active requests in progress cannot be directly cancelled by the citizen. Please contact your coordinator or volunteer.'
-        });
-        return;
-      }
-    } else if (isAssignedVolunteer && !isAdmin) {
-      // Volunteers:
-      // From 'assigned' or 'matched' -> MUST move to 'in_progress' first
-      if (['assigned', 'matched'].includes(currentStatus)) {
-        if (targetStatus !== 'in_progress') {
-          res.status(400).json({
-            error: `Invalid transition: Assigned volunteer must first transition the request to 'in_progress' before marking it 'completed'.`
-          });
-          return;
-        }
-      } else if (currentStatus === 'in_progress') {
-        if (targetStatus !== 'completed') {
-          res.status(400).json({
-            error: `Invalid transition: Volunteers can only mark an 'in_progress' request as 'completed'.`
-          });
-          return;
-        }
-      } else {
-        res.status(403).json({
-          error: `Volunteers cannot modify requests in '${currentStatus}' status.`
-        });
-        return;
-      }
-    } else if (isAdmin) {
-      // Administrators must also respect the allowed transition schema
-      const allowed = ALLOWED_TRANSITIONS[currentStatus] || [];
-      if (!allowed.includes(targetStatus)) {
-        res.status(400).json({
-          error: `Invalid status transition: Cannot transition request from '${currentStatus}' to '${targetStatus}'. Allowed transitions: ${allowed.join(', ') || 'none (terminal state)'}`
-        });
-        return;
-      }
+    if (!validation.valid) {
+      res.status(validation.statusCode || 400).json({ error: validation.error });
+      return;
     }
 
     const now = new Date().toISOString();
@@ -366,6 +407,27 @@ router.post('/:id/assign', authenticate, async (req: AuthenticatedRequest, res) 
   if (!request) {
     res.status(404).json({ error: 'Request not found' });
     return;
+  }
+
+  // Reject assignment if request is in terminal state
+  if (['completed', 'cancelled'].includes(request.status)) {
+    res.status(400).json({
+      error: `Invalid transition: Request is in terminal state '${request.status}' and cannot be assigned.`
+    });
+    return;
+  }
+
+  // Validate state transition to 'assigned' if not already assigned
+  if (request.status !== 'assigned') {
+    const validation = validateStatusTransition(request.status as RequestStatus, 'assigned', {
+      isAdmin: true,
+      isOwner: false,
+      isAssignedVolunteer: false
+    });
+    if (!validation.valid) {
+      res.status(validation.statusCode || 400).json({ error: validation.error });
+      return;
+    }
   }
 
   const vProfile = state.volunteer_profiles.find(v => v.id === volunteerId);

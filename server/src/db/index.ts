@@ -1,20 +1,24 @@
 import fs from 'fs';
 import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { config } from '../config/env.js';
 
+// Standard RFC 4122 DNS namespace for deterministic UUID v5 generation
+const RFC4122_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
+
+/**
+ * Ensures any identifier string is converted into a strictly compliant RFC 4122 UUID.
+ * Preserves existing 36-character hyphenated UUIDs, and deterministically transforms
+ * non-UUID strings (e.g. 'hp-1', 'asgn-173...', 'test-req') using standard RFC 4122 v5.
+ */
 export function toValidUuid(id: string): string {
   if (!id) return uuidv4();
   if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
     return id;
   }
-  let hex = '';
-  for (let i = 0; i < id.length; i++) {
-    hex += id.charCodeAt(i).toString(16);
-  }
-  hex = hex.padEnd(32, '0').slice(0, 32);
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
+  // Generate deterministic RFC 4122 Version 5 UUID for arbitrary non-UUID string keys
+  return uuidv5(id, RFC4122_NAMESPACE);
 }
 
 export interface Profile {
@@ -401,70 +405,114 @@ export class DatabaseStore {
     }
   }
 
-  public saveSync(): void {
-    try {
-      fs.writeFileSync(this.dbPath, JSON.stringify(this.state, null, 2), 'utf-8');
-      if (this.supabase) {
-        this.syncStateToSupabase().catch(err => {
-          console.error('Supabase write-through synchronization error:', err);
-        });
-      }
-    } catch (e) {
-      console.error('Error in saveSync:', e);
-    }
-  }
-
   public async hydrateFromSupabase(): Promise<boolean> {
     if (!this.supabase) return false;
-    try {
-      const [
-        profilesRes,
-        rolesRes,
-        householdRes,
-        volunteersRes,
-        requestsRes,
-        assignmentsRes,
-        equipmentRes,
-        facilitiesRes,
-        reportsRes,
-        notificationsRes,
-        impactRes
-      ] = await Promise.all([
-        this.supabase.from('profiles').select('*'),
-        this.supabase.from('user_roles').select('*'),
-        this.supabase.from('household_profiles').select('*'),
-        this.supabase.from('volunteer_profiles').select('*'),
-        this.supabase.from('assistance_requests').select('*'),
-        this.supabase.from('request_assignments').select('*'),
-        this.supabase.from('equipment').select('*'),
-        this.supabase.from('facilities').select('*'),
-        this.supabase.from('community_reports').select('*'),
-        this.supabase.from('notifications').select('*'),
-        this.supabase.from('impact_records').select('*'),
-      ]);
+    
+    const tableNames = [
+      'profiles',
+      'user_roles',
+      'household_profiles',
+      'volunteer_profiles',
+      'volunteer_skills',
+      'organisations',
+      'assistance_requests',
+      'request_assignments',
+      'equipment',
+      'equipment_requests',
+      'facilities',
+      'community_reports',
+      'community_initiatives',
+      'notifications',
+      'impact_records',
+    ] as const;
 
-      if (profilesRes.data && profilesRes.data.length > 0) this.state.profiles = profilesRes.data;
-      if (rolesRes.data && rolesRes.data.length > 0) this.state.user_roles = rolesRes.data;
-      if (householdRes.data && householdRes.data.length > 0) this.state.household_profiles = householdRes.data;
-      if (volunteersRes.data && volunteersRes.data.length > 0) this.state.volunteer_profiles = volunteersRes.data;
-      if (requestsRes.data && requestsRes.data.length > 0) this.state.assistance_requests = requestsRes.data;
-      if (assignmentsRes.data && assignmentsRes.data.length > 0) this.state.request_assignments = assignmentsRes.data;
-      if (equipmentRes.data && equipmentRes.data.length > 0) this.state.equipment = equipmentRes.data;
-      if (facilitiesRes.data && facilitiesRes.data.length > 0) this.state.facilities = facilitiesRes.data;
-      if (reportsRes.data && reportsRes.data.length > 0) this.state.community_reports = reportsRes.data;
-      if (notificationsRes.data && notificationsRes.data.length > 0) this.state.notifications = notificationsRes.data;
-      if (impactRes.data && impactRes.data.length > 0) this.state.impact_records = impactRes.data;
+    const results = await Promise.all([
+      this.supabase.from('profiles').select('*'),
+      this.supabase.from('user_roles').select('*'),
+      this.supabase.from('household_profiles').select('*'),
+      this.supabase.from('volunteer_profiles').select('*'),
+      this.supabase.from('volunteer_skills').select('*'),
+      this.supabase.from('organisations').select('*'),
+      this.supabase.from('assistance_requests').select('*'),
+      this.supabase.from('request_assignments').select('*'),
+      this.supabase.from('equipment').select('*'),
+      this.supabase.from('equipment_requests').select('*'),
+      this.supabase.from('facilities').select('*'),
+      this.supabase.from('community_reports').select('*'),
+      this.supabase.from('community_initiatives').select('*'),
+      this.supabase.from('notifications').select('*'),
+      this.supabase.from('impact_records').select('*'),
+    ]);
 
-      console.log('✅ Hydrated authoritative state from Supabase PostgreSQL.');
-      return true;
-    } catch (err: any) {
-      console.warn('Hydration from Supabase encountered notice (using local snapshot):', err?.message || err);
-      return false;
+    // Check every single query error explicitly
+    for (let i = 0; i < results.length; i++) {
+      const res = results[i];
+      const tableName = tableNames[i];
+      if (res.error) {
+        throw new Error(`Supabase authoritative hydration query failed on table '${tableName}': ${res.error.message}`);
+      }
     }
+
+    const [
+      profilesRes,
+      rolesRes,
+      householdRes,
+      volunteersRes,
+      skillsRes,
+      organisationsRes,
+      requestsRes,
+      assignmentsRes,
+      equipmentRes,
+      eqRequestsRes,
+      facilitiesRes,
+      reportsRes,
+      initiativesRes,
+      notificationsRes,
+      impactRes
+    ] = results;
+
+    if (profilesRes.data && profilesRes.data.length > 0) this.state.profiles = profilesRes.data;
+    if (rolesRes.data && rolesRes.data.length > 0) this.state.user_roles = rolesRes.data;
+    if (householdRes.data && householdRes.data.length > 0) this.state.household_profiles = householdRes.data;
+    if (volunteersRes.data && volunteersRes.data.length > 0) this.state.volunteer_profiles = volunteersRes.data;
+    if (skillsRes.data && skillsRes.data.length > 0) this.state.volunteer_skills = skillsRes.data;
+    if (organisationsRes.data && organisationsRes.data.length > 0) this.state.organisations = organisationsRes.data;
+    if (requestsRes.data && requestsRes.data.length > 0) this.state.assistance_requests = requestsRes.data;
+    if (assignmentsRes.data && assignmentsRes.data.length > 0) this.state.request_assignments = assignmentsRes.data;
+    if (equipmentRes.data && equipmentRes.data.length > 0) this.state.equipment = equipmentRes.data;
+    if (eqRequestsRes.data && eqRequestsRes.data.length > 0) this.state.equipment_requests = eqRequestsRes.data;
+    if (facilitiesRes.data && facilitiesRes.data.length > 0) this.state.facilities = facilitiesRes.data;
+    if (reportsRes.data && reportsRes.data.length > 0) this.state.community_reports = reportsRes.data;
+    if (initiativesRes.data && initiativesRes.data.length > 0) this.state.community_initiatives = initiativesRes.data;
+    if (notificationsRes.data && notificationsRes.data.length > 0) this.state.notifications = notificationsRes.data;
+    if (impactRes.data && impactRes.data.length > 0) this.state.impact_records = impactRes.data;
+
+    console.log(`✅ Authoritatively hydrated 15 operational tables from Supabase PostgreSQL.`);
+    return true;
   }
 
   public async syncStateToSupabase(): Promise<void> {
     if (!this.supabase) return;
+
+    const upsertTable = async (tableName: string, rows: any[], onConflict: string = 'id') => {
+      let attempts = 0;
+      while (attempts < 2) {
+        attempts++;
+        try {
+          const { error } = await this.supabase!.from(tableName).upsert(rows, { onConflict });
+          if (error) {
+            throw new Error(`Supabase persistence failure on '${tableName}': ${error.message}`);
+          }
+          return;
+        } catch (err: any) {
+          if (attempts < 2 && (err.message?.includes('fetch failed') || err.message?.includes('ECONNRESET') || err.message?.includes('ETIMEDOUT'))) {
+            await new Promise(r => setTimeout(r, 600));
+            continue;
+          }
+          throw err;
+        }
+      }
+    };
 
     // 1. Profiles
     if (this.state.profiles && this.state.profiles.length > 0) {
@@ -482,11 +530,20 @@ export class DatabaseStore {
         created_at: p.created_at,
         updated_at: p.updated_at
       }));
-      const { error } = await this.supabase.from('profiles').upsert(rows, { onConflict: 'id' });
-      if (error) throw new Error(`Supabase persistence failure on 'profiles': ${error.message}`);
+      await upsertTable('profiles', rows, 'id');
     }
 
-    // 2. Household Profiles
+    // 2. User Roles
+    if (this.state.user_roles && this.state.user_roles.length > 0) {
+      const rows = this.state.user_roles.map(u => ({
+        user_id: toValidUuid(u.user_id),
+        role: u.role,
+        granted_at: u.granted_at
+      }));
+      await upsertTable('user_roles', rows, 'user_id, role');
+    }
+
+    // 3. Household Profiles
     if (this.state.household_profiles && this.state.household_profiles.length > 0) {
       const rows = this.state.household_profiles.map(h => ({
         id: toValidUuid(h.id),
@@ -501,11 +558,10 @@ export class DatabaseStore {
         created_at: h.created_at,
         updated_at: h.updated_at
       }));
-      const { error } = await this.supabase.from('household_profiles').upsert(rows, { onConflict: 'id' });
-      if (error) throw new Error(`Supabase persistence failure on 'household_profiles': ${error.message}`);
+      await upsertTable('household_profiles', rows, 'id');
     }
 
-    // 3. Volunteer Profiles
+    // 4. Volunteer Profiles
     if (this.state.volunteer_profiles && this.state.volunteer_profiles.length > 0) {
       const rows = this.state.volunteer_profiles.map(v => ({
         id: toValidUuid(v.id),
@@ -520,11 +576,39 @@ export class DatabaseStore {
         created_at: v.created_at,
         updated_at: v.updated_at
       }));
-      const { error } = await this.supabase.from('volunteer_profiles').upsert(rows, { onConflict: 'id' });
-      if (error) throw new Error(`Supabase persistence failure on 'volunteer_profiles': ${error.message}`);
+      await upsertTable('volunteer_profiles', rows, 'id');
     }
 
-    // 4. Assistance Requests
+    // 5. Volunteer Skills
+    if (this.state.volunteer_skills && this.state.volunteer_skills.length > 0) {
+      const rows = this.state.volunteer_skills.map(s => ({
+        id: toValidUuid(s.id),
+        volunteer_id: toValidUuid(s.volunteer_id),
+        skill_category: s.skill_category,
+        proficiency_level: s.proficiency_level,
+        created_at: s.created_at
+      }));
+      await upsertTable('volunteer_skills', rows, 'id');
+    }
+
+    // 6. Organisations
+    if (this.state.organisations && this.state.organisations.length > 0) {
+      const rows = this.state.organisations.map(o => ({
+        id: toValidUuid(o.id),
+        name: o.name,
+        contact_email: o.contact_email,
+        contact_phone: o.contact_phone,
+        city: o.city,
+        address: o.address,
+        registration_number: o.registration_number,
+        is_verified: o.is_verified,
+        created_at: o.created_at,
+        updated_at: o.updated_at
+      }));
+      await upsertTable('organisations', rows, 'id');
+    }
+
+    // 7. Assistance Requests
     if (this.state.assistance_requests && this.state.assistance_requests.length > 0) {
       const rows = this.state.assistance_requests.map(r => ({
         id: toValidUuid(r.id),
@@ -544,11 +628,10 @@ export class DatabaseStore {
         created_at: r.created_at,
         updated_at: r.updated_at
       }));
-      const { error } = await this.supabase.from('assistance_requests').upsert(rows, { onConflict: 'id' });
-      if (error) throw new Error(`Supabase persistence failure on 'assistance_requests': ${error.message}`);
+      await upsertTable('assistance_requests', rows, 'id');
     }
 
-    // 5. Request Assignments
+    // 8. Request Assignments
     if (this.state.request_assignments && this.state.request_assignments.length > 0) {
       const rows = this.state.request_assignments.map(a => ({
         id: toValidUuid(a.id),
@@ -560,11 +643,10 @@ export class DatabaseStore {
         completion_notes: a.completion_notes,
         completion_photo_url: a.completion_photo_url
       }));
-      const { error } = await this.supabase.from('request_assignments').upsert(rows, { onConflict: 'id' });
-      if (error) throw new Error(`Supabase persistence failure on 'request_assignments': ${error.message}`);
+      await upsertTable('request_assignments', rows, 'id');
     }
 
-    // 6. Equipment
+    // 9. Equipment
     if (this.state.equipment && this.state.equipment.length > 0) {
       const rows = this.state.equipment.map(e => ({
         id: toValidUuid(e.id),
@@ -587,11 +669,25 @@ export class DatabaseStore {
         created_at: e.created_at,
         updated_at: e.updated_at
       }));
-      const { error } = await this.supabase.from('equipment').upsert(rows, { onConflict: 'id' });
-      if (error) throw new Error(`Supabase persistence failure on 'equipment': ${error.message}`);
+      await upsertTable('equipment', rows, 'id');
     }
 
-    // 7. Facilities
+    // 10. Equipment Requests
+    if (this.state.equipment_requests && this.state.equipment_requests.length > 0) {
+      const rows = this.state.equipment_requests.map(er => ({
+        id: toValidUuid(er.id),
+        equipment_id: toValidUuid(er.equipment_id),
+        requester_id: toValidUuid(er.requester_id),
+        status: er.status,
+        requested_duration_days: er.requested_duration_days,
+        purpose: er.purpose,
+        created_at: er.created_at,
+        updated_at: er.updated_at
+      }));
+      await upsertTable('equipment_requests', rows, 'id');
+    }
+
+    // 11. Facilities
     if (this.state.facilities && this.state.facilities.length > 0) {
       const rows = this.state.facilities.map(f => ({
         id: toValidUuid(f.id),
@@ -612,11 +708,10 @@ export class DatabaseStore {
         created_at: f.created_at,
         updated_at: f.updated_at
       }));
-      const { error } = await this.supabase.from('facilities').upsert(rows, { onConflict: 'id' });
-      if (error) throw new Error(`Supabase persistence failure on 'facilities': ${error.message}`);
+      await upsertTable('facilities', rows, 'id');
     }
 
-    // 8. Community Reports
+    // 12. Community Reports
     if (this.state.community_reports && this.state.community_reports.length > 0) {
       const rows = this.state.community_reports.map(r => ({
         id: toValidUuid(r.id),
@@ -633,11 +728,29 @@ export class DatabaseStore {
         created_at: r.created_at,
         updated_at: r.updated_at
       }));
-      const { error } = await this.supabase.from('community_reports').upsert(rows, { onConflict: 'id' });
-      if (error) throw new Error(`Supabase persistence failure on 'community_reports': ${error.message}`);
+      await upsertTable('community_reports', rows, 'id');
     }
 
-    // 9. Notifications
+    // 13. Community Initiatives
+    if (this.state.community_initiatives && this.state.community_initiatives.length > 0) {
+      const rows = this.state.community_initiatives.map(ci => ({
+        id: toValidUuid(ci.id),
+        title: ci.title,
+        description: ci.description,
+        city: ci.city,
+        neighbourhood: ci.neighbourhood,
+        organiser_id: toValidUuid(ci.organiser_id),
+        start_date: ci.start_date,
+        end_date: ci.end_date,
+        target_participants: ci.target_participants,
+        current_participants: ci.current_participants,
+        status: ci.status,
+        created_at: ci.created_at
+      }));
+      await upsertTable('community_initiatives', rows, 'id');
+    }
+
+    // 14. Notifications
     if (this.state.notifications && this.state.notifications.length > 0) {
       const rows = this.state.notifications.map(n => ({
         id: toValidUuid(n.id),
@@ -649,11 +762,10 @@ export class DatabaseStore {
         is_read: n.is_read,
         created_at: n.created_at
       }));
-      const { error } = await this.supabase.from('notifications').upsert(rows, { onConflict: 'id' });
-      if (error) throw new Error(`Supabase persistence failure on 'notifications': ${error.message}`);
+      await upsertTable('notifications', rows, 'id');
     }
 
-    // 10. Impact Records
+    // 15. Impact Records
     if (this.state.impact_records && this.state.impact_records.length > 0) {
       const rows = this.state.impact_records.map(i => ({
         id: toValidUuid(i.id),
@@ -664,8 +776,7 @@ export class DatabaseStore {
         recorded_at: i.recorded_at,
         methodology_notes: i.methodology_notes
       }));
-      const { error } = await this.supabase.from('impact_records').upsert(rows, { onConflict: 'id' });
-      if (error) throw new Error(`Supabase persistence failure on 'impact_records': ${error.message}`);
+      await upsertTable('impact_records', rows, 'id');
     }
   }
 

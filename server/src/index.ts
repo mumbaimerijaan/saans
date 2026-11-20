@@ -71,7 +71,10 @@ async function startServer() {
   // Authoritative Hydration from Supabase PostgreSQL on startup
   if (config.supabaseUrl && (config.supabaseServiceRoleKey || config.supabaseAnonKey)) {
     console.log('🔄 Hydrating authoritative state from Supabase PostgreSQL...');
-    await db.hydrateFromSupabase();
+    const hydrated = await db.hydrateFromSupabase();
+    if (!hydrated) {
+      throw new Error('Supabase authoritative hydration failed: database client not connected or returned failure.');
+    }
   }
 
   app.listen(config.port, () => {
