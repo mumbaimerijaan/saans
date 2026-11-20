@@ -321,9 +321,14 @@ export const EquipmentLibrary: React.FC = () => {
 
         {/* REQUEST MODAL */}
         {requestingItem && (
-          <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title-request"
+            className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          >
             <div className="w-full max-w-lg bg-[#11181c] border border-slate-800 rounded-2xl p-6 shadow-2xl animate-in zoom-in-95 duration-150">
-              <h3 className="text-lg font-bold text-white mb-1 font-display">
+              <h3 id="modal-title-request" className="text-lg font-bold text-white mb-1 font-display">
                 Request "{requestingItem.name}"
               </h3>
               <p className="text-xs text-slate-400 mb-4">
@@ -332,10 +337,11 @@ export const EquipmentLibrary: React.FC = () => {
 
               <form onSubmit={handleRequestSubmit} className="space-y-4 text-xs">
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">
+                  <label htmlFor="req-purpose" className="block text-slate-300 font-bold mb-1">
                     State Purpose of Request (e.g. vulnerable child with wheezing) *
                   </label>
                   <textarea
+                    id="req-purpose"
                     rows={3}
                     value={requestPurpose}
                     onChange={e => setRequestPurpose(e.target.value)}
@@ -347,10 +353,11 @@ export const EquipmentLibrary: React.FC = () => {
 
                 {requestingItem.type === 'loan' && (
                   <div>
-                    <label className="block text-slate-300 font-bold mb-1">
+                    <label htmlFor="req-duration" className="block text-slate-300 font-bold mb-1">
                       Requested Loan Duration (Days) *
                     </label>
                     <input
+                      id="req-duration"
                       type="number"
                       min={1}
                       max={requestingItem.max_loan_duration_days || 30}
@@ -386,9 +393,14 @@ export const EquipmentLibrary: React.FC = () => {
 
         {/* ADD EQUIPMENT MODAL */}
         {showAddModal && (
-          <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title-list-equip"
+            className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          >
             <div className="w-full max-w-xl bg-[#11181c] border border-slate-800 rounded-2xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-              <h3 className="text-xl font-bold text-white mb-1 font-display">
+              <h3 id="modal-title-list-equip" className="text-xl font-bold text-white mb-1 font-display">
                 List Equipment in SAANS Library
               </h3>
               <p className="text-xs text-slate-400 mb-5">
@@ -397,8 +409,9 @@ export const EquipmentLibrary: React.FC = () => {
 
               <form onSubmit={handleAddSubmit} className="space-y-4 text-xs">
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">Equipment Name *</label>
+                  <label htmlFor="equip-name" className="block text-slate-300 font-bold mb-1">Equipment Name *</label>
                   <input
+                    id="equip-name"
                     type="text"
                     value={newName}
                     onChange={e => setNewName(e.target.value)}
@@ -410,8 +423,9 @@ export const EquipmentLibrary: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-slate-300 font-bold mb-1">Category *</label>
+                    <label htmlFor="equip-category" className="block text-slate-300 font-bold mb-1">Category *</label>
                     <select
+                      id="equip-category"
                       value={newCategory}
                       onChange={e => setNewCategory(e.target.value)}
                       className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -425,8 +439,9 @@ export const EquipmentLibrary: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-slate-300 font-bold mb-1">Condition *</label>
+                    <label htmlFor="equip-condition" className="block text-slate-300 font-bold mb-1">Condition *</label>
                     <select
+                      id="equip-condition"
                       value={newCondition}
                       onChange={e => setNewCondition(e.target.value as any)}
                       className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -441,8 +456,9 @@ export const EquipmentLibrary: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-slate-300 font-bold mb-1">Type *</label>
+                    <label htmlFor="equip-type" className="block text-slate-300 font-bold mb-1">Type *</label>
                     <select
+                      id="equip-type"
                       value={newType}
                       onChange={e => setNewType(e.target.value as any)}
                       className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -453,8 +469,9 @@ export const EquipmentLibrary: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-slate-300 font-bold mb-1">Neighbourhood *</label>
+                    <label htmlFor="equip-neighbourhood" className="block text-slate-300 font-bold mb-1">Neighbourhood *</label>
                     <input
+                      id="equip-neighbourhood"
                       type="text"
                       value={newNeighbourhood}
                       onChange={e => setNewNeighbourhood(e.target.value)}
@@ -466,8 +483,9 @@ export const EquipmentLibrary: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">Description & Maintenance Details *</label>
+                  <label htmlFor="equip-desc" className="block text-slate-300 font-bold mb-1">Description & Maintenance Details *</label>
                   <textarea
+                    id="equip-desc"
                     rows={3}
                     value={newDesc}
                     onChange={e => setNewDesc(e.target.value)}

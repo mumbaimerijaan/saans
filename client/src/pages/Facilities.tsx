@@ -284,9 +284,14 @@ export const Facilities: React.FC = () => {
 
         {/* SUBMIT RECOMMENDATION MODAL */}
         {showSubmitModal && (
-          <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title-facility"
+            className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          >
             <div className="w-full max-w-xl bg-[#11181c] border border-slate-800 rounded-2xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-              <h3 className="text-xl font-bold text-white mb-1 font-display">
+              <h3 id="modal-title-facility" className="text-xl font-bold text-white mb-1 font-display">
                 Recommend Clean-Air Sanctuary
               </h3>
               <p className="text-xs text-slate-400 mb-5">
@@ -295,8 +300,9 @@ export const Facilities: React.FC = () => {
 
               <form onSubmit={handleSubmitFacility} className="space-y-4 text-xs">
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">Facility Name *</label>
+                  <label htmlFor="fac-name" className="block text-slate-300 font-bold mb-1">Facility Name *</label>
                   <input
+                    id="fac-name"
                     type="text"
                     value={name}
                     onChange={e => setName(e.target.value)}
@@ -308,8 +314,9 @@ export const Facilities: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-slate-300 font-bold mb-1">Facility Type *</label>
+                    <label htmlFor="fac-type" className="block text-slate-300 font-bold mb-1">Facility Type *</label>
                     <select
+                      id="fac-type"
                       value={facilityType}
                       onChange={e => setFacilityType(e.target.value as any)}
                       className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -324,8 +331,9 @@ export const Facilities: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-slate-300 font-bold mb-1">Neighbourhood *</label>
+                    <label htmlFor="fac-neighbourhood" className="block text-slate-300 font-bold mb-1">Neighbourhood *</label>
                     <select
+                      id="fac-neighbourhood"
                       value={neighbourhood}
                       onChange={e => setNeighbourhood(e.target.value)}
                       className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -341,8 +349,9 @@ export const Facilities: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">Street Address *</label>
+                  <label htmlFor="fac-address" className="block text-slate-300 font-bold mb-1">Street Address *</label>
                   <input
+                    id="fac-address"
                     type="text"
                     value={address}
                     onChange={e => setAddress(e.target.value)}
@@ -353,8 +362,9 @@ export const Facilities: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">Filtration Equipment Installed *</label>
+                  <label htmlFor="fac-filtration" className="block text-slate-300 font-bold mb-1">Filtration Equipment Installed *</label>
                   <textarea
+                    id="fac-filtration"
                     rows={2}
                     value={filtrationDetails}
                     onChange={e => setFiltrationDetails(e.target.value)}
@@ -366,8 +376,9 @@ export const Facilities: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-slate-300 font-bold mb-1">Seating Capacity</label>
+                    <label htmlFor="fac-capacity" className="block text-slate-300 font-bold mb-1">Seating Capacity</label>
                     <input
+                      id="fac-capacity"
                       type="number"
                       value={capacity}
                       onChange={e => setCapacity(parseInt(e.target.value, 10))}
@@ -375,8 +386,9 @@ export const Facilities: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-300 font-bold mb-1">Operating Hours</label>
+                    <label htmlFor="fac-hours" className="block text-slate-300 font-bold mb-1">Operating Hours</label>
                     <input
+                      id="fac-hours"
                       type="text"
                       value={operatingHours}
                       onChange={e => setOperatingHours(e.target.value)}

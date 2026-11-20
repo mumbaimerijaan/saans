@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { aiService } from '../services/aiService.js';
 import { optionalAuthenticate, AuthenticatedRequest } from '../middleware/auth.js';
@@ -61,7 +61,7 @@ router.post('/chat', optionalAuthenticate, async (req: AuthenticatedRequest, res
 });
 
 // DIY Room CADR Calculator
-router.post('/diy-cadr', (req, res) => {
+const handleCadrCalculation = (req: Request, res: Response) => {
   try {
     const data = CadrCalculatorSchema.parse(req.body);
     const result = aiService.calculateRoomPurifierCADR(
@@ -78,6 +78,9 @@ router.post('/diy-cadr', (req, res) => {
       res.status(500).json({ error: 'CADR calculation failed', message: err.message });
     }
   }
-});
+};
+
+router.post('/diy-cadr', handleCadrCalculation);
+router.post('/cadr-calculate', handleCadrCalculation);
 
 export default router;

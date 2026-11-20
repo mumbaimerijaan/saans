@@ -392,15 +392,28 @@ export class DatabaseStore {
   }
 
   public async save(): Promise<void> {
-    // 1. Authoritative persistence: When Supabase client is active, persist directly to PostgreSQL first
-    if (this.supabase) {
-      await this.syncStateToSupabase();
-    }
-    // 2. Persist local file snapshot
+    // Snapshot state before persistence for transactional rollback safety
+    const preSaveSnapshot = JSON.parse(JSON.stringify(this.state));
+
     try {
+      // 1. Authoritative persistence: When Supabase client is active, persist directly to PostgreSQL first
+      if (this.supabase) {
+        await this.syncStateToSupabase();
+      }
+      // 2. Persist local file snapshot
       fs.writeFileSync(this.dbPath, JSON.stringify(this.state, null, 2), 'utf-8');
     } catch (e) {
-      console.error('Error saving database state locally:', e);
+      console.error('Authoritative persistence failure, rolling back in-memory state to pre-mutation snapshot:', e);
+      // Revert in-memory state to pre-mutation snapshot to prevent state divergence
+      this.state = preSaveSnapshot;
+      // Re-hydrate from Supabase to guarantee 100% alignment with database
+      if (this.supabase) {
+        try {
+          await this.hydrateFromSupabase();
+        } catch (hydrationErr) {
+          console.error('Post-rollback hydration failed:', hydrationErr);
+        }
+      }
       throw e;
     }
   }
@@ -471,21 +484,21 @@ export class DatabaseStore {
       impactRes
     ] = results;
 
-    if (profilesRes.data && profilesRes.data.length > 0) this.state.profiles = profilesRes.data;
-    if (rolesRes.data && rolesRes.data.length > 0) this.state.user_roles = rolesRes.data;
-    if (householdRes.data && householdRes.data.length > 0) this.state.household_profiles = householdRes.data;
-    if (volunteersRes.data && volunteersRes.data.length > 0) this.state.volunteer_profiles = volunteersRes.data;
-    if (skillsRes.data && skillsRes.data.length > 0) this.state.volunteer_skills = skillsRes.data;
-    if (organisationsRes.data && organisationsRes.data.length > 0) this.state.organisations = organisationsRes.data;
-    if (requestsRes.data && requestsRes.data.length > 0) this.state.assistance_requests = requestsRes.data;
-    if (assignmentsRes.data && assignmentsRes.data.length > 0) this.state.request_assignments = assignmentsRes.data;
-    if (equipmentRes.data && equipmentRes.data.length > 0) this.state.equipment = equipmentRes.data;
-    if (eqRequestsRes.data && eqRequestsRes.data.length > 0) this.state.equipment_requests = eqRequestsRes.data;
-    if (facilitiesRes.data && facilitiesRes.data.length > 0) this.state.facilities = facilitiesRes.data;
-    if (reportsRes.data && reportsRes.data.length > 0) this.state.community_reports = reportsRes.data;
-    if (initiativesRes.data && initiativesRes.data.length > 0) this.state.community_initiatives = initiativesRes.data;
-    if (notificationsRes.data && notificationsRes.data.length > 0) this.state.notifications = notificationsRes.data;
-    if (impactRes.data && impactRes.data.length > 0) this.state.impact_records = impactRes.data;
+    if (Array.isArray(profilesRes.data)) this.state.profiles = profilesRes.data;
+    if (Array.isArray(rolesRes.data)) this.state.user_roles = rolesRes.data;
+    if (Array.isArray(householdRes.data)) this.state.household_profiles = householdRes.data;
+    if (Array.isArray(volunteersRes.data)) this.state.volunteer_profiles = volunteersRes.data;
+    if (Array.isArray(skillsRes.data)) this.state.volunteer_skills = skillsRes.data;
+    if (Array.isArray(organisationsRes.data)) this.state.organisations = organisationsRes.data;
+    if (Array.isArray(requestsRes.data)) this.state.assistance_requests = requestsRes.data;
+    if (Array.isArray(assignmentsRes.data)) this.state.request_assignments = assignmentsRes.data;
+    if (Array.isArray(equipmentRes.data)) this.state.equipment = equipmentRes.data;
+    if (Array.isArray(eqRequestsRes.data)) this.state.equipment_requests = eqRequestsRes.data;
+    if (Array.isArray(facilitiesRes.data)) this.state.facilities = facilitiesRes.data;
+    if (Array.isArray(reportsRes.data)) this.state.community_reports = reportsRes.data;
+    if (Array.isArray(initiativesRes.data)) this.state.community_initiatives = initiativesRes.data;
+    if (Array.isArray(notificationsRes.data)) this.state.notifications = notificationsRes.data;
+    if (Array.isArray(impactRes.data)) this.state.impact_records = impactRes.data;
 
     console.log(`✅ Authoritatively hydrated 15 operational tables from Supabase PostgreSQL.`);
     return true;

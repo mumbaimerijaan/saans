@@ -99,7 +99,7 @@ export const Register: React.FC = () => {
         </div>
 
         {error && (
-          <div className="p-3 rounded-xl bg-rose-950/80 border border-rose-500/40 text-rose-300 text-xs">
+          <div role="alert" className="p-3 rounded-xl bg-rose-950/80 border border-rose-500/40 text-rose-300 text-xs">
             {error}
           </div>
         )}
