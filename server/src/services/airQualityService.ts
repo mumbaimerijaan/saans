@@ -159,18 +159,18 @@ export class AirQualityService {
     let report: AQIReport;
 
     // Neighbourhood micro-climate calibration to mirror localized ground CAAQMS variations
-    const NEIGHBOURHOOD_MODS: Record<string, { pm25Mult: number; pm10Mult: number; no2Mult: number; station: string }> = {
-      'Kurla West': { pm25Mult: 1.38, pm10Mult: 1.45, no2Mult: 1.50, station: 'Kurla CST Road Monitoring Grid' },
-      'Andheri East': { pm25Mult: 1.48, pm10Mult: 1.55, no2Mult: 1.62, station: 'Chakala Andheri CAAQMS Reference Grid' },
-      'Dadar': { pm25Mult: 1.18, pm10Mult: 1.22, no2Mult: 1.25, station: 'Dadar TT Circle Monitoring Hub' },
-      'Chembur': { pm25Mult: 1.58, pm10Mult: 1.65, no2Mult: 1.42, station: 'Chembur Naka Industrial Air Station' },
-      'Worli': { pm25Mult: 0.85, pm10Mult: 0.88, no2Mult: 0.80, station: 'Worli Coastal Boundary Reference Grid' },
-      'Colaba': { pm25Mult: 0.76, pm10Mult: 0.78, no2Mult: 0.72, station: 'Colaba Navy Nagar Marine Station' },
-      'Thane West': { pm25Mult: 1.32, pm10Mult: 1.40, no2Mult: 1.35, station: 'Thane Majiwada Traffic Junction' },
-      'Bandra West': { pm25Mult: 1.0, pm10Mult: 1.0, no2Mult: 1.0, station: 'Bandra Kalanagar CPCB Reference Grid' }
+    const NEIGHBOURHOOD_MODS: Record<string, { pm25Mult: number; pm10Mult: number; no2Mult: number; o3Mult: number; station: string }> = {
+      'Kurla West': { pm25Mult: 1.38, pm10Mult: 1.45, no2Mult: 1.50, o3Mult: 0.78, station: 'Kurla CST Road Monitoring Grid' },
+      'Andheri East': { pm25Mult: 1.48, pm10Mult: 1.55, no2Mult: 1.62, o3Mult: 0.72, station: 'Chakala Andheri CAAQMS Reference Grid' },
+      'Dadar': { pm25Mult: 1.18, pm10Mult: 1.22, no2Mult: 1.25, o3Mult: 0.85, station: 'Dadar TT Circle Monitoring Hub' },
+      'Chembur': { pm25Mult: 1.58, pm10Mult: 1.65, no2Mult: 1.42, o3Mult: 0.70, station: 'Chembur Naka Industrial Air Station' },
+      'Worli': { pm25Mult: 0.85, pm10Mult: 0.88, no2Mult: 0.80, o3Mult: 1.05, station: 'Worli Coastal Boundary Reference Grid' },
+      'Colaba': { pm25Mult: 0.76, pm10Mult: 0.78, no2Mult: 0.72, o3Mult: 1.02, station: 'Colaba Navy Nagar Marine Station' },
+      'Thane West': { pm25Mult: 1.32, pm10Mult: 1.40, no2Mult: 1.35, o3Mult: 0.82, station: 'Thane Majiwada Traffic Junction' },
+      'Bandra West': { pm25Mult: 1.0, pm10Mult: 1.0, no2Mult: 1.0, o3Mult: 0.95, station: 'Bandra Kalanagar CPCB Reference Grid' }
     };
 
-    const mod = NEIGHBOURHOOD_MODS[neighbourhood] || { pm25Mult: 1.0, pm10Mult: 1.0, no2Mult: 1.0, station: `${neighbourhood} Environmental Reference Grid` };
+    const mod = NEIGHBOURHOOD_MODS[neighbourhood] || { pm25Mult: 1.0, pm10Mult: 1.0, no2Mult: 1.0, o3Mult: 1.0, station: `${neighbourhood} Environmental Reference Grid` };
 
     let cityMult = 1.0;
     if (city.toLowerCase().includes('delhi')) cityMult = 2.8;
@@ -193,13 +193,14 @@ export class AirQualityService {
       const rawPm25 = current.pm2_5 ?? 85.4;
       const rawPm10 = current.pm10 ?? 142.1;
       const rawNo2 = current.nitrogen_dioxide ?? 48.2;
+      const rawO3 = current.ozone ?? 38.0;
 
       const pm25 = parseFloat((rawPm25 * mod.pm25Mult * cityMult).toFixed(1));
       const pm10 = parseFloat((rawPm10 * mod.pm10Mult * cityMult).toFixed(1));
       const no2 = parseFloat((rawNo2 * mod.no2Mult * cityMult).toFixed(1));
       const so2 = current.sulphur_dioxide ?? 14.5;
       const co = current.carbon_monoxide ? current.carbon_monoxide / 1000 : 1.4; // convert to mg/m3
-      const o3 = current.ozone ?? 38.0;
+      const o3 = parseFloat((rawO3 * mod.o3Mult).toFixed(1));
 
       // CPCB criteria verification
       const validSubIndices: Array<{ code: string; name: string; subIndex: number }> = [];
