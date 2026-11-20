@@ -453,7 +453,7 @@ Guidelines:
 
       const volumeCuFt = length * width * height;
       const requiredCfm = Math.round((volumeCuFt * targetAch) / 60);
-      const requiredCadrM3h = Math.round(requiredCfm * 1.7);
+      const recommendedCadrM3h = Math.round(requiredCfm * 1.7);
 
       return jsonResponse({
         roomDimensions: { lengthFt: length, widthFt: width, heightFt: height, volumeCuFt },
