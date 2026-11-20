@@ -1,7 +1,21 @@
 import fs from 'fs';
 import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { config } from '../config/env.js';
+
+export function toValidUuid(id: string): string {
+  if (!id) return uuidv4();
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+    return id;
+  }
+  let hex = '';
+  for (let i = 0; i < id.length; i++) {
+    hex += id.charCodeAt(i).toString(16);
+  }
+  hex = hex.padEnd(32, '0').slice(0, 32);
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
+}
 
 export interface Profile {
   id: string;
@@ -373,103 +387,285 @@ export class DatabaseStore {
     return this.getSeedData();
   }
 
-  public save(): void {
+  public async save(): Promise<void> {
+    // 1. Authoritative persistence: When Supabase client is active, persist directly to PostgreSQL first
+    if (this.supabase) {
+      await this.syncStateToSupabase();
+    }
+    // 2. Persist local file snapshot
     try {
       fs.writeFileSync(this.dbPath, JSON.stringify(this.state, null, 2), 'utf-8');
-      // Genuinely write-through persist mutations to Supabase PostgreSQL when client is active
+    } catch (e) {
+      console.error('Error saving database state locally:', e);
+      throw e;
+    }
+  }
+
+  public saveSync(): void {
+    try {
+      fs.writeFileSync(this.dbPath, JSON.stringify(this.state, null, 2), 'utf-8');
       if (this.supabase) {
         this.syncStateToSupabase().catch(err => {
-          console.warn('Background Supabase write-through warning:', err?.message || err);
+          console.error('Supabase write-through synchronization error:', err);
         });
       }
     } catch (e) {
-      console.error('Error saving database state:', e);
+      console.error('Error in saveSync:', e);
+    }
+  }
+
+  public async hydrateFromSupabase(): Promise<boolean> {
+    if (!this.supabase) return false;
+    try {
+      const [
+        profilesRes,
+        rolesRes,
+        householdRes,
+        volunteersRes,
+        requestsRes,
+        assignmentsRes,
+        equipmentRes,
+        facilitiesRes,
+        reportsRes,
+        notificationsRes,
+        impactRes
+      ] = await Promise.all([
+        this.supabase.from('profiles').select('*'),
+        this.supabase.from('user_roles').select('*'),
+        this.supabase.from('household_profiles').select('*'),
+        this.supabase.from('volunteer_profiles').select('*'),
+        this.supabase.from('assistance_requests').select('*'),
+        this.supabase.from('request_assignments').select('*'),
+        this.supabase.from('equipment').select('*'),
+        this.supabase.from('facilities').select('*'),
+        this.supabase.from('community_reports').select('*'),
+        this.supabase.from('notifications').select('*'),
+        this.supabase.from('impact_records').select('*'),
+      ]);
+
+      if (profilesRes.data && profilesRes.data.length > 0) this.state.profiles = profilesRes.data;
+      if (rolesRes.data && rolesRes.data.length > 0) this.state.user_roles = rolesRes.data;
+      if (householdRes.data && householdRes.data.length > 0) this.state.household_profiles = householdRes.data;
+      if (volunteersRes.data && volunteersRes.data.length > 0) this.state.volunteer_profiles = volunteersRes.data;
+      if (requestsRes.data && requestsRes.data.length > 0) this.state.assistance_requests = requestsRes.data;
+      if (assignmentsRes.data && assignmentsRes.data.length > 0) this.state.request_assignments = assignmentsRes.data;
+      if (equipmentRes.data && equipmentRes.data.length > 0) this.state.equipment = equipmentRes.data;
+      if (facilitiesRes.data && facilitiesRes.data.length > 0) this.state.facilities = facilitiesRes.data;
+      if (reportsRes.data && reportsRes.data.length > 0) this.state.community_reports = reportsRes.data;
+      if (notificationsRes.data && notificationsRes.data.length > 0) this.state.notifications = notificationsRes.data;
+      if (impactRes.data && impactRes.data.length > 0) this.state.impact_records = impactRes.data;
+
+      console.log('✅ Hydrated authoritative state from Supabase PostgreSQL.');
+      return true;
+    } catch (err: any) {
+      console.warn('Hydration from Supabase encountered notice (using local snapshot):', err?.message || err);
+      return false;
     }
   }
 
   public async syncStateToSupabase(): Promise<void> {
     if (!this.supabase) return;
-    try {
-      if (this.state.assistance_requests && this.state.assistance_requests.length > 0) {
-        const rows = this.state.assistance_requests.map(r => ({
-          id: r.id,
-          user_id: r.user_id,
-          category: r.category,
-          description: r.description,
-          location_city: r.location_city,
-          location_neighbourhood: r.location_neighbourhood,
-          latitude: r.latitude,
-          longitude: r.longitude,
-          urgency: r.urgency,
-          household_type: r.household_type,
-          existing_equipment: r.existing_equipment,
-          contact_method: r.contact_method,
-          consent_shared: r.consent_shared,
-          status: r.status,
-          created_at: r.created_at,
-          updated_at: r.updated_at
-        }));
-        await this.supabase.from('assistance_requests').upsert(rows, { onConflict: 'id' });
-      }
 
-      if (this.state.equipment && this.state.equipment.length > 0) {
-        const rows = this.state.equipment.map(e => ({
-          id: e.id,
-          donor_id: e.donor_id,
-          name: e.name,
-          category: e.category,
-          description: e.description,
-          manufacturer_model: e.manufacturer_model,
-          condition: e.condition,
-          type: e.type,
-          max_loan_duration_days: e.max_loan_duration_days,
-          location_city: e.location_city,
-          location_neighbourhood: e.location_neighbourhood,
-          latitude: e.latitude,
-          longitude: e.longitude,
-          image_url: e.image_url,
-          status: e.status,
-          is_verified: e.is_verified,
-          cadr_rating: e.cadr_rating,
-          created_at: e.created_at,
-          updated_at: e.updated_at
-        }));
-        await this.supabase.from('equipment').upsert(rows, { onConflict: 'id' });
-      }
+    // 1. Profiles
+    if (this.state.profiles && this.state.profiles.length > 0) {
+      const rows = this.state.profiles.map(p => ({
+        id: toValidUuid(p.id),
+        email: p.email,
+        full_name: p.full_name,
+        phone: p.phone,
+        city: p.city,
+        neighbourhood: p.neighbourhood,
+        preferred_language: p.preferred_language,
+        account_type: p.account_type,
+        latitude: p.latitude,
+        longitude: p.longitude,
+        created_at: p.created_at,
+        updated_at: p.updated_at
+      }));
+      const { error } = await this.supabase.from('profiles').upsert(rows, { onConflict: 'id' });
+      if (error) throw new Error(`Supabase persistence failure on 'profiles': ${error.message}`);
+    }
 
-      if (this.state.community_reports && this.state.community_reports.length > 0) {
-        const rows = this.state.community_reports.map(r => ({
-          id: r.id,
-          reporter_id: r.reporter_id,
-          category: r.category,
-          description: r.description,
-          city: r.city,
-          neighbourhood: r.neighbourhood,
-          latitude: r.latitude,
-          longitude: r.longitude,
-          image_url: r.image_url,
-          status: r.status,
-          resolution_notes: r.resolution_notes,
-          created_at: r.created_at,
-          updated_at: r.updated_at
-        }));
-        await this.supabase.from('community_reports').upsert(rows, { onConflict: 'id' });
-      }
+    // 2. Household Profiles
+    if (this.state.household_profiles && this.state.household_profiles.length > 0) {
+      const rows = this.state.household_profiles.map(h => ({
+        id: toValidUuid(h.id),
+        user_id: toValidUuid(h.user_id),
+        member_count: h.member_count,
+        elderly_present: h.elderly_present,
+        children_present: h.children_present,
+        sensitive_persons: h.sensitive_persons,
+        housing_type: h.housing_type,
+        room_size_sqft: h.room_size_sqft,
+        existing_purifiers: h.existing_purifiers,
+        created_at: h.created_at,
+        updated_at: h.updated_at
+      }));
+      const { error } = await this.supabase.from('household_profiles').upsert(rows, { onConflict: 'id' });
+      if (error) throw new Error(`Supabase persistence failure on 'household_profiles': ${error.message}`);
+    }
 
-      if (this.state.impact_records && this.state.impact_records.length > 0) {
-        const rows = this.state.impact_records.map(i => ({
-          id: i.id,
-          metric_type: i.metric_type,
-          value: i.value,
-          related_entity_type: i.related_entity_type,
-          related_entity_id: i.related_entity_id,
-          recorded_at: i.recorded_at,
-          methodology_notes: i.methodology_notes
-        }));
-        await this.supabase.from('impact_records').upsert(rows, { onConflict: 'id' });
-      }
-    } catch (err) {
-      console.warn('Supabase write-through synchronization failed:', err);
+    // 3. Volunteer Profiles
+    if (this.state.volunteer_profiles && this.state.volunteer_profiles.length > 0) {
+      const rows = this.state.volunteer_profiles.map(v => ({
+        id: toValidUuid(v.id),
+        user_id: toValidUuid(v.user_id),
+        service_radius_km: v.service_radius_km,
+        experience_years: v.experience_years,
+        bio: v.bio,
+        languages: v.languages,
+        organisation_affiliation: v.organisation_affiliation,
+        is_verified: v.is_verified,
+        status: v.status,
+        created_at: v.created_at,
+        updated_at: v.updated_at
+      }));
+      const { error } = await this.supabase.from('volunteer_profiles').upsert(rows, { onConflict: 'id' });
+      if (error) throw new Error(`Supabase persistence failure on 'volunteer_profiles': ${error.message}`);
+    }
+
+    // 4. Assistance Requests
+    if (this.state.assistance_requests && this.state.assistance_requests.length > 0) {
+      const rows = this.state.assistance_requests.map(r => ({
+        id: toValidUuid(r.id),
+        user_id: toValidUuid(r.user_id),
+        category: r.category,
+        description: r.description,
+        location_city: r.location_city,
+        location_neighbourhood: r.location_neighbourhood,
+        latitude: r.latitude,
+        longitude: r.longitude,
+        urgency: r.urgency,
+        household_type: r.household_type,
+        existing_equipment: r.existing_equipment,
+        contact_method: r.contact_method,
+        consent_shared: r.consent_shared,
+        status: r.status,
+        created_at: r.created_at,
+        updated_at: r.updated_at
+      }));
+      const { error } = await this.supabase.from('assistance_requests').upsert(rows, { onConflict: 'id' });
+      if (error) throw new Error(`Supabase persistence failure on 'assistance_requests': ${error.message}`);
+    }
+
+    // 5. Request Assignments
+    if (this.state.request_assignments && this.state.request_assignments.length > 0) {
+      const rows = this.state.request_assignments.map(a => ({
+        id: toValidUuid(a.id),
+        request_id: toValidUuid(a.request_id),
+        volunteer_id: toValidUuid(a.volunteer_id),
+        status: a.status,
+        assigned_at: a.assigned_at,
+        updated_at: a.updated_at,
+        completion_notes: a.completion_notes,
+        completion_photo_url: a.completion_photo_url
+      }));
+      const { error } = await this.supabase.from('request_assignments').upsert(rows, { onConflict: 'id' });
+      if (error) throw new Error(`Supabase persistence failure on 'request_assignments': ${error.message}`);
+    }
+
+    // 6. Equipment
+    if (this.state.equipment && this.state.equipment.length > 0) {
+      const rows = this.state.equipment.map(e => ({
+        id: toValidUuid(e.id),
+        donor_id: e.donor_id ? toValidUuid(e.donor_id) : undefined,
+        name: e.name,
+        category: e.category,
+        description: e.description,
+        manufacturer_model: e.manufacturer_model,
+        condition: e.condition,
+        type: e.type,
+        max_loan_duration_days: e.max_loan_duration_days,
+        location_city: e.location_city,
+        location_neighbourhood: e.location_neighbourhood,
+        latitude: e.latitude,
+        longitude: e.longitude,
+        image_url: e.image_url,
+        status: e.status,
+        is_verified: e.is_verified,
+        cadr_rating: e.cadr_rating,
+        created_at: e.created_at,
+        updated_at: e.updated_at
+      }));
+      const { error } = await this.supabase.from('equipment').upsert(rows, { onConflict: 'id' });
+      if (error) throw new Error(`Supabase persistence failure on 'equipment': ${error.message}`);
+    }
+
+    // 7. Facilities
+    if (this.state.facilities && this.state.facilities.length > 0) {
+      const rows = this.state.facilities.map(f => ({
+        id: toValidUuid(f.id),
+        name: f.name,
+        facility_type: f.facility_type,
+        address: f.address,
+        city: f.city,
+        neighbourhood: f.neighbourhood,
+        latitude: f.latitude,
+        longitude: f.longitude,
+        contact_phone: f.contact_phone,
+        contact_email: f.contact_email,
+        operating_hours: f.operating_hours,
+        accessibility_features: f.accessibility_features,
+        filtration_equipment_details: f.filtration_equipment_details,
+        capacity: f.capacity,
+        is_verified: f.is_verified,
+        created_at: f.created_at,
+        updated_at: f.updated_at
+      }));
+      const { error } = await this.supabase.from('facilities').upsert(rows, { onConflict: 'id' });
+      if (error) throw new Error(`Supabase persistence failure on 'facilities': ${error.message}`);
+    }
+
+    // 8. Community Reports
+    if (this.state.community_reports && this.state.community_reports.length > 0) {
+      const rows = this.state.community_reports.map(r => ({
+        id: toValidUuid(r.id),
+        reporter_id: toValidUuid(r.reporter_id),
+        category: r.category,
+        description: r.description,
+        city: r.city,
+        neighbourhood: r.neighbourhood,
+        latitude: r.latitude,
+        longitude: r.longitude,
+        image_url: r.image_url,
+        status: r.status,
+        resolution_notes: r.resolution_notes,
+        created_at: r.created_at,
+        updated_at: r.updated_at
+      }));
+      const { error } = await this.supabase.from('community_reports').upsert(rows, { onConflict: 'id' });
+      if (error) throw new Error(`Supabase persistence failure on 'community_reports': ${error.message}`);
+    }
+
+    // 9. Notifications
+    if (this.state.notifications && this.state.notifications.length > 0) {
+      const rows = this.state.notifications.map(n => ({
+        id: toValidUuid(n.id),
+        user_id: toValidUuid(n.user_id),
+        title: n.title,
+        message: n.message,
+        event_type: n.event_type,
+        related_entity_id: n.related_entity_id ? toValidUuid(n.related_entity_id) : undefined,
+        is_read: n.is_read,
+        created_at: n.created_at
+      }));
+      const { error } = await this.supabase.from('notifications').upsert(rows, { onConflict: 'id' });
+      if (error) throw new Error(`Supabase persistence failure on 'notifications': ${error.message}`);
+    }
+
+    // 10. Impact Records
+    if (this.state.impact_records && this.state.impact_records.length > 0) {
+      const rows = this.state.impact_records.map(i => ({
+        id: toValidUuid(i.id),
+        metric_type: i.metric_type,
+        value: i.value,
+        related_entity_type: i.related_entity_type,
+        related_entity_id: i.related_entity_id ? toValidUuid(i.related_entity_id) : undefined,
+        recorded_at: i.recorded_at,
+        methodology_notes: i.methodology_notes
+      }));
+      const { error } = await this.supabase.from('impact_records').upsert(rows, { onConflict: 'id' });
+      if (error) throw new Error(`Supabase persistence failure on 'impact_records': ${error.message}`);
     }
   }
 

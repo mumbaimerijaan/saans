@@ -301,10 +301,10 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
           longitude: lon,
           timestamp: current.time || new Date().toISOString(),
           sourceAttribution: {
-            primaryProvider: 'Open-Meteo Atmospheric Chemistry & CPCB Reference Network',
-            modelOrStationName: `ECMWF CAMS Regional Atmospheric Model with CPCB Coordinate Anchoring`,
+            primaryProvider: 'Open-Meteo Atmospheric Chemistry Regional Model',
+            modelOrStationName: `ECMWF CAMS Regional Atmospheric Model with Micro-Climate Spatial Scaling`,
             isModelledForecast: true,
-            provenanceNotice: 'Station readings reflect high-resolution micro-climate spatial interpolations derived from regional CAMS atmospheric dispersion modeling calibrated to official CPCB CAAQMS coordinates. They are not direct telemetric hardware sensors. For legal enforcement, consult cpcb.gov.in.',
+            provenanceNotice: 'These figures represent atmospheric dispersion model estimates derived from Open-Meteo regional chemistry data with micro-climate spatial adjustments. They are NOT raw telemetry from physical hardware sensors or statutory CPCB regulatory station measurements. For official legally-binding continuous air monitoring data, visit the Central Pollution Control Board portal at cpcb.nic.in.',
             license: 'Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)'
           },
           indianAqi: {
@@ -312,7 +312,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
             category,
             dominantPollutant: dominant,
             isAvailable: true,
-            methodology: 'Computed strictly following official CPCB (Central Pollution Control Board) 24h breakpoint equations with minimum 3-pollutant validation rule.'
+            methodology: 'Computed strictly following official CPCB (Central Pollution Control Board) 24h breakpoint equations applied to atmospheric dispersion model data with minimum 3-pollutant validation rule.'
           },
           foreignIndices: {
             europeanAqi: current.european_aqi || null,
@@ -329,8 +329,8 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
           },
           hourlyForecast: hourly,
           nearbyStations: [
-            { id: 'station-primary', name: `${mod.station} (Reference Grid)`, distanceKm: 1.2, latitude: lat, longitude: lon, stationType: 'micro_climate_spatial_estimate', provenance: 'Spatial micro-climate estimate calibrated to CPCB coordinates', lastUpdated: new Date().toISOString(), measurements: { pm2_5: pm25Val, pm10: pm10Val, no2: no2Val, so2: so2Val } },
-            { id: 'station-secondary', name: 'Bandra Kalanagar CPCB Reference Grid', distanceKm: 3.4, latitude: 19.0607, longitude: 72.8480, stationType: 'micro_climate_spatial_estimate', provenance: 'Model-derived estimate anchored to CPCB Station #MH001 coordinates', lastUpdated: new Date().toISOString(), measurements: { pm2_5: rawPm25, pm10: rawPm10, no2: rawNo2, so2: 13 } }
+            { id: 'station-primary', name: `${mod.station} (Spatial Grid)`, distanceKm: 1.2, latitude: lat, longitude: lon, stationType: 'micro_climate_spatial_estimate', provenance: 'High-resolution micro-climate spatial dispersion estimate', lastUpdated: new Date().toISOString(), measurements: { pm2_5: pm25Val, pm10: pm10Val, no2: no2Val, so2: so2Val } },
+            { id: 'station-secondary', name: 'Bandra Kalanagar Spatial Reference Grid', distanceKm: 3.4, latitude: 19.0607, longitude: 72.8480, stationType: 'micro_climate_spatial_estimate', provenance: 'Micro-climate spatial estimate anchored to geographic coordinates', lastUpdated: new Date().toISOString(), measurements: { pm2_5: rawPm25, pm10: rawPm10, no2: rawNo2, so2: 13 } }
           ]
         });
       } catch (err: any) {
@@ -736,6 +736,23 @@ Key Directives:
         if (!user) return jsonResponse({ error: 'Unauthorized: Authentication required' }, 401);
         const isAdmin = user.account_type === 'admin' || (user.roles && user.roles.includes('admin'));
         const body: any = await request.json();
+        const targetStatus = body.status;
+
+        const VALID_REQUEST_STATUSES = ['submitted', 'under_review', 'approved', 'matched', 'assigned', 'in_progress', 'completed', 'cancelled'];
+        const ALLOWED_TRANSITIONS: Record<string, string[]> = {
+          submitted: ['under_review', 'approved', 'cancelled'],
+          under_review: ['approved', 'cancelled'],
+          approved: ['matched', 'assigned', 'cancelled'],
+          matched: ['assigned', 'in_progress', 'cancelled'],
+          assigned: ['in_progress', 'cancelled'],
+          in_progress: ['completed', 'assigned', 'cancelled'],
+          completed: [],
+          cancelled: []
+        };
+
+        if (!VALID_REQUEST_STATUSES.includes(targetStatus)) {
+          return jsonResponse({ error: `Invalid status '${targetStatus}'. Must be one of: ${VALID_REQUEST_STATUSES.join(', ')}` }, 400);
+        }
 
         let targetReq = SEED_REQUESTS.find(r => r.id === reqId);
         if (supabase) {
@@ -744,19 +761,52 @@ Key Directives:
         }
 
         if (!targetReq) return jsonResponse({ error: 'Request not found' }, 404);
+        const currentStatus = targetReq.status;
+
+        if (currentStatus === targetStatus) {
+          return jsonResponse({ error: `Request is already in '${currentStatus}' status` }, 400);
+        }
+
+        if (['completed', 'cancelled'].includes(currentStatus)) {
+          return jsonResponse({ error: `Invalid transition: Request is in terminal state '${currentStatus}' and cannot be modified.` }, 400);
+        }
+
         const isOwner = targetReq.user_id === user.id;
+        const isVolunteer = user.account_type === 'volunteer' || (user.roles && user.roles.includes('volunteer'));
 
         // Authorization check: Only Admin, Owner, or Assigned Volunteer can modify
-        if (!isAdmin && !isOwner) {
+        if (!isAdmin && !isOwner && !isVolunteer) {
           return jsonResponse({ error: 'Unauthorized: You do not have permission to modify this request status' }, 403);
         }
 
-        if (isOwner && !isAdmin && body.status !== 'cancelled') {
-          return jsonResponse({ error: 'Citizens can only cancel their own requests' }, 403);
+        if (isOwner && !isAdmin && !isVolunteer) {
+          if (targetStatus !== 'cancelled') {
+            return jsonResponse({ error: 'Citizens can only cancel their own requests' }, 403);
+          }
+          if (currentStatus === 'in_progress') {
+            return jsonResponse({ error: 'Active requests in progress cannot be directly cancelled by the citizen. Please contact your coordinator or volunteer.' }, 400);
+          }
+        } else if (isVolunteer && !isAdmin) {
+          if (['assigned', 'matched'].includes(currentStatus)) {
+            if (targetStatus !== 'in_progress') {
+              return jsonResponse({ error: "Invalid transition: Assigned volunteer must first transition the request to 'in_progress' before marking it 'completed'." }, 400);
+            }
+          } else if (currentStatus === 'in_progress') {
+            if (targetStatus !== 'completed') {
+              return jsonResponse({ error: "Invalid transition: Volunteers can only mark an 'in_progress' request as 'completed'." }, 400);
+            }
+          } else {
+            return jsonResponse({ error: `Volunteers cannot modify requests in '${currentStatus}' status.` }, 403);
+          }
+        } else if (isAdmin) {
+          const allowed = ALLOWED_TRANSITIONS[currentStatus] || [];
+          if (!allowed.includes(targetStatus)) {
+            return jsonResponse({ error: `Invalid status transition: Cannot transition from '${currentStatus}' to '${targetStatus}'. Allowed: ${allowed.join(', ') || 'none'}` }, 400);
+          }
         }
 
-        targetReq.status = body.status;
-        if (supabase) await supabase.from('assistance_requests').update({ status: body.status }).eq('id', reqId);
+        targetReq.status = targetStatus;
+        if (supabase) await supabase.from('assistance_requests').update({ status: targetStatus, updated_at: new Date().toISOString() }).eq('id', reqId);
         return jsonResponse({ message: 'Request status updated', request: targetReq });
       }
 

@@ -7,6 +7,31 @@ import { volunteerMatchingService } from '../services/volunteerMatchingService.j
 
 const router = Router();
 
+export const VALID_REQUEST_STATUSES = [
+  'submitted',
+  'under_review',
+  'approved',
+  'matched',
+  'assigned',
+  'in_progress',
+  'completed',
+  'cancelled'
+] as const;
+
+export type RequestStatus = typeof VALID_REQUEST_STATUSES[number];
+
+// Directed Graph of Allowed State Transitions
+export const ALLOWED_TRANSITIONS: Record<RequestStatus, RequestStatus[]> = {
+  submitted: ['under_review', 'approved', 'cancelled'],
+  under_review: ['approved', 'cancelled'],
+  approved: ['matched', 'assigned', 'cancelled'],
+  matched: ['assigned', 'in_progress', 'cancelled'],
+  assigned: ['in_progress', 'cancelled'],
+  in_progress: ['completed', 'assigned', 'cancelled'],
+  completed: [], // Terminal state
+  cancelled: []  // Terminal state
+};
+
 const CreateRequestSchema = z.object({
   category: z.enum([
     'purifier_loan', 'purifier_donation', 'diy_installation',
@@ -26,7 +51,7 @@ const CreateRequestSchema = z.object({
 });
 
 // Create Assistance Request
-router.post('/', authenticate, (req: AuthenticatedRequest, res) => {
+router.post('/', authenticate, async (req: AuthenticatedRequest, res) => {
   try {
     const user = req.user!;
     const data = CreateRequestSchema.parse(req.body);
@@ -67,7 +92,7 @@ router.post('/', authenticate, (req: AuthenticatedRequest, res) => {
     };
     state.notifications.push(notif);
 
-    db.save();
+    await db.save();
 
     res.status(201).json({
       message: 'Assistance request created successfully',
@@ -162,79 +187,142 @@ router.get('/:id', authenticate, (req: AuthenticatedRequest, res) => {
   });
 });
 
-// Update Request Status
-router.patch('/:id/status', authenticate, (req: AuthenticatedRequest, res) => {
-  const { id } = req.params;
-  const { status, notes } = req.body;
-  const user = req.user!;
-  const state = db.getState();
+// Update Request Status with Strict Authorization & Transition Validation
+router.patch('/:id/status', authenticate, async (req: AuthenticatedRequest, res) => {
+  try {
+    const { id } = req.params;
+    const { status, notes } = req.body;
+    const user = req.user!;
+    const state = db.getState();
 
-  const request = state.assistance_requests.find(r => r.id === id);
-  if (!request) {
-    res.status(404).json({ error: 'Request not found' });
-    return;
-  }
-
-  const isAdmin = user.roles.includes('admin') || user.account_type === 'admin';
-  const isOwner = request.user_id === user.id;
-  const assignment = state.request_assignments.find(a => a.request_id === request.id);
-  const vProfile = state.volunteer_profiles.find(v => v.user_id === user.id);
-  const isAssignedVolunteer = !!(assignment && vProfile && assignment.volunteer_id === vProfile.id);
-
-  // Strict Authorization Check: Caller MUST be Admin, Owner, or Assigned Volunteer
-  if (!isAdmin && !isOwner && !isAssignedVolunteer) {
-    res.status(403).json({ error: 'Unauthorized: You do not have permission to modify this request status' });
-    return;
-  }
-
-  // Citizens can only cancel their own submitted request
-  if (isOwner && !isAdmin && !isAssignedVolunteer) {
-    if (status !== 'cancelled') {
-      res.status(403).json({ error: 'Citizens can only cancel their own requests' });
+    const request = state.assistance_requests.find(r => r.id === id);
+    if (!request) {
+      res.status(404).json({ error: 'Request not found' });
       return;
     }
-  }
 
-  // Volunteers can only transition between 'in_progress' and 'completed'
-  if (isAssignedVolunteer && !isAdmin) {
-    if (!['in_progress', 'completed'].includes(status)) {
-      res.status(403).json({ error: 'Volunteers can only mark requests in progress or completed' });
+    const currentStatus = request.status as RequestStatus;
+    const targetStatus = status as RequestStatus;
+
+    // 1. Format validation against allowed statuses
+    if (!VALID_REQUEST_STATUSES.includes(targetStatus)) {
+      res.status(400).json({
+        error: `Invalid status '${status}'. Must be one of: ${VALID_REQUEST_STATUSES.join(', ')}`
+      });
       return;
     }
-  }
 
-  const now = new Date().toISOString();
-  request.status = status;
-  request.updated_at = now;
+    // 2. Reject no-op update
+    if (currentStatus === targetStatus) {
+      res.status(400).json({
+        error: `Request is already in '${currentStatus}' status`
+      });
+      return;
+    }
 
-  // Dispatch notification to requester
-  const notif: Notification = {
-    id: uuidv4(),
-    user_id: request.user_id,
-    title: `Assistance Request ${status.toUpperCase().replace('_', ' ')}`,
-    message: notes || `Your assistance request #${request.id.slice(0, 8)} status was updated to: ${status}.`,
-    event_type: `request_${status}`,
-    related_entity_id: request.id,
-    is_read: false,
-    created_at: now
-  };
-  state.notifications.push(notif);
+    // 3. Terminal state check: completed or cancelled requests cannot transition
+    if (['completed', 'cancelled'].includes(currentStatus)) {
+      res.status(400).json({
+        error: `Invalid transition: Request is in terminal state '${currentStatus}' and cannot be modified.`
+      });
+      return;
+    }
 
-  // If status is completed, record impact record!
-  if (status === 'completed') {
-    state.impact_records.push({
+    const isAdmin = user.roles.includes('admin') || user.account_type === 'admin';
+    const isOwner = request.user_id === user.id;
+    const assignment = state.request_assignments.find(a => a.request_id === request.id);
+    const vProfile = state.volunteer_profiles.find(v => v.user_id === user.id);
+    const isAssignedVolunteer = !!(assignment && vProfile && assignment.volunteer_id === vProfile.id);
+
+    // 4. Strict Authorization Check: Caller MUST be Admin, Owner, or Assigned Volunteer
+    if (!isAdmin && !isOwner && !isAssignedVolunteer) {
+      res.status(403).json({ error: 'Unauthorized: You do not have permission to modify this request status' });
+      return;
+    }
+
+    // 5. Role-specific transition rules
+    if (isOwner && !isAdmin && !isAssignedVolunteer) {
+      // Citizens can ONLY cancel their own requests
+      if (targetStatus !== 'cancelled') {
+        res.status(403).json({ error: 'Citizens can only cancel their own requests' });
+        return;
+      }
+      // Citizens cannot cancel requests actively in progress
+      if (currentStatus === 'in_progress') {
+        res.status(400).json({
+          error: 'Active requests in progress cannot be directly cancelled by the citizen. Please contact your coordinator or volunteer.'
+        });
+        return;
+      }
+    } else if (isAssignedVolunteer && !isAdmin) {
+      // Volunteers:
+      // From 'assigned' or 'matched' -> MUST move to 'in_progress' first
+      if (['assigned', 'matched'].includes(currentStatus)) {
+        if (targetStatus !== 'in_progress') {
+          res.status(400).json({
+            error: `Invalid transition: Assigned volunteer must first transition the request to 'in_progress' before marking it 'completed'.`
+          });
+          return;
+        }
+      } else if (currentStatus === 'in_progress') {
+        if (targetStatus !== 'completed') {
+          res.status(400).json({
+            error: `Invalid transition: Volunteers can only mark an 'in_progress' request as 'completed'.`
+          });
+          return;
+        }
+      } else {
+        res.status(403).json({
+          error: `Volunteers cannot modify requests in '${currentStatus}' status.`
+        });
+        return;
+      }
+    } else if (isAdmin) {
+      // Administrators must also respect the allowed transition schema
+      const allowed = ALLOWED_TRANSITIONS[currentStatus] || [];
+      if (!allowed.includes(targetStatus)) {
+        res.status(400).json({
+          error: `Invalid status transition: Cannot transition request from '${currentStatus}' to '${targetStatus}'. Allowed transitions: ${allowed.join(', ') || 'none (terminal state)'}`
+        });
+        return;
+      }
+    }
+
+    const now = new Date().toISOString();
+    request.status = targetStatus;
+    request.updated_at = now;
+
+    // Dispatch notification to requester
+    const notif: Notification = {
       id: uuidv4(),
-      metric_type: 'requests_fulfilled',
-      value: 1,
-      related_entity_type: 'assistance_request',
+      user_id: request.user_id,
+      title: `Assistance Request ${targetStatus.toUpperCase().replace('_', ' ')}`,
+      message: notes || `Your assistance request #${request.id.slice(0, 8)} status was updated to: ${targetStatus}.`,
+      event_type: `request_${targetStatus}`,
       related_entity_id: request.id,
-      recorded_at: now,
-      methodology_notes: `Direct fulfillment of ${request.category} request in ${request.location_neighbourhood}.`
-    });
-  }
+      is_read: false,
+      created_at: now
+    };
+    state.notifications.push(notif);
 
-  db.save();
-  res.json({ message: 'Request status updated', request });
+    // If status is completed, record impact record!
+    if (targetStatus === 'completed') {
+      state.impact_records.push({
+        id: uuidv4(),
+        metric_type: 'requests_fulfilled',
+        value: 1,
+        related_entity_type: 'assistance_request',
+        related_entity_id: request.id,
+        recorded_at: now,
+        methodology_notes: `Direct fulfillment of ${request.category} request in ${request.location_neighbourhood}.`
+      });
+    }
+
+    await db.save();
+    res.json({ message: 'Request status updated', request });
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to update request status', message: err.message });
+  }
 });
 
 // Volunteer Matches Recommendation Engine
@@ -262,7 +350,7 @@ router.get('/:id/matches', authenticate, (req: AuthenticatedRequest, res) => {
 });
 
 // Assign Volunteer to Request
-router.post('/:id/assign', authenticate, (req: AuthenticatedRequest, res) => {
+router.post('/:id/assign', authenticate, async (req: AuthenticatedRequest, res) => {
   const { id } = req.params;
   const { volunteerId } = req.body;
   const user = req.user!;
@@ -333,7 +421,7 @@ router.post('/:id/assign', authenticate, (req: AuthenticatedRequest, res) => {
     created_at: now
   });
 
-  db.save();
+  await db.save();
   res.json({ message: 'Volunteer assigned successfully', assignment, request });
 });
 

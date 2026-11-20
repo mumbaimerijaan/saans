@@ -40,12 +40,12 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     stations: true,
   });
 
-  // Mumbai CAAQMS Reference Stations
+  // Mumbai Regional Micro-Climate Spatial Reference Grids (Model-Derived)
   const groundStations = [
-    { name: 'Bandra Kalanagar CAAQMS', lat: 19.0607, lon: 72.8480, aqi: 312, dominant: 'PM2.5' },
-    { name: 'Kurla CST Road Station', lat: 19.0726, lon: 72.8845, aqi: 335, dominant: 'PM2.5' },
-    { name: 'Worli Coastal Boundary', lat: 19.0166, lon: 72.8166, aqi: 182, dominant: 'PM10' },
-    { name: 'Andheri East Station', lat: 19.1158, lon: 72.8654, aqi: 284, dominant: 'PM2.5' },
+    { name: 'Bandra Kalanagar Grid Reference', lat: 19.0607, lon: 72.8480, dominant: 'PM2.5 (Modelled)' },
+    { name: 'Kurla CST Industrial Corridor Grid', lat: 19.0726, lon: 72.8845, dominant: 'PM2.5 (Modelled)' },
+    { name: 'Worli Coastal Boundary Reference Grid', lat: 19.0166, lon: 72.8166, dominant: 'Ozone (Modelled)' },
+    { name: 'Andheri East Urban Transit Grid', lat: 19.1158, lon: 72.8654, dominant: 'PM2.5 (Modelled)' },
   ];
 
   useEffect(() => {
@@ -182,11 +182,12 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         const popupContent = `
           <div style="padding: 4px; font-family: Inter, sans-serif;">
             <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-              <span style="background: #8b5cf6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold;">CAAQMS GROUND STATION</span>
+              <span style="background: #6366f1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold;">SPATIAL MODEL GRID</span>
             </div>
             <h4 style="margin: 0 0 4px 0; font-size: 13px; font-weight: bold; color: #f8fafc;">${s.name}</h4>
+            <p style="margin: 0 0 6px 0; font-size: 10px; color: #94a3b8;">High-resolution micro-climate spatial dispersion estimate. Not raw direct sensor telemetry.</p>
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
-              <span style="background: #7f1d1d; color: #fecaca; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 12px;">AQI: ${s.aqi}</span>
+              <span style="background: #1e293b; border: 1px solid #475569; color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px;">Micro-Climate Anchor</span>
               <span style="font-size: 11px; color: #cbd5e1;">Dominant: ${s.dominant}</span>
             </div>
           </div>
@@ -246,7 +247,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             className="rounded border-slate-700 text-purple-500 focus:ring-0"
           />
           <span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
-          CAAQMS Stations (4)
+          Micro-Climate Spatial Grids (4)
         </label>
       </div>
 

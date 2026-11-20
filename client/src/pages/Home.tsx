@@ -127,7 +127,7 @@ export const Home: React.FC = () => {
                     <MapPin className="w-4 h-4 text-teal-400" />
                     <div>
                       <h3 className="font-bold text-white text-sm">Mumbai &bull; Bandra West</h3>
-                      <p className="text-[10px] text-slate-400">Official CPCB Breakpoint Index</p>
+                      <p className="text-[10px] text-slate-400">Model-Derived Indian AQI (CPCB Breakpoints)</p>
                     </div>
                   </div>
                   {aqReport && (
@@ -175,7 +175,7 @@ export const Home: React.FC = () => {
                 {/* Attribution and Link to Full Centre */}
                 <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
                   <span className="text-slate-400 text-[11px]">
-                    Source: {aqReport?.sourceAttribution.primaryProvider.split('&')[0] || 'Open-Meteo & CAAQMS'}
+                    Source: {aqReport?.sourceAttribution.primaryProvider.split('&')[0] || 'Open-Meteo Regional Model'}
                   </span>
                   <Link
                     to="/air-quality"

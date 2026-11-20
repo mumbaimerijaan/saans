@@ -56,7 +56,7 @@ Its primary purpose is to mobilize ground interventions: connecting citizens in 
 ### Database & Cloud Infrastructure:
 * **Relational Schema:** 23 PostgreSQL relational tables with UUIDs, foreign keys, timestamps, indexes, and RLS policies
 * **Supabase:** Supabase PostgreSQL, Supabase Auth, Row Level Security (`supabase/migrations/`)
-* **Dual-Tier Resilience:** Automatically connects to Supabase Cloud when credentials exist; seamlessly falls back to a persistent local JSON store (`server/data/saans_db.json`) for zero-friction local development and testing.
+* **Authoritative Supabase PostgreSQL Persistence:** When Supabase credentials are configured, Supabase PostgreSQL acts as the primary authoritative database. The backend hydrates state directly from Supabase on startup and synchronously persists mutations across all operational tables with full caller error propagation, backed by an offline local JSON snapshot for zero-downtime resilience.
 
 ### External APIs & Data Sources:
 * **Open-Meteo Air Quality API:** ECMWF CAMS regional chemistry model (free, no API key required).
@@ -254,3 +254,4 @@ The platform includes 4 pre-seeded evaluation fixtures with a **1-click Role Swi
 1. **Medical Safety:** SAANS is an environmental engineering and community logistics platform. It does not provide medical diagnoses, prescribe drugs, or guarantee disease prevention. Inhabitants experiencing acute respiratory distress are always directed to registered medical doctors.
 2. **DIY Hardware Integrity:** DIY Corsi-Rosenthal box units provide mechanical particle filtration; they are not medically certified commercial devices. Assembly instructions mandate thermal fuse fan motors and forbid unauthorized electrical modifications.
 3. **Data Transparency:** Impact statistics reflect actual database transactions (fulfilled requests, verified loans, audited facilities). They are not inflated into speculative carbon offsets or invented disability-adjusted life years (DALYs).
+4. **Air Quality Data Provenance:** Figures presented on the platform represent atmospheric dispersion model estimates computed from Open-Meteo regional chemistry data with micro-climate spatial adjustments (evaluated against CPCB 24h breakpoint formulas). They are NOT physical hardware sensor telemetry or statutory CAAQMS station measurements. For official legally-binding continuous air monitoring data, consult cpcb.nic.in.

@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { config } from './config/env.js';
+import { db } from './db/index.js';
 
 // Import Route Handlers
 import authRoutes from './routes/auth.js';
@@ -66,10 +67,23 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   });
 });
 
-app.listen(config.port, () => {
-  console.log(`=========================================`);
-  console.log(`🌬️  SAANS Backend Server Active`);
-  console.log(`📍 Port: http://localhost:${config.port}`);
-  console.log(`🌱 Environment: ${config.nodeEnv}`);
-  console.log(`=========================================`);
+async function startServer() {
+  // Authoritative Hydration from Supabase PostgreSQL on startup
+  if (config.supabaseUrl && (config.supabaseServiceRoleKey || config.supabaseAnonKey)) {
+    console.log('🔄 Hydrating authoritative state from Supabase PostgreSQL...');
+    await db.hydrateFromSupabase();
+  }
+
+  app.listen(config.port, () => {
+    console.log(`=========================================`);
+    console.log(`🌬️  SAANS Backend Server Active`);
+    console.log(`📍 Port: http://localhost:${config.port}`);
+    console.log(`🌱 Environment: ${config.nodeEnv}`);
+    console.log(`=========================================`);
+  });
+}
+
+startServer().catch(err => {
+  console.error('Fatal startup error:', err);
+  process.exit(1);
 });

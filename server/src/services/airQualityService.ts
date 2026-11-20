@@ -267,12 +267,12 @@ export class AirQualityService {
       const nearbyStations = [
         {
           id: 'station-bandra-cpcb',
-          name: 'Bandra Kalanagar CPCB Reference Grid',
+          name: 'Bandra Kalanagar Spatial Reference Grid',
           distanceKm: 2.8,
           latitude: 19.0607,
           longitude: 72.8480,
           stationType: 'micro_climate_spatial_estimate',
-          provenance: 'Model-derived micro-climate estimate anchored to CPCB CAAQMS Station #MH001 coordinates (Bandra Kalanagar)',
+          provenance: 'Model-derived micro-climate dispersion estimate anchored to Bandra Kalanagar geographic coordinates',
           lastUpdated: new Date().toISOString(),
           measurements: {
             pm2_5: Math.round(pm25 * 1.05),
@@ -283,12 +283,12 @@ export class AirQualityService {
         },
         {
           id: 'station-kurla-mpcb',
-          name: 'Kurla CST Road Monitoring Grid',
+          name: 'Kurla CST Industrial Corridor Grid',
           distanceKm: 4.1,
           latitude: 19.0726,
           longitude: 72.8845,
           stationType: 'micro_climate_spatial_estimate',
-          provenance: 'Model-derived micro-climate estimate anchored to MPCB Kurla Industrial Corridor coordinates',
+          provenance: 'Model-derived micro-climate dispersion estimate anchored to Kurla industrial corridor coordinates',
           lastUpdated: new Date().toISOString(),
           measurements: {
             pm2_5: Math.round(pm25 * 1.15),
@@ -304,7 +304,7 @@ export class AirQualityService {
           latitude: 19.0166,
           longitude: 72.8166,
           stationType: 'micro_climate_spatial_estimate',
-          provenance: 'Model-derived coastal dispersion estimate anchored to Worli Sea Face monitoring coordinates',
+          provenance: 'Model-derived coastal dispersion estimate anchored to Worli Sea Face geographic coordinates',
           lastUpdated: new Date().toISOString(),
           measurements: {
             pm2_5: Math.round(pm25 * 0.88),
@@ -322,10 +322,10 @@ export class AirQualityService {
         longitude: lon,
         timestamp: current.time || new Date().toISOString(),
         sourceAttribution: {
-          primaryProvider: 'Open-Meteo Atmospheric Chemistry & CPCB Reference Network',
-          modelOrStationName: 'ECMWF CAMS Regional Atmospheric Model with CPCB Coordinate Anchoring',
+          primaryProvider: 'Open-Meteo Atmospheric Chemistry Regional Model',
+          modelOrStationName: 'ECMWF CAMS Atmospheric Model with Micro-Climate Spatial Scaling',
           isModelledForecast: true,
-          provenanceNotice: 'Station readings reflect high-resolution micro-climate spatial interpolations derived from regional CAMS atmospheric dispersion modeling calibrated to official CPCB CAAQMS coordinates. They are not direct telemetric hardware sensors. For legal enforcement, consult cpcb.gov.in.',
+          provenanceNotice: 'These figures represent atmospheric dispersion model estimates derived from Open-Meteo regional chemistry data with micro-climate spatial adjustments. They are NOT raw telemetry from physical hardware sensors or statutory CPCB regulatory station measurements. For official legally-binding continuous air monitoring data, visit the Central Pollution Control Board portal at cpcb.nic.in.',
           license: 'Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)'
         },
         indianAqi: {
@@ -333,7 +333,7 @@ export class AirQualityService {
           category: this.getCpcbCategory(indianAqiVal),
           dominantPollutant,
           isAvailable: isCpcbValid,
-          methodology: 'Computed strictly following official CPCB (Central Pollution Control Board) 24h breakpoint equations with minimum 3-pollutant validation rule.'
+          methodology: 'Computed strictly following official CPCB (Central Pollution Control Board) 24h breakpoint equations applied to atmospheric dispersion model data with minimum 3-pollutant validation rule.'
         },
         foreignIndices: {
           europeanAqi: current.european_aqi ?? null,

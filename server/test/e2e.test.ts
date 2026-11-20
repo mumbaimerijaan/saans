@@ -100,7 +100,21 @@ async function runTests() {
   assert.ok(typeof totalReportsResolved === 'number');
   console.log(`✅ Passed: Verified Impact metrics aggregated directly from DB state.\n`);
 
-  console.log('🎉 ALL 9 CORE BACKEND & ALGORITHM TESTS PASSED SUCCESSFULLY!');
+  // Test 10: Request Lifecycle & Transition State Machine Verification
+  console.log('Test 10: Request Status Transition State Machine Verification...');
+  const { ALLOWED_TRANSITIONS, VALID_REQUEST_STATUSES } = await import('../src/routes/requests.js');
+  
+  // Verify state machine definition
+  assert.ok(VALID_REQUEST_STATUSES.includes('in_progress'));
+  assert.ok(VALID_REQUEST_STATUSES.includes('completed'));
+  assert.deepStrictEqual(ALLOWED_TRANSITIONS.completed, [], 'Completed must be a terminal state');
+  assert.deepStrictEqual(ALLOWED_TRANSITIONS.cancelled, [], 'Cancelled must be a terminal state');
+  assert.ok(ALLOWED_TRANSITIONS.assigned.includes('in_progress'), 'Assigned must allow transition to in_progress');
+  assert.ok(!ALLOWED_TRANSITIONS.assigned.includes('completed'), 'Assigned must NOT allow direct transition to completed');
+  assert.ok(ALLOWED_TRANSITIONS.in_progress.includes('completed'), 'in_progress must allow transition to completed');
+  console.log('✅ Passed: Request Status State Machine and Allowed Transitions Verified.\n');
+
+  console.log('🎉 ALL 10 CORE BACKEND & ALGORITHM TESTS PASSED SUCCESSFULLY!');
 }
 
 runTests().catch(err => {

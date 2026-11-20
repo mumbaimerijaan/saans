@@ -97,7 +97,7 @@ export const AirQualityCentre: React.FC = () => {
               Real-Time Atmospheric Monitoring & Forecasts
             </h1>
             <p className="text-xs text-slate-400 mt-1">
-              Strictly computed with official CPCB National Air Quality Index 24h breakpoints.
+              Computed using CPCB National Air Quality Index 24h breakpoint formulas on live Open-Meteo atmospheric dispersion data with localized micro-climate calibrations.
             </p>
           </div>
 
@@ -274,8 +274,8 @@ export const AirQualityCentre: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-bold text-white text-base">CPCB CAAQMS Geographic Reference Grid</h3>
-                  <p className="text-xs text-slate-400">Micro-climate spatial interpolations anchored to official CPCB/MPCB station coordinates.</p>
+                  <h3 className="font-bold text-white text-base">Micro-Climate Atmospheric Dispersion Grid</h3>
+                  <p className="text-xs text-slate-400">Micro-climate spatial interpolations anchored to official CPCB/MPCB station coordinates (Engineering Estimates).</p>
                 </div>
                 <span className="text-[10px] font-bold uppercase bg-slate-800 text-teal-400 px-2.5 py-1 rounded-full border border-slate-700">
                   Spatial Model Grid (CPCB Anchored)
@@ -286,7 +286,7 @@ export const AirQualityCentre: React.FC = () => {
               <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-400 flex items-start gap-2.5">
                 <ShieldCheck className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
                 <div className="leading-relaxed">
-                  <strong className="text-slate-200">Scientific Provenance Notice:</strong> Overall AQI is calculated strictly following official CPCB Indian National AQI 24h breakpoint equations using live Open-Meteo atmospheric telemetry. Station values represent calibrated spatial micro-climate estimates for each ward, not raw direct hardware sensors. For statutory regulatory enforcement, consult official CAAQMS telemetry at <a href="https://cpcb.nic.in" target="_blank" rel="noopener noreferrer" className="text-teal-400 underline">cpcb.nic.in</a>.
+                  <strong className="text-slate-200">Scientific Provenance Notice:</strong> Overall AQI is computed adhering strictly to CPCB Indian National AQI 24h breakpoint equations using Open-Meteo atmospheric model telemetry and micro-climate spatial dispersion scaling. Station cards and map anchors represent calibrated model estimates, not raw direct hardware sensor readings or statutory CAAQMS measurements. For official legally-binding continuous air monitoring data, visit the Central Pollution Control Board portal at <a href="https://cpcb.nic.in" target="_blank" rel="noopener noreferrer" className="text-teal-400 underline">cpcb.nic.in</a>.
                 </div>
               </div>
 
@@ -308,15 +308,15 @@ export const AirQualityCentre: React.FC = () => {
                       </div>
                       <div className="grid grid-cols-3 gap-2 mt-2 pt-2 border-t border-slate-800 text-center text-[11px]">
                         <div className="p-1 rounded bg-slate-900">
-                          <div className="text-slate-400">PM2.5</div>
+                          <div className="text-slate-400">Est. PM2.5</div>
                           <div className="font-bold text-white">{station.measurements.pm2_5 || '—'}</div>
                         </div>
                         <div className="p-1 rounded bg-slate-900">
-                          <div className="text-slate-400">PM10</div>
+                          <div className="text-slate-400">Est. PM10</div>
                           <div className="font-bold text-white">{station.measurements.pm10 || '—'}</div>
                         </div>
                         <div className="p-1 rounded bg-slate-900">
-                          <div className="text-slate-400">NO2</div>
+                          <div className="text-slate-400">Est. NO2</div>
                           <div className="font-bold text-white">{station.measurements.no2 || '—'}</div>
                         </div>
                       </div>
