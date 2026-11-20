@@ -179,12 +179,26 @@ router.patch('/:id/status', authenticate, (req: AuthenticatedRequest, res) => {
   const isOwner = request.user_id === user.id;
   const assignment = state.request_assignments.find(a => a.request_id === request.id);
   const vProfile = state.volunteer_profiles.find(v => v.user_id === user.id);
-  const isAssignedVolunteer = assignment && vProfile && assignment.volunteer_id === vProfile.id;
+  const isAssignedVolunteer = !!(assignment && vProfile && assignment.volunteer_id === vProfile.id);
+
+  // Strict Authorization Check: Caller MUST be Admin, Owner, or Assigned Volunteer
+  if (!isAdmin && !isOwner && !isAssignedVolunteer) {
+    res.status(403).json({ error: 'Unauthorized: You do not have permission to modify this request status' });
+    return;
+  }
 
   // Citizens can only cancel their own submitted request
   if (isOwner && !isAdmin && !isAssignedVolunteer) {
     if (status !== 'cancelled') {
       res.status(403).json({ error: 'Citizens can only cancel their own requests' });
+      return;
+    }
+  }
+
+  // Volunteers can only transition between 'in_progress' and 'completed'
+  if (isAssignedVolunteer && !isAdmin) {
+    if (!['in_progress', 'completed'].includes(status)) {
+      res.status(403).json({ error: 'Volunteers can only mark requests in progress or completed' });
       return;
     }
   }
@@ -226,11 +240,20 @@ router.patch('/:id/status', authenticate, (req: AuthenticatedRequest, res) => {
 // Volunteer Matches Recommendation Engine
 router.get('/:id/matches', authenticate, (req: AuthenticatedRequest, res) => {
   const { id } = req.params;
+  const user = req.user!;
   const state = db.getState();
 
   const request = state.assistance_requests.find(r => r.id === id);
   if (!request) {
     res.status(404).json({ error: 'Request not found' });
+    return;
+  }
+
+  const isAdmin = user.roles.includes('admin') || user.account_type === 'admin';
+  const isOwner = request.user_id === user.id;
+
+  if (!isAdmin && !isOwner) {
+    res.status(403).json({ error: 'Unauthorized: Only administrators or the request owner can view volunteer matches' });
     return;
   }
 

@@ -242,7 +242,7 @@ export const EquipmentLibrary: React.FC = () => {
                       alt={item.name}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                    <div className="absolute top-3 left-3 flex flex-wrap items-center gap-1.5">
                       <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
                         item.type === 'donation'
                           ? 'bg-emerald-500 text-slate-950 font-black'
@@ -250,6 +250,11 @@ export const EquipmentLibrary: React.FC = () => {
                       }`}>
                         {item.type === 'donation' ? 'Permanent Donation' : `Loan (${item.max_loan_duration_days} Days)`}
                       </span>
+                      {item.is_demo && (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-500/90 text-slate-950 font-black shadow-sm">
+                          Demo Pilot Unit
+                        </span>
+                      )}
                     </div>
                     <div className="absolute top-3 right-3">
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border ${

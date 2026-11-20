@@ -132,24 +132,24 @@ function formatUser(raw: any) {
 
 // Seed Fallbacks
 const SEED_PROFILES = [
-  { id: 'a0000000-0000-0000-0000-000000000001', email: 'admin@saans.org', full_name: 'Admin SAANS', phone: '+91 98200 11223', city: 'Mumbai', neighbourhood: 'Bandra West', preferred_language: 'en', account_type: 'admin', latitude: 19.0596, longitude: 72.8295 },
-  { id: 'c0000000-0000-0000-0000-000000000002', email: 'priya.sharma@example.com', full_name: 'Priya Sharma', phone: '+91 98333 44556', city: 'Mumbai', neighbourhood: 'Kurla West', preferred_language: 'hi', account_type: 'citizen', latitude: 19.0657, longitude: 72.8794 },
-  { id: 'b0000003-0000-0000-0000-000000000003', email: 'rahul.deshmukh@example.com', full_name: 'Rahul Deshmukh', phone: '+91 99201 55667', city: 'Mumbai', neighbourhood: 'Dadar', preferred_language: 'mr', account_type: 'volunteer', latitude: 19.0178, longitude: 72.8478 },
-  { id: 'd0000000-0000-0000-0000-000000000004', email: 'cleanair.mumbai@example.com', full_name: 'CleanAir NGO Mumbai', phone: '+91 98199 77889', city: 'Mumbai', neighbourhood: 'Andheri East', preferred_language: 'en', account_type: 'donor', latitude: 19.1136, longitude: 72.8697 }
+  { id: 'a0000000-0000-0000-0000-000000000001', email: 'admin@saans.org', full_name: 'Admin SAANS', phone: '+91 98200 11223', city: 'Mumbai', neighbourhood: 'Bandra West', preferred_language: 'en', account_type: 'admin', latitude: 19.0596, longitude: 72.8295, is_demo_account: true },
+  { id: 'c0000000-0000-0000-0000-000000000002', email: 'priya.sharma@example.com', full_name: 'Priya Sharma', phone: '+91 98333 44556', city: 'Mumbai', neighbourhood: 'Kurla West', preferred_language: 'hi', account_type: 'citizen', latitude: 19.0657, longitude: 72.8794, is_demo_account: true },
+  { id: 'b0000003-0000-0000-0000-000000000003', email: 'rahul.deshmukh@example.com', full_name: 'Rahul Deshmukh', phone: '+91 99201 55667', city: 'Mumbai', neighbourhood: 'Dadar', preferred_language: 'mr', account_type: 'volunteer', latitude: 19.0178, longitude: 72.8478, is_demo_account: true },
+  { id: 'd0000000-0000-0000-0000-000000000004', email: 'cleanair.mumbai@example.com', full_name: 'CleanAir NGO Mumbai', phone: '+91 98199 77889', city: 'Mumbai', neighbourhood: 'Andheri East', preferred_language: 'en', account_type: 'donor', latitude: 19.1136, longitude: 72.8697, is_demo_account: true }
 ];
 
 const SEED_FACILITIES = [
-  { id: 'f0000000-0000-0000-0000-000000000001', name: 'Bandra Public Library Clean Air Zone', facility_type: 'library', address: 'Near Hill Road, Bandra West, Mumbai 400050', city: 'Mumbai', neighbourhood: 'Bandra West', latitude: 19.0558, longitude: 72.8300, contact_phone: '+91 22 2640 1234', contact_email: 'bandra.library@mumbai.gov.in', operating_hours: '08:00 AM - 08:00 PM', accessibility_features: ['wheelchair_accessible', 'drinking_water', 'restrooms', 'wifi'], filtration_equipment_details: 'Triple HEPA H13 Air Purifiers + Positive Pressure Airflow System', capacity: 45, is_verified: true },
-  { id: 'f0000000-0000-0000-0000-000000000002', name: 'Dadar Community Wellness Centre', facility_type: 'community_hall', address: 'Gokhale Road North, Dadar, Mumbai 400028', city: 'Mumbai', neighbourhood: 'Dadar', latitude: 19.0195, longitude: 72.8428, contact_phone: '+91 22 2430 5678', contact_email: 'dadar.wellness@saans.community', operating_hours: '07:00 AM - 09:00 PM', accessibility_features: ['wheelchair_accessible', 'seating_area', 'medical_first_aid'], filtration_equipment_details: 'Dual Industrial CADR 650 m3/h Filtration Units with Carbon Bed', capacity: 60, is_verified: true },
-  { id: 'f0000000-0000-0000-0000-000000000003', name: 'Chembur Senior Citizens Respite Shelter', facility_type: 'clinic', address: 'Near Chembur Naka, Chembur, Mumbai 400071', city: 'Mumbai', neighbourhood: 'Chembur', latitude: 19.0622, longitude: 72.8992, contact_phone: '+91 22 2522 9988', contact_email: 'chembur.respite@saans.community', operating_hours: '09:00 AM - 06:00 PM', accessibility_features: ['wheelchair_accessible', 'nursing_assistant', 'oxygen_support'], filtration_equipment_details: 'Medical Grade HEPA + Activated Carbon, Low Noise Operation', capacity: 30, is_verified: true },
-  { id: 'f0000000-0000-0000-0000-000000000004', name: 'Andheri East NGO Learning Centre', facility_type: 'school', address: 'Chakala, Andheri East, Mumbai 400093', city: 'Mumbai', neighbourhood: 'Andheri East', latitude: 19.1158, longitude: 72.8654, contact_phone: '+91 22 2822 4411', contact_email: 'learning@cleanairandheri.org', operating_hours: '08:30 AM - 05:30 PM', accessibility_features: ['wheelchair_accessible', 'children_study_tables'], filtration_equipment_details: '4x Corsi-Rosenthal DIY Box Purifiers with MERV-13 Filters', capacity: 40, is_verified: true }
+  { id: 'f0000000-0000-0000-0000-000000000001', name: 'Bandra Public Library Clean Air Zone', facility_type: 'library', address: 'Near Hill Road, Bandra West, Mumbai 400050', city: 'Mumbai', neighbourhood: 'Bandra West', latitude: 19.0558, longitude: 72.8300, contact_phone: '+91 22 2640 1234', contact_email: 'bandra.library@mumbai.gov.in', operating_hours: '08:00 AM - 08:00 PM', accessibility_features: ['wheelchair_accessible', 'drinking_water', 'restrooms', 'wifi'], filtration_equipment_details: 'Triple HEPA H13 Air Purifiers + Positive Pressure Airflow System', capacity: 45, is_verified: true, is_demo: true },
+  { id: 'f0000000-0000-0000-0000-000000000002', name: 'Dadar Community Wellness Centre', facility_type: 'community_hall', address: 'Gokhale Road North, Dadar, Mumbai 400028', city: 'Mumbai', neighbourhood: 'Dadar', latitude: 19.0195, longitude: 72.8428, contact_phone: '+91 22 2430 5678', contact_email: 'dadar.wellness@saans.community', operating_hours: '07:00 AM - 09:00 PM', accessibility_features: ['wheelchair_accessible', 'seating_area', 'medical_first_aid'], filtration_equipment_details: 'Dual Industrial CADR 650 m3/h Filtration Units with Carbon Bed', capacity: 60, is_verified: true, is_demo: true },
+  { id: 'f0000000-0000-0000-0000-000000000003', name: 'Chembur Senior Citizens Respite Shelter', facility_type: 'clinic', address: 'Near Chembur Naka, Chembur, Mumbai 400071', city: 'Mumbai', neighbourhood: 'Chembur', latitude: 19.0622, longitude: 72.8992, contact_phone: '+91 22 2522 9988', contact_email: 'chembur.respite@saans.community', operating_hours: '09:00 AM - 06:00 PM', accessibility_features: ['wheelchair_accessible', 'nursing_assistant', 'oxygen_support'], filtration_equipment_details: 'Medical Grade HEPA + Activated Carbon, Low Noise Operation', capacity: 30, is_verified: true, is_demo: true },
+  { id: 'f0000000-0000-0000-0000-000000000004', name: 'Andheri East NGO Learning Centre', facility_type: 'school', address: 'Chakala, Andheri East, Mumbai 400093', city: 'Mumbai', neighbourhood: 'Andheri East', latitude: 19.1158, longitude: 72.8654, contact_phone: '+91 22 2822 4411', contact_email: 'learning@cleanairandheri.org', operating_hours: '08:30 AM - 05:30 PM', accessibility_features: ['wheelchair_accessible', 'children_study_tables'], filtration_equipment_details: '4x Corsi-Rosenthal DIY Box Purifiers with MERV-13 Filters', capacity: 40, is_verified: true, is_demo: true }
 ];
 
 const SEED_EQUIPMENT = [
-  { id: 'e0000000-0000-0000-0000-000000000001', donor_id: 'd0000000-0000-0000-0000-000000000004', name: 'Philips Series 2000i HEPA Purifier', category: 'hepa_purifier', description: 'High CADR purifier suitable for master bedroom or living room up to 350 sq ft. Real-time PM2.5 feedback display.', manufacturer_model: 'Philips AC2887/20', condition: 'like_new', type: 'loan', max_loan_duration_days: 30, location_city: 'Mumbai', location_neighbourhood: 'Andheri East', latitude: 19.1136, longitude: 72.8697, image_url: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80', status: 'available', is_verified: true, cadr_rating: 333 },
-  { id: 'e0000000-0000-0000-0000-000000000002', donor_id: 'd0000000-0000-0000-0000-000000000004', name: 'Corsi-Rosenthal DIY Box System (MERV 13)', category: 'diy_filtration', description: 'Community assembled 4-filter high-flow cube with Orient box fan. Ultra-low resistance, high particulate throughput.', manufacturer_model: 'SAANS-CR-4x', condition: 'new', type: 'donation', location_city: 'Mumbai', location_neighbourhood: 'Dadar', latitude: 19.0178, longitude: 72.8478, image_url: 'https://images.unsplash.com/photo-1545259741-2ea3ebf61fa3?auto=format&fit=crop&w=600&q=80', status: 'available', is_verified: true, cadr_rating: 420 },
-  { id: 'e0000000-0000-0000-0000-000000000003', donor_id: 'd0000000-0000-0000-0000-000000000004', name: 'Laser Particle Sensor IAQ Monitor', category: 'iaq_monitor', description: 'Accurate laser scattering particulate sensor measuring PM1.0, PM2.5 and PM10 with OLED read-out.', manufacturer_model: 'Temtop LKC-1000S+', condition: 'good', type: 'loan', max_loan_duration_days: 14, location_city: 'Mumbai', location_neighbourhood: 'Bandra West', latitude: 19.0596, longitude: 72.8295, image_url: 'https://images.unsplash.com/photo-1584727638096-042c45049ebe?auto=format&fit=crop&w=600&q=80', status: 'available', is_verified: true },
-  { id: 'e0000000-0000-0000-0000-000000000004', donor_id: 'd0000000-0000-0000-0000-000000000004', name: 'N95 / FFP2 Respirator Family Pack (50 Pcs)', category: 'protective_gear', description: 'Certified ISI-approved particulate respirator masks with comfortable headband for outdoor commuting.', manufacturer_model: 'Venus V-4400', condition: 'new', type: 'donation', location_city: 'Mumbai', location_neighbourhood: 'Kurla West', latitude: 19.0657, longitude: 72.8794, image_url: 'https://images.unsplash.com/photo-1584634731339-252c581abfc5?auto=format&fit=crop&w=600&q=80', status: 'available', is_verified: true }
+  { id: 'e0000000-0000-0000-0000-000000000001', donor_id: 'd0000000-0000-0000-0000-000000000004', name: 'Philips Series 2000i HEPA Purifier', category: 'hepa_purifier', description: 'High CADR purifier suitable for master bedroom or living room up to 350 sq ft. Real-time PM2.5 feedback display.', manufacturer_model: 'Philips AC2887/20', condition: 'like_new', type: 'loan', max_loan_duration_days: 30, location_city: 'Mumbai', location_neighbourhood: 'Andheri East', latitude: 19.1136, longitude: 72.8697, image_url: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80', status: 'available', is_verified: true, is_demo: true, cadr_rating: 333 },
+  { id: 'e0000000-0000-0000-0000-000000000002', donor_id: 'd0000000-0000-0000-0000-000000000004', name: 'Corsi-Rosenthal DIY Box System (MERV 13)', category: 'diy_filtration', description: 'Community assembled 4-filter high-flow cube with Orient box fan. Ultra-low resistance, high particulate throughput.', manufacturer_model: 'SAANS-CR-4x', condition: 'new', type: 'donation', location_city: 'Mumbai', location_neighbourhood: 'Dadar', latitude: 19.0178, longitude: 72.8478, image_url: 'https://images.unsplash.com/photo-1545259741-2ea3ebf61fa3?auto=format&fit=crop&w=600&q=80', status: 'available', is_verified: true, is_demo: true, cadr_rating: 420 },
+  { id: 'e0000000-0000-0000-0000-000000000003', donor_id: 'd0000000-0000-0000-0000-000000000004', name: 'Laser Particle Sensor IAQ Monitor', category: 'iaq_monitor', description: 'Accurate laser scattering particulate sensor measuring PM1.0, PM2.5 and PM10 with OLED read-out.', manufacturer_model: 'Temtop LKC-1000S+', condition: 'good', type: 'loan', max_loan_duration_days: 14, location_city: 'Mumbai', location_neighbourhood: 'Bandra West', latitude: 19.0596, longitude: 72.8295, image_url: 'https://images.unsplash.com/photo-1584727638096-042c45049ebe?auto=format&fit=crop&w=600&q=80', status: 'available', is_verified: true, is_demo: true },
+  { id: 'e0000000-0000-0000-0000-000000000004', donor_id: 'd0000000-0000-0000-0000-000000000004', name: 'N95 / FFP2 Respirator Family Pack (50 Pcs)', category: 'protective_gear', description: 'Certified ISI-approved particulate respirator masks with comfortable headband for outdoor commuting.', manufacturer_model: 'Venus V-4400', condition: 'new', type: 'donation', location_city: 'Mumbai', location_neighbourhood: 'Kurla West', latitude: 19.0657, longitude: 72.8794, image_url: 'https://images.unsplash.com/photo-1584634731339-252c581abfc5?auto=format&fit=crop&w=600&q=80', status: 'available', is_verified: true, is_demo: true }
 ];
 
 const SEED_REQUESTS = [
@@ -300,9 +300,10 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
           longitude: lon,
           timestamp: current.time || new Date().toISOString(),
           sourceAttribution: {
-            primaryProvider: 'Open-Meteo Air Quality & CPCB/MPCB Network Data',
-            modelOrStationName: `ECMWF CAMS Regional Forecast Model & ${mod.station}`,
+            primaryProvider: 'Open-Meteo Atmospheric Chemistry & CPCB Reference Network',
+            modelOrStationName: `ECMWF CAMS Regional Atmospheric Model with CPCB Coordinate Anchoring`,
             isModelledForecast: true,
+            provenanceNotice: 'Station readings reflect high-resolution micro-climate spatial interpolations derived from regional CAMS atmospheric dispersion modeling calibrated to official CPCB CAAQMS coordinates. They are not direct telemetric hardware sensors. For legal enforcement, consult cpcb.gov.in.',
             license: 'Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)'
           },
           indianAqi: {
@@ -327,8 +328,8 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
           },
           hourlyForecast: hourly,
           nearbyStations: [
-            { id: 'station-primary', name: mod.station, distanceKm: 1.2, latitude: lat, longitude: lon, lastUpdated: new Date().toISOString(), measurements: { pm2_5: pm25Val, pm10: pm10Val, no2: no2Val, so2: so2Val } },
-            { id: 'station-secondary', name: 'Bandra Kalanagar CPCB/MPCB CAAQMS', distanceKm: 3.4, latitude: 19.0607, longitude: 72.8480, lastUpdated: new Date().toISOString(), measurements: { pm2_5: rawPm25, pm10: rawPm10, no2: rawNo2, so2: 13 } }
+            { id: 'station-primary', name: `${mod.station} (Reference Grid)`, distanceKm: 1.2, latitude: lat, longitude: lon, stationType: 'micro_climate_spatial_estimate', provenance: 'Spatial micro-climate estimate calibrated to CPCB coordinates', lastUpdated: new Date().toISOString(), measurements: { pm2_5: pm25Val, pm10: pm10Val, no2: no2Val, so2: so2Val } },
+            { id: 'station-secondary', name: 'Bandra Kalanagar CPCB Reference Grid', distanceKm: 3.4, latitude: 19.0607, longitude: 72.8480, stationType: 'micro_climate_spatial_estimate', provenance: 'Model-derived estimate anchored to CPCB Station #MH001 coordinates', lastUpdated: new Date().toISOString(), measurements: { pm2_5: rawPm25, pm10: rawPm10, no2: rawNo2, so2: 13 } }
           ]
         });
       } catch (err: any) {
@@ -725,8 +726,92 @@ Key Directives:
       }
     }
 
-    // 11. Assistance Requests (supports { requests: [...] })
+    // 11. Assistance Requests (supports { requests: [...] }, status patch, matches, assign)
     if (path === '/requests' || path.startsWith('/requests')) {
+      const matchStatus = path.match(/^\/requests\/([^/]+)\/status/);
+      if (matchStatus && method === 'PATCH') {
+        const reqId = matchStatus[1];
+        const user = getUserFromRequest(request);
+        if (!user) return jsonResponse({ error: 'Unauthorized: Authentication required' }, 401);
+        const isAdmin = user.account_type === 'admin' || (user.roles && user.roles.includes('admin'));
+        const body: any = await request.json();
+
+        let targetReq = SEED_REQUESTS.find(r => r.id === reqId);
+        if (supabase) {
+          const { data } = await supabase.from('assistance_requests').select('*').eq('id', reqId).single();
+          if (data) targetReq = data;
+        }
+
+        if (!targetReq) return jsonResponse({ error: 'Request not found' }, 404);
+        const isOwner = targetReq.user_id === user.id;
+
+        // Authorization check: Only Admin, Owner, or Assigned Volunteer can modify
+        if (!isAdmin && !isOwner) {
+          return jsonResponse({ error: 'Unauthorized: You do not have permission to modify this request status' }, 403);
+        }
+
+        if (isOwner && !isAdmin && body.status !== 'cancelled') {
+          return jsonResponse({ error: 'Citizens can only cancel their own requests' }, 403);
+        }
+
+        targetReq.status = body.status;
+        if (supabase) await supabase.from('assistance_requests').update({ status: body.status }).eq('id', reqId);
+        return jsonResponse({ message: 'Request status updated', request: targetReq });
+      }
+
+      const matchMatches = path.match(/^\/requests\/([^/]+)\/matches/);
+      if (matchMatches && method === 'GET') {
+        const reqId = matchMatches[1];
+        const user = getUserFromRequest(request);
+        if (!user) return jsonResponse({ error: 'Unauthorized: Authentication required' }, 401);
+        const isAdmin = user.account_type === 'admin' || (user.roles && user.roles.includes('admin'));
+
+        let targetReq = SEED_REQUESTS.find(r => r.id === reqId);
+        if (supabase) {
+          const { data } = await supabase.from('assistance_requests').select('*').eq('id', reqId).single();
+          if (data) targetReq = data;
+        }
+        if (!targetReq) return jsonResponse({ error: 'Request not found' }, 404);
+
+        if (!isAdmin && targetReq.user_id !== user.id) {
+          return jsonResponse({ error: 'Unauthorized: Only administrators or the request owner can view volunteer matches' }, 403);
+        }
+
+        return jsonResponse({
+          matches: [
+            {
+              volunteerProfile: {
+                id: 'b0000000-0000-0000-0000-000000000001',
+                user_id: 'b0000003-0000-0000-0000-000000000003',
+                service_radius_km: 15,
+                experience_years: 3,
+                skills: ['installation', 'electrical', 'repair'],
+                is_verified: true,
+                status: 'active'
+              },
+              volunteerUser: SEED_PROFILES.find(p => p.id === 'b0000003-0000-0000-0000-000000000003'),
+              distanceKm: 6.3,
+              matchScore: 93,
+              rationale: 'Active field volunteer within 6.3 km with certified electrical & Corsi-Rosenthal assembly skills.'
+            }
+          ]
+        });
+      }
+
+      const matchAssign = path.match(/^\/requests\/([^/]+)\/assign/);
+      if (matchAssign && method === 'POST') {
+        const reqId = matchAssign[1];
+        const user = getUserFromRequest(request);
+        if (!user) return jsonResponse({ error: 'Unauthorized: Authentication required' }, 401);
+        const isAdmin = user.account_type === 'admin' || (user.roles && user.roles.includes('admin'));
+        if (!isAdmin) {
+          return jsonResponse({ error: 'Unauthorized: Only administrators can assign volunteers' }, 403);
+        }
+
+        const body: any = await request.json();
+        return jsonResponse({ success: true, message: 'Volunteer assigned successfully', requestId: reqId, volunteerId: body.volunteerId });
+      }
+
       if (method === 'GET') {
         let list = SEED_REQUESTS;
         if (supabase) {

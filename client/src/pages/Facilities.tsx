@@ -228,10 +228,17 @@ export const Facilities: React.FC = () => {
                     <span className="px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-teal-500/15 text-teal-300 border border-teal-500/30">
                       {facility.facility_type.replace('_', ' ')}
                     </span>
-                    <span className="flex items-center gap-1 text-xs text-emerald-400 font-semibold">
-                      <ShieldCheck className="w-4 h-4" />
-                      Audited Sanctuary
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      {facility.is_demo && (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                          Demo Benchmark Sanctuary
+                        </span>
+                      )}
+                      <span className="flex items-center gap-1 text-xs text-emerald-400 font-semibold">
+                        <ShieldCheck className="w-4 h-4" />
+                        {facility.is_demo ? 'Pilot Clean Air Zone' : 'Verified Community Sanctuary'}
+                      </span>
+                    </div>
                   </div>
 
                   <h3 className="text-lg font-bold text-white mb-1 font-display">{facility.name}</h3>

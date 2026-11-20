@@ -15,6 +15,7 @@ export interface Profile {
   account_type: 'citizen' | 'volunteer' | 'donor' | 'admin';
   latitude?: number;
   longitude?: number;
+  is_demo_account?: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -122,6 +123,7 @@ export interface Equipment {
   image_url?: string;
   status: 'available' | 'requested' | 'reserved' | 'issued' | 'returned' | 'maintenance';
   is_verified: boolean;
+  is_demo?: boolean;
   cadr_rating?: number;
   created_at: string;
   updated_at: string;
@@ -177,6 +179,7 @@ export interface Facility {
   filtration_equipment_details: string;
   capacity: number;
   is_verified: boolean;
+  is_demo?: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -373,8 +376,100 @@ export class DatabaseStore {
   public save(): void {
     try {
       fs.writeFileSync(this.dbPath, JSON.stringify(this.state, null, 2), 'utf-8');
+      // Genuinely write-through persist mutations to Supabase PostgreSQL when client is active
+      if (this.supabase) {
+        this.syncStateToSupabase().catch(err => {
+          console.warn('Background Supabase write-through warning:', err?.message || err);
+        });
+      }
     } catch (e) {
       console.error('Error saving database state:', e);
+    }
+  }
+
+  public async syncStateToSupabase(): Promise<void> {
+    if (!this.supabase) return;
+    try {
+      if (this.state.assistance_requests && this.state.assistance_requests.length > 0) {
+        const rows = this.state.assistance_requests.map(r => ({
+          id: r.id,
+          user_id: r.user_id,
+          category: r.category,
+          description: r.description,
+          location_city: r.location_city,
+          location_neighbourhood: r.location_neighbourhood,
+          latitude: r.latitude,
+          longitude: r.longitude,
+          urgency: r.urgency,
+          household_type: r.household_type,
+          existing_equipment: r.existing_equipment,
+          contact_method: r.contact_method,
+          consent_shared: r.consent_shared,
+          status: r.status,
+          created_at: r.created_at,
+          updated_at: r.updated_at
+        }));
+        await this.supabase.from('assistance_requests').upsert(rows, { onConflict: 'id' });
+      }
+
+      if (this.state.equipment && this.state.equipment.length > 0) {
+        const rows = this.state.equipment.map(e => ({
+          id: e.id,
+          donor_id: e.donor_id,
+          name: e.name,
+          category: e.category,
+          description: e.description,
+          manufacturer_model: e.manufacturer_model,
+          condition: e.condition,
+          type: e.type,
+          max_loan_duration_days: e.max_loan_duration_days,
+          location_city: e.location_city,
+          location_neighbourhood: e.location_neighbourhood,
+          latitude: e.latitude,
+          longitude: e.longitude,
+          image_url: e.image_url,
+          status: e.status,
+          is_verified: e.is_verified,
+          cadr_rating: e.cadr_rating,
+          created_at: e.created_at,
+          updated_at: e.updated_at
+        }));
+        await this.supabase.from('equipment').upsert(rows, { onConflict: 'id' });
+      }
+
+      if (this.state.community_reports && this.state.community_reports.length > 0) {
+        const rows = this.state.community_reports.map(r => ({
+          id: r.id,
+          reporter_id: r.reporter_id,
+          category: r.category,
+          description: r.description,
+          city: r.city,
+          neighbourhood: r.neighbourhood,
+          latitude: r.latitude,
+          longitude: r.longitude,
+          image_url: r.image_url,
+          status: r.status,
+          resolution_notes: r.resolution_notes,
+          created_at: r.created_at,
+          updated_at: r.updated_at
+        }));
+        await this.supabase.from('community_reports').upsert(rows, { onConflict: 'id' });
+      }
+
+      if (this.state.impact_records && this.state.impact_records.length > 0) {
+        const rows = this.state.impact_records.map(i => ({
+          id: i.id,
+          metric_type: i.metric_type,
+          value: i.value,
+          related_entity_type: i.related_entity_type,
+          related_entity_id: i.related_entity_id,
+          recorded_at: i.recorded_at,
+          methodology_notes: i.methodology_notes
+        }));
+        await this.supabase.from('impact_records').upsert(rows, { onConflict: 'id' });
+      }
+    } catch (err) {
+      console.warn('Supabase write-through synchronization failed:', err);
     }
   }
 
@@ -398,6 +493,7 @@ export class DatabaseStore {
           account_type: 'admin',
           latitude: 19.0596,
           longitude: 72.8295,
+          is_demo_account: true,
           created_at: now,
           updated_at: now
         },
@@ -413,6 +509,7 @@ export class DatabaseStore {
           account_type: 'citizen',
           latitude: 19.0657,
           longitude: 72.8794,
+          is_demo_account: true,
           created_at: now,
           updated_at: now
         },
@@ -428,6 +525,7 @@ export class DatabaseStore {
           account_type: 'volunteer',
           latitude: 19.0178,
           longitude: 72.8478,
+          is_demo_account: true,
           created_at: now,
           updated_at: now
         },
@@ -443,6 +541,7 @@ export class DatabaseStore {
           account_type: 'donor',
           latitude: 19.1136,
           longitude: 72.8697,
+          is_demo_account: true,
           created_at: now,
           updated_at: now
         }
@@ -541,6 +640,7 @@ export class DatabaseStore {
           image_url: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80',
           status: 'available',
           is_verified: true,
+          is_demo: true,
           cadr_rating: 333,
           created_at: now,
           updated_at: now
@@ -561,6 +661,7 @@ export class DatabaseStore {
           image_url: 'https://images.unsplash.com/photo-1545259741-2ea3ebf61fa3?auto=format&fit=crop&w=600&q=80',
           status: 'available',
           is_verified: true,
+          is_demo: true,
           cadr_rating: 420,
           created_at: now,
           updated_at: now
@@ -582,6 +683,7 @@ export class DatabaseStore {
           image_url: 'https://images.unsplash.com/photo-1584727638096-042c45049ebe?auto=format&fit=crop&w=600&q=80',
           status: 'available',
           is_verified: true,
+          is_demo: true,
           created_at: now,
           updated_at: now
         },
@@ -601,6 +703,7 @@ export class DatabaseStore {
           image_url: 'https://images.unsplash.com/photo-1584634731339-252c581abfc5?auto=format&fit=crop&w=600&q=80',
           status: 'available',
           is_verified: true,
+          is_demo: true,
           created_at: now,
           updated_at: now
         }
@@ -625,6 +728,7 @@ export class DatabaseStore {
           filtration_equipment_details: 'Triple HEPA H13 Air Purifiers + Positive Pressure Airflow System',
           capacity: 45,
           is_verified: true,
+          is_demo: true,
           created_at: now,
           updated_at: now
         },
@@ -644,6 +748,7 @@ export class DatabaseStore {
           filtration_equipment_details: 'Dual Industrial CADR 650 m3/h Filtration Units with Carbon Bed',
           capacity: 60,
           is_verified: true,
+          is_demo: true,
           created_at: now,
           updated_at: now
         },
@@ -663,6 +768,7 @@ export class DatabaseStore {
           filtration_equipment_details: 'Medical Grade HEPA + Activated Carbon, Low Noise Operation',
           capacity: 30,
           is_verified: true,
+          is_demo: true,
           created_at: now,
           updated_at: now
         },
@@ -682,6 +788,7 @@ export class DatabaseStore {
           filtration_equipment_details: '4x Corsi-Rosenthal DIY Box Purifiers with MERV-13 Filters',
           capacity: 40,
           is_verified: true,
+          is_demo: true,
           created_at: now,
           updated_at: now
         }

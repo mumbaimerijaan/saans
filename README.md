@@ -209,16 +209,21 @@ Directly verifies every requirement defined in the prompt:
 
 ---
 
-## 7. Pre-Seeded Evaluation Accounts
+## 7. Demonstration Personas & Sandbox Security
 
-The platform includes 4 pre-seeded Mumbai accounts with a **1-click Role Switcher** in the top navbar:
+The platform includes 4 pre-seeded evaluation fixtures with a **1-click Role Switcher** in the top navbar:
 
-| Account | Role | Name | Location | Password |
-|---|---|---|---|---|
-| `priya.sharma@example.com` | **Citizen** | Priya Sharma | Kurla West, Mumbai | `password123` |
-| `rahul.deshmukh@example.com` | **Volunteer** | Rahul Deshmukh | Dadar, Mumbai | `password123` |
-| `cleanair.mumbai@example.com` | **Donor / NGO** | CleanAir NGO Mumbai | Andheri East, Mumbai | `password123` |
-| `admin@saans.org` | **Administrator** | Admin SAANS | Bandra West, Mumbai | `password123` |
+| Account | Role | Name | Location | Password | Sandbox Badge |
+|---|---|---|---|---|---|
+| `priya.sharma@example.com` | **Citizen** | Priya Sharma | Kurla West, Mumbai | `password123` | `is_demo_account: true` |
+| `rahul.deshmukh@example.com` | **Volunteer** | Rahul Deshmukh | Dadar, Mumbai | `password123` | `is_demo_account: true` |
+| `cleanair.mumbai@example.com` | **Donor / NGO** | CleanAir NGO Mumbai | Andheri East, Mumbai | `password123` | `is_demo_account: true` |
+| `admin@saans.org` | **Administrator** | Admin SAANS | Bandra West, Mumbai | `password123` | `is_demo_account: true` |
+
+> [!SECURITY] Demonstration Persona Isolation & Production Secret Hardening
+> - **Sandbox Isolation:** These demo credentials and seed records are strictly earmarked fixtures (`is_demo_account: true`). When real users register via `/register`, their profiles are assigned authentic UUIDs, distinct hashed passwords, and isolated record partitions.
+> - **Production JWT Secret Validation:** The backend enforces strict configuration security. When `NODE_ENV === 'production'`, the server verifies that `JWT_SECRET` is non-empty, distinct from the default development key, and at least 32 characters long. If an insecure or default secret is detected in production, the application aborts immediately with a fatal security error.
+> - **Production Credential Safety:** Never reuse the demo credentials above in production deployments. Production administrators must provision dedicated environment variables and unique credentials.
 
 ---
 

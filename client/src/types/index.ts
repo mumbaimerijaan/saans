@@ -12,6 +12,7 @@ export interface User {
   roles: string[];
   latitude?: number;
   longitude?: number;
+  is_demo_account?: boolean;
 }
 
 export interface HouseholdProfile {
@@ -46,6 +47,7 @@ export interface AQIReport {
     primaryProvider: string;
     modelOrStationName: string;
     isModelledForecast: boolean;
+    provenanceNotice?: string;
     license: string;
   };
   indianAqi: {
@@ -74,6 +76,8 @@ export interface AQIReport {
     distanceKm: number;
     latitude: number;
     longitude: number;
+    stationType?: string;
+    provenance?: string;
     lastUpdated: string;
     measurements: Record<string, number>;
   }>;
@@ -120,6 +124,7 @@ export interface Equipment {
   image_url?: string;
   status: 'available' | 'requested' | 'reserved' | 'issued' | 'returned' | 'maintenance';
   is_verified: boolean;
+  is_demo?: boolean;
   cadr_rating?: number;
   created_at: string;
   updated_at: string;
@@ -141,6 +146,7 @@ export interface Facility {
   filtration_equipment_details: string;
   capacity: number;
   is_verified: boolean;
+  is_demo?: boolean;
   created_at: string;
   updated_at: string;
 }

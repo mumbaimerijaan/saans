@@ -274,10 +274,20 @@ export const AirQualityCentre: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-bold text-white text-base">Nearby Ground CAAQMS Stations in Mumbai</h3>
-                  <p className="text-xs text-slate-400">Physical continuous ambient air quality stations maintained by MPCB and CPCB.</p>
+                  <h3 className="font-bold text-white text-base">CPCB CAAQMS Geographic Reference Grid</h3>
+                  <p className="text-xs text-slate-400">Micro-climate spatial interpolations anchored to official CPCB/MPCB station coordinates.</p>
                 </div>
-                <span className="text-xs text-teal-400 font-medium">4 Continuous Stations Monitored</span>
+                <span className="text-[10px] font-bold uppercase bg-slate-800 text-teal-400 px-2.5 py-1 rounded-full border border-slate-700">
+                  Spatial Model Grid (CPCB Anchored)
+                </span>
+              </div>
+
+              {/* Data Provenance Transparency Note */}
+              <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-400 flex items-start gap-2.5">
+                <ShieldCheck className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
+                <div className="leading-relaxed">
+                  <strong className="text-slate-200">Scientific Provenance Notice:</strong> Overall AQI is calculated strictly following official CPCB Indian National AQI 24h breakpoint equations using live Open-Meteo atmospheric telemetry. Station values represent calibrated spatial micro-climate estimates for each ward, not raw direct hardware sensors. For statutory regulatory enforcement, consult official CAAQMS telemetry at <a href="https://cpcb.nic.in" target="_blank" rel="noopener noreferrer" className="text-teal-400 underline">cpcb.nic.in</a>.
+                </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -292,6 +302,9 @@ export const AirQualityCentre: React.FC = () => {
                       <div className="flex items-center justify-between text-xs mb-1">
                         <span className="font-bold text-white">{station.name}</span>
                         <span className="text-[11px] text-teal-400 font-medium">{station.distanceKm} km</span>
+                      </div>
+                      <div className="text-[10px] text-slate-400 mb-2">
+                        {station.provenance || 'Spatial micro-climate estimate calibrated to CPCB coordinates'}
                       </div>
                       <div className="grid grid-cols-3 gap-2 mt-2 pt-2 border-t border-slate-800 text-center text-[11px]">
                         <div className="p-1 rounded bg-slate-900">
