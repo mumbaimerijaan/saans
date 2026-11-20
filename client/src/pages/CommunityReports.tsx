@@ -224,9 +224,9 @@ export const CommunityReports: React.FC = () => {
 
         {/* REPORT SUBMISSION MODAL */}
         {showModal && (
-          <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <div className="w-full max-w-lg bg-[#11181c] border border-slate-800 rounded-2xl p-6 shadow-2xl">
-              <h3 className="text-xl font-bold text-white mb-1 font-display">
+              <h3 id="modal-title" className="text-xl font-bold text-white mb-1 font-display">
                 Report Pollution Event
               </h3>
               <p className="text-xs text-slate-400 mb-5">
@@ -235,8 +235,9 @@ export const CommunityReports: React.FC = () => {
 
               <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">Incident Category *</label>
+                  <label htmlFor="report-category" className="block text-slate-300 font-bold mb-1">Incident Category *</label>
                   <select
+                    id="report-category"
                     value={category}
                     onChange={e => setCategory(e.target.value as any)}
                     className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -248,8 +249,9 @@ export const CommunityReports: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">Location / Neighbourhood *</label>
+                  <label htmlFor="report-neighbourhood" className="block text-slate-300 font-bold mb-1">Location / Neighbourhood *</label>
                   <select
+                    id="report-neighbourhood"
                     value={neighbourhood}
                     onChange={e => setNeighbourhood(e.target.value)}
                     className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -261,8 +263,9 @@ export const CommunityReports: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">Observation Description *</label>
+                  <label htmlFor="report-description" className="block text-slate-300 font-bold mb-1">Observation Description *</label>
                   <textarea
+                    id="report-description"
                     rows={3}
                     value={description}
                     onChange={e => setDescription(e.target.value)}
@@ -273,8 +276,9 @@ export const CommunityReports: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">Evidence Photo URL (Optional)</label>
+                  <label htmlFor="report-image-url" className="block text-slate-300 font-bold mb-1">Evidence Photo URL (Optional)</label>
                   <input
+                    id="report-image-url"
                     type="url"
                     value={imageUrl}
                     onChange={e => setImageUrl(e.target.value)}
@@ -294,6 +298,7 @@ export const CommunityReports: React.FC = () => {
                   <button
                     type="submit"
                     disabled={submitting}
+                    aria-label="Submit community pollution incident report"
                     className="px-6 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold hover:bg-amber-400 transition-colors shadow-md flex items-center gap-1.5"
                   >
                     <Send className="w-3.5 h-3.5" />

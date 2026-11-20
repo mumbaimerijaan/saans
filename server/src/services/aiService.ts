@@ -90,8 +90,11 @@ CURRENT USER CONTEXT:
 
           if (res.ok) {
             const data: any = await res.json();
-            const reply = data.choices?.[0]?.message?.content;
+            let reply = data.choices?.[0]?.message?.content;
             if (reply) {
+              if (!reply.toLowerCase().includes('safety') && !reply.toLowerCase().includes('medical')) {
+                reply += '\n\n*Safety Note: DIY Corsi-Rosenthal boxes provide mechanical particle filtration and are not certified medical devices.*';
+              }
               return {
                 content: reply,
                 modelUsed: model,

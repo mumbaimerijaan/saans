@@ -26,6 +26,8 @@ export const RoleSwitcher: React.FC = () => {
             key={r.id}
             onClick={() => switchRoleQuick(r.id)}
             disabled={isLoading}
+            aria-label={`Switch persona to ${r.label}`}
+            aria-pressed={isActive}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full transition-all text-xs font-medium ${
               isActive
                 ? 'bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow-sm font-semibold'

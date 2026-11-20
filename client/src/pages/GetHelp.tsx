@@ -189,12 +189,15 @@ export const GetHelp: React.FC = () => {
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
                   Select Request Category *
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" role="radiogroup" aria-label="Request Category">
                   {CATEGORIES.map(cat => (
-                    <div
+                    <button
                       key={cat.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={category === cat.id}
                       onClick={() => setCategory(cat.id)}
-                      className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+                      className={`p-3.5 rounded-xl border text-left transition-all ${
                         category === cat.id
                           ? 'bg-teal-950/40 border-teal-500 text-white shadow-sm'
                           : 'bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700'
@@ -202,17 +205,18 @@ export const GetHelp: React.FC = () => {
                     >
                       <div className="text-xs font-bold mb-1">{cat.label}</div>
                       <div className="text-[11px] text-slate-400 leading-snug">{cat.desc}</div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+                <label htmlFor="req-description" className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
                   Detailed Explanation of Your Situation *
                 </label>
                 <textarea
+                  id="req-description"
                   rows={3}
                   value={description}
                   onChange={e => setDescription(e.target.value)}
@@ -225,10 +229,11 @@ export const GetHelp: React.FC = () => {
               {/* Location & Urgency */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  <label htmlFor="req-neighbourhood" className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
                     Mumbai Neighbourhood *
                   </label>
                   <select
+                    id="req-neighbourhood"
                     value={neighbourhood}
                     onChange={e => setNeighbourhood(e.target.value)}
                     className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -240,10 +245,11 @@ export const GetHelp: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  <label htmlFor="req-urgency" className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
                     Urgency Level *
                   </label>
                   <select
+                    id="req-urgency"
                     value={urgency}
                     onChange={e => setUrgency(e.target.value as any)}
                     className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -256,10 +262,11 @@ export const GetHelp: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  <label htmlFor="req-household" className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
                     Household Composition
                   </label>
                   <input
+                    id="req-household"
                     type="text"
                     value={householdType}
                     onChange={e => setHouseholdType(e.target.value)}
@@ -272,10 +279,11 @@ export const GetHelp: React.FC = () => {
               {/* Existing Equipment & Contact Method */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  <label htmlFor="req-existing-equip" className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
                     Purification Devices Already Available
                   </label>
                   <input
+                    id="req-existing-equip"
                     type="text"
                     value={existingEquipment}
                     onChange={e => setExistingEquipment(e.target.value)}
@@ -285,10 +293,11 @@ export const GetHelp: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+                  <label htmlFor="req-contact-method" className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
                     Preferred Contact Method
                   </label>
                   <input
+                    id="req-contact-method"
                     type="text"
                     value={contactMethod}
                     onChange={e => setContactMethod(e.target.value)}

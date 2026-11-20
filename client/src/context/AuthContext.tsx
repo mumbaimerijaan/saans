@@ -8,7 +8,7 @@ interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   login: (email: string, password?: string) => Promise<void>;
-  register: (data: any) => Promise<void>;
+  register: (data: Record<string, unknown>) => Promise<void>;
   logout: () => void;
   switchRoleQuick: (role: 'citizen' | 'volunteer' | 'donor' | 'admin') => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (data: any) => {
+  const register = async (data: Record<string, unknown>) => {
     setIsLoading(true);
     try {
       const res = await api.register(data);

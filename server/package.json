@@ -7,7 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "tsx test/e2e.test.ts"
+    "test": "tsx test/e2e.test.ts && tsx test/acceptance_criteria.test.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.48.1",

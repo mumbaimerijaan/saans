@@ -132,10 +132,12 @@ I can help you:
           </div>
 
           {/* Language Selector */}
-          <div className="flex items-center gap-2 bg-[#11181c] border border-slate-800 p-1 rounded-xl text-xs">
+          <div className="flex items-center gap-2 bg-[#11181c] border border-slate-800 p-1 rounded-xl text-xs" role="group" aria-label="Language options">
             <Globe2 className="w-3.5 h-3.5 text-teal-400 ml-1.5" />
             <button
               onClick={() => setLanguage('en')}
+              aria-label="Switch response language to English"
+              aria-pressed={language === 'en'}
               className={`px-2.5 py-1 rounded-lg font-medium transition-all ${
                 language === 'en' ? 'bg-teal-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
               }`}
@@ -144,6 +146,8 @@ I can help you:
             </button>
             <button
               onClick={() => setLanguage('hi')}
+              aria-label="Switch response language to Hindi"
+              aria-pressed={language === 'hi'}
               className={`px-2.5 py-1 rounded-lg font-medium transition-all ${
                 language === 'hi' ? 'bg-teal-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
               }`}
@@ -152,6 +156,8 @@ I can help you:
             </button>
             <button
               onClick={() => setLanguage('mr')}
+              aria-label="Switch response language to Marathi"
+              aria-pressed={language === 'mr'}
               className={`px-2.5 py-1 rounded-lg font-medium transition-all ${
                 language === 'mr' ? 'bg-teal-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
               }`}
@@ -256,6 +262,8 @@ I can help you:
               className="flex items-center gap-2"
             >
               <input
+                id="ai-prompt-input"
+                aria-label="Ask SAANS AI assistant about clean air guidance"
                 type="text"
                 value={input}
                 onChange={e => setInput(e.target.value)}
@@ -271,6 +279,7 @@ I can help you:
               <button
                 type="submit"
                 disabled={!input.trim() || loading}
+                aria-label="Send message to AI assistant"
                 className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 text-slate-950 font-bold text-xs hover:opacity-95 transition-all shadow-md flex items-center gap-1.5 disabled:opacity-40"
               >
                 <Send className="w-3.5 h-3.5" />

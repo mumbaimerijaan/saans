@@ -58,11 +58,13 @@ export const Login: React.FC = () => {
         {/* Standard Email Login */}
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="block text-slate-300 font-bold mb-1">Email Address</label>
+            <label htmlFor="login-email" className="block text-slate-300 font-bold mb-1">Email Address</label>
             <div className="relative">
               <Mail className="w-4 h-4 absolute left-3 top-2.5 text-slate-500" />
               <input
+                id="login-email"
                 type="email"
+                autoComplete="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="you@example.com"
@@ -73,11 +75,13 @@ export const Login: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-slate-300 font-bold mb-1">Password</label>
+            <label htmlFor="login-password" className="block text-slate-300 font-bold mb-1">Password</label>
             <div className="relative">
               <Lock className="w-4 h-4 absolute left-3 top-2.5 text-slate-500" />
               <input
+                id="login-password"
                 type="password"
+                autoComplete="current-password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-3 py-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -89,6 +93,7 @@ export const Login: React.FC = () => {
           <button
             type="submit"
             disabled={submitting}
+            aria-label="Sign in to your SAANS account"
             className="w-full py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 text-slate-950 font-bold text-xs hover:opacity-95 transition-all shadow-md flex items-center justify-center gap-1.5"
           >
             <span>{submitting ? 'Authenticating...' : 'Sign In'}</span>
@@ -106,6 +111,7 @@ export const Login: React.FC = () => {
             <button
               onClick={() => handleQuickLogin('citizen')}
               disabled={isLoading}
+              aria-label="Sign in as Citizen demo persona Priya Sharma"
               className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-teal-500/40 text-left transition-colors flex items-center gap-2"
             >
               <User className="w-3.5 h-3.5 text-teal-400" />
@@ -118,6 +124,7 @@ export const Login: React.FC = () => {
             <button
               onClick={() => handleQuickLogin('volunteer')}
               disabled={isLoading}
+              aria-label="Sign in as Volunteer demo persona Rahul Deshmukh"
               className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/40 text-left transition-colors flex items-center gap-2"
             >
               <Wrench className="w-3.5 h-3.5 text-amber-400" />
@@ -130,6 +137,7 @@ export const Login: React.FC = () => {
             <button
               onClick={() => handleQuickLogin('donor')}
               disabled={isLoading}
+              aria-label="Sign in as Donor NGO demo persona CleanAir Mumbai"
               className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500/40 text-left transition-colors flex items-center gap-2"
             >
               <HeartHandshake className="w-3.5 h-3.5 text-emerald-400" />
@@ -142,6 +150,7 @@ export const Login: React.FC = () => {
             <button
               onClick={() => handleQuickLogin('admin')}
               disabled={isLoading}
+              aria-label="Sign in as Administrator demo persona Admin SAANS"
               className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-rose-500/40 text-left transition-colors flex items-center gap-2"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-rose-400" />

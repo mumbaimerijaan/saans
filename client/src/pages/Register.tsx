@@ -51,7 +51,7 @@ export const Register: React.FC = () => {
     setSubmitting(true);
     setError(null);
     try {
-      const payload: any = {
+      const payload: Record<string, unknown> = {
         fullName,
         email,
         password,
@@ -108,9 +108,11 @@ export const Register: React.FC = () => {
         {step === 1 && (
           <form onSubmit={handleStep1Submit} className="space-y-4 text-xs">
             <div>
-              <label className="block text-slate-300 font-bold mb-1">Full Name *</label>
+              <label htmlFor="reg-fullname" className="block text-slate-300 font-bold mb-1">Full Name *</label>
               <input
+                id="reg-fullname"
                 type="text"
+                autoComplete="name"
                 value={fullName}
                 onChange={e => setFullName(e.target.value)}
                 placeholder="e.g. Vikram Joshi"
@@ -121,9 +123,11 @@ export const Register: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-slate-300 font-bold mb-1">Email Address *</label>
+                <label htmlFor="reg-email" className="block text-slate-300 font-bold mb-1">Email Address *</label>
                 <input
+                  id="reg-email"
                   type="email"
+                  autoComplete="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="vikram@example.com"
@@ -132,9 +136,11 @@ export const Register: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-slate-300 font-bold mb-1">Password *</label>
+                <label htmlFor="reg-password" className="block text-slate-300 font-bold mb-1">Password *</label>
                 <input
+                  id="reg-password"
                   type="password"
+                  autoComplete="new-password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Minimum 6 characters"
@@ -146,9 +152,11 @@ export const Register: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-slate-300 font-bold mb-1">Phone Number (Optional)</label>
+                <label htmlFor="reg-phone" className="block text-slate-300 font-bold mb-1">Phone Number (Optional)</label>
                 <input
+                  id="reg-phone"
                   type="tel"
+                  autoComplete="tel"
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
                   placeholder="+91 98200 XXXXX"
@@ -156,8 +164,9 @@ export const Register: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-slate-300 font-bold mb-1">Mumbai Neighbourhood *</label>
+                <label htmlFor="reg-neighbourhood" className="block text-slate-300 font-bold mb-1">Mumbai Neighbourhood *</label>
                 <select
+                  id="reg-neighbourhood"
                   value={neighbourhood}
                   onChange={e => setNeighbourhood(e.target.value)}
                   className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -172,17 +181,20 @@ export const Register: React.FC = () => {
             {/* Account Role Selection */}
             <div>
               <label className="block text-slate-300 font-bold mb-1.5">Primary Platform Role *</label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Primary Platform Role">
                 {[
                   { id: 'citizen', label: 'Citizen', desc: 'Need clean air assistance' },
                   { id: 'volunteer', label: 'Volunteer', desc: 'Help install & build' },
                   { id: 'donor', label: 'Donor / Org', desc: 'Share gear & funds' },
                   { id: 'admin', label: 'Admin', desc: 'Coordinate community' },
                 ].map(r => (
-                  <div
+                  <button
                     key={r.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={accountType === r.id}
                     onClick={() => setAccountType(r.id as any)}
-                    className={`p-2.5 rounded-xl border cursor-pointer text-center transition-all ${
+                    className={`p-2.5 rounded-xl border text-center transition-all ${
                       accountType === r.id
                         ? 'bg-teal-950/60 border-teal-500 text-teal-300 font-bold'
                         : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
@@ -190,15 +202,16 @@ export const Register: React.FC = () => {
                   >
                     <div className="font-semibold text-xs text-white">{r.label}</div>
                     <div className="text-[10px] text-slate-400 mt-0.5">{r.desc}</div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
 
             {/* Preferred Language */}
             <div>
-              <label className="block text-slate-300 font-bold mb-1">Preferred Language</label>
+              <label htmlFor="reg-language" className="block text-slate-300 font-bold mb-1">Preferred Language</label>
               <select
+                id="reg-language"
                 value={preferredLanguage}
                 onChange={e => setPreferredLanguage(e.target.value as any)}
                 className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -211,6 +224,7 @@ export const Register: React.FC = () => {
 
             <button
               type="submit"
+              aria-label="Continue to Household Profile"
               className="w-full py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 text-slate-950 font-bold text-xs hover:opacity-95 transition-all shadow-md flex items-center justify-center gap-1.5"
             >
               <span>Continue to Household Profile</span>
@@ -228,8 +242,9 @@ export const Register: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-slate-300 font-bold mb-1">Total Household Members</label>
+                <label htmlFor="reg-members" className="block text-slate-300 font-bold mb-1">Total Household Members</label>
                 <input
+                  id="reg-members"
                   type="number"
                   min={1}
                   max={20}
@@ -240,8 +255,9 @@ export const Register: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-slate-300 font-bold mb-1">Approx Room Size (Sq Ft)</label>
+                <label htmlFor="reg-roomsize" className="block text-slate-300 font-bold mb-1">Approx Room Size (Sq Ft)</label>
                 <input
+                  id="reg-roomsize"
                   type="number"
                   value={roomSizeFt(roomSizeSqft)}
                   onChange={e => setRoomSizeSqft(parseInt(e.target.value, 10))}
@@ -251,8 +267,9 @@ export const Register: React.FC = () => {
             </div>
 
             <div className="space-y-2 p-3.5 rounded-xl bg-slate-900/60 border border-slate-800">
-              <label className="flex items-center gap-2 cursor-pointer text-slate-300">
+              <label htmlFor="reg-elderly" className="flex items-center gap-2 cursor-pointer text-slate-300">
                 <input
+                  id="reg-elderly"
                   type="checkbox"
                   checked={elderlyPresent}
                   onChange={e => setElderlyPresent(e.target.checked)}
@@ -261,8 +278,9 @@ export const Register: React.FC = () => {
                 <span>Elderly family members (60+ yrs) present</span>
               </label>
 
-              <label className="flex items-center gap-2 cursor-pointer text-slate-300">
+              <label htmlFor="reg-children" className="flex items-center gap-2 cursor-pointer text-slate-300">
                 <input
+                  id="reg-children"
                   type="checkbox"
                   checked={childrenPresent}
                   onChange={e => setChildrenPresent(e.target.checked)}
@@ -271,8 +289,9 @@ export const Register: React.FC = () => {
                 <span>Young children or infants present</span>
               </label>
 
-              <label className="flex items-center gap-2 cursor-pointer text-slate-300">
+              <label htmlFor="reg-sensitive" className="flex items-center gap-2 cursor-pointer text-slate-300">
                 <input
+                  id="reg-sensitive"
                   type="checkbox"
                   checked={sensitivePersons}
                   onChange={e => setSensitivePersons(e.target.checked)}
@@ -283,8 +302,9 @@ export const Register: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-slate-300 font-bold mb-1">Existing Air Purification Equipment</label>
+              <label htmlFor="reg-existing-purifiers" className="block text-slate-300 font-bold mb-1">Existing Air Purification Equipment</label>
               <input
+                id="reg-existing-purifiers"
                 type="text"
                 value={existingPurifiers}
                 onChange={e => setExistingPurifiers(e.target.value)}

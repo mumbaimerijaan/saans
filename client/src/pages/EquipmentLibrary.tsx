@@ -172,6 +172,7 @@ export const EquipmentLibrary: React.FC = () => {
             <input
               type="text"
               value={search}
+              aria-label="Search equipment by model, brand, or specifications"
               onChange={e => setSearch(e.target.value)}
               placeholder="Search by model, brand, or specs..."
               className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -180,6 +181,7 @@ export const EquipmentLibrary: React.FC = () => {
 
           <select
             value={selectedCategory}
+            aria-label="Filter equipment by device category"
             onChange={e => setSelectedCategory(e.target.value)}
             className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
           >
@@ -190,6 +192,7 @@ export const EquipmentLibrary: React.FC = () => {
 
           <select
             value={selectedType}
+            aria-label="Filter equipment by loan or donation status"
             onChange={e => setSelectedType(e.target.value)}
             className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
           >

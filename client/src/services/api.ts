@@ -1,4 +1,21 @@
-import { AQIReport, AssistanceRequest, Equipment, Facility, CommunityReport, Notification, SystemStatus, User } from '../types';
+import {
+  AQIReport,
+  AssistanceRequest,
+  Equipment,
+  Facility,
+  CommunityReport,
+  Notification,
+  SystemStatus,
+  User,
+  VolunteerTasksResponse,
+  VolunteerMatch,
+  DiyCadrResult,
+  AiChatResult,
+  ImpactResponse,
+  AdminOverviewResponse,
+  HouseholdProfile,
+  VolunteerProfile
+} from '../types';
 
 const rawBase = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
 const API_BASE = rawBase ? (rawBase.endsWith('/api') ? rawBase : `${rawBase}/api`) : '/api';
@@ -16,7 +33,7 @@ function getAuthHeaders(): HeadersInit {
 
 export const api = {
   // Auth
-  async register(data: any): Promise<{ token: string; user: User }> {
+  async register(data: Record<string, unknown>): Promise<{ token: string; user: User }> {
     const res = await fetch(`${API_BASE}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -38,7 +55,7 @@ export const api = {
     return json;
   },
 
-  async getMe(): Promise<{ user: User; household?: any; volunteer?: any }> {
+  async getMe(): Promise<{ user: User; household?: HouseholdProfile; volunteer?: VolunteerProfile }> {
     const res = await fetch(`${API_BASE}/auth/me`, {
       headers: getAuthHeaders(),
     });
@@ -47,7 +64,7 @@ export const api = {
     return json;
   },
 
-  async updateHousehold(data: any): Promise<any> {
+  async updateHousehold(data: Partial<HouseholdProfile>): Promise<{ success: boolean; household: HouseholdProfile }> {
     const res = await fetch(`${API_BASE}/auth/household`, {
       method: 'PUT',
       headers: getAuthHeaders(),
@@ -107,14 +124,14 @@ export const api = {
     return json;
   },
 
-  async getRequestMatches(id: string): Promise<any> {
+  async getRequestMatches(id: string): Promise<{ matches: VolunteerMatch[] }> {
     const res = await fetch(`${API_BASE}/requests/${id}/matches`, {
       headers: getAuthHeaders(),
     });
     return res.json();
   },
 
-  async assignVolunteerToRequest(id: string, volunteerId: string): Promise<any> {
+  async assignVolunteerToRequest(id: string, volunteerId: string): Promise<{ success: boolean; assignment: unknown }> {
     const res = await fetch(`${API_BASE}/requests/${id}/assign`, {
       method: 'POST',
       headers: getAuthHeaders(),
@@ -126,7 +143,7 @@ export const api = {
   },
 
   // Volunteers
-  async getVolunteerTasks(): Promise<any> {
+  async getVolunteerTasks(): Promise<VolunteerTasksResponse> {
     const res = await fetch(`${API_BASE}/volunteers/tasks`, {
       headers: getAuthHeaders(),
     });
@@ -257,7 +274,7 @@ export const api = {
   },
 
   // AI Assistant
-  async sendAiChat(messages: Array<{ role: string; content: string }>, language: string = 'en', activeAqi?: number | null, city?: string, neighbourhood?: string): Promise<any> {
+  async sendAiChat(messages: Array<{ role: string; content: string }>, language: string = 'en', activeAqi?: number | null, city?: string, neighbourhood?: string): Promise<AiChatResult> {
     const res = await fetch(`${API_BASE}/ai/chat`, {
       method: 'POST',
       headers: getAuthHeaders(),
@@ -268,7 +285,7 @@ export const api = {
     return json;
   },
 
-  async calculateDiyCadr(lengthFt: number, widthFt: number, heightFt: number = 10, targetACH: number = 5): Promise<any> {
+  async calculateDiyCadr(lengthFt: number, widthFt: number, heightFt: number = 10, targetACH: number = 5): Promise<DiyCadrResult> {
     const res = await fetch(`${API_BASE}/ai/diy-cadr`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -289,7 +306,7 @@ export const api = {
     return json;
   },
 
-  async markNotificationRead(id: string): Promise<any> {
+  async markNotificationRead(id: string): Promise<{ success: boolean }> {
     const res = await fetch(`${API_BASE}/notifications/${id}/read`, {
       method: 'PATCH',
       headers: getAuthHeaders(),
@@ -297,7 +314,7 @@ export const api = {
     return res.json();
   },
 
-  async markAllNotificationsRead(): Promise<any> {
+  async markAllNotificationsRead(): Promise<{ success: boolean }> {
     const res = await fetch(`${API_BASE}/notifications/read-all`, {
       method: 'POST',
       headers: getAuthHeaders(),
@@ -306,20 +323,20 @@ export const api = {
   },
 
   // Impact Engine
-  async getImpact(): Promise<any> {
+  async getImpact(): Promise<ImpactResponse> {
     const res = await fetch(`${API_BASE}/impact`);
     return res.json();
   },
 
   // Admin Overview
-  async getAdminOverview(): Promise<any> {
+  async getAdminOverview(): Promise<AdminOverviewResponse> {
     const res = await fetch(`${API_BASE}/admin/overview`, {
       headers: getAuthHeaders(),
     });
     return res.json();
   },
 
-  async getAdminUsers(): Promise<any> {
+  async getAdminUsers(): Promise<{ users: User[] }> {
     const res = await fetch(`${API_BASE}/admin/users`, {
       headers: getAuthHeaders(),
     });

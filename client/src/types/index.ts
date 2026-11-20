@@ -203,3 +203,109 @@ export interface SystemStatus {
     };
   };
 }
+
+export interface VolunteerProfile {
+  id: string;
+  user_id: string;
+  skills: string[];
+  vehicle_type: string;
+  max_travel_radius_km: number;
+  is_active: boolean;
+  tasks_completed_count: number;
+  rating: number;
+}
+
+export interface VolunteerMatch {
+  volunteerProfile: VolunteerProfile;
+  volunteerUser: User;
+  distanceKm: number;
+  matchScore: number;
+  rationale: string;
+}
+
+export interface VolunteerTask {
+  assignment: {
+    id: string;
+    request_id: string;
+    volunteer_id: string;
+    status: 'assigned' | 'in_progress' | 'accepted' | 'completed' | 'cancelled';
+    assigned_at: string;
+    completed_at?: string;
+    completion_notes?: string;
+  };
+  request: AssistanceRequest;
+  creatorName?: string;
+  creatorPhone?: string;
+}
+
+export interface VolunteerTasksResponse {
+  volunteerProfile: VolunteerProfile | null;
+  activeTasks: VolunteerTask[];
+  completedTasks: VolunteerTask[];
+  availableRequests: AssistanceRequest[];
+}
+
+export interface DiyCadrResult {
+  roomVolumeCuFt: number;
+  roomVolumeM3: number;
+  targetACH: number;
+  recommendedCadrCFM: number;
+  recommendedCadrM3H: number;
+  estimatedBoxesNeeded: number;
+  recommendedFanSizeInches: number;
+  safetyGuidelines: string[];
+  safetyNotes: string[];
+}
+
+export interface AiChatResult {
+  content: string;
+  modelUsed: string;
+  isFallback?: boolean;
+}
+
+export interface ImpactMetrics {
+  equipmentDonated: number;
+  equipmentLoaned: number;
+  requestsFulfilled: number;
+  volunteerTasksCompleted: number;
+  facilitiesOnboarded: number;
+  reportsResolved: number;
+  diyAssembled: number;
+  estimatedPeopleReached: number;
+}
+
+export interface ImpactResponse {
+  metrics: ImpactMetrics;
+  methodology: {
+    source: string;
+    transparencyNote: string;
+    peopleReachedFormula: string;
+  };
+  recentRecords: Array<{
+    id?: string;
+    metric_type: string;
+    value: number;
+    recorded_at: string;
+  }>;
+}
+
+export interface AdminStats {
+  totalUsers: number;
+  totalRequests: number;
+  openRequests?: number;
+  pendingRequests?: number;
+  totalEquipment?: number;
+  equipmentCount?: number;
+  availableEquipment?: number;
+  verifiedFacilities?: number;
+  activeReports?: number;
+  pendingReports?: number;
+  activeVolunteers?: number;
+}
+
+export interface AdminOverviewResponse {
+  stats: AdminStats;
+  pendingRequests: AssistanceRequest[];
+  unverifiedFacilities: Facility[];
+  unverifiedReports: CommunityReport[];
+}

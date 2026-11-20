@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import { AssistanceRequest, Equipment, Facility, CommunityReport, AQIReport } from '../types';
+import {
+  AssistanceRequest,
+  Equipment,
+  Facility,
+  CommunityReport,
+  AQIReport,
+  VolunteerTasksResponse,
+  VolunteerMatch,
+  VolunteerTask,
+  AdminStats,
+  User as UserType
+} from '../types';
 import { AqiBadge } from '../components/AqiBadge';
 import {
   LayoutDashboard,
@@ -31,18 +42,18 @@ export const Dashboard: React.FC = () => {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [reports, setReports] = useState<CommunityReport[]>([]);
-  const [volunteerTasks, setVolunteerTasks] = useState<any>(null);
-  const [adminOverview, setAdminOverview] = useState<any>(null);
-  const [adminUsers, setAdminUsers] = useState<any[]>([]);
+  const [volunteerTasks, setVolunteerTasks] = useState<VolunteerTasksResponse | null>(null);
+  const [adminOverview, setAdminOverview] = useState<AdminStats | null>(null);
+  const [adminUsers, setAdminUsers] = useState<UserType[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Volunteer Task Complete Modal
-  const [completingTask, setCompletingTask] = useState<any>(null);
+  const [completingTask, setCompletingTask] = useState<VolunteerTask | null>(null);
   const [completionNotes, setCompletionNotes] = useState('');
 
   // Admin Assign Modal
   const [assigningReq, setAssigningReq] = useState<AssistanceRequest | null>(null);
-  const [volunteerMatches, setVolunteerMatches] = useState<any[]>([]);
+  const [volunteerMatches, setVolunteerMatches] = useState<VolunteerMatch[]>([]);
   const [assignLoading, setAssignLoading] = useState(false);
 
   const loadDashboardData = async () => {
@@ -397,7 +408,7 @@ export const Dashboard: React.FC = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {volunteerTasks?.activeTasks?.map((item: any) => (
+                  {volunteerTasks?.activeTasks?.map(item => (
                     <div
                       key={item.assignment.id}
                       className="p-5 rounded-xl bg-slate-900 border border-teal-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4"
@@ -411,7 +422,7 @@ export const Dashboard: React.FC = () => {
                         </div>
                         <p className="text-slate-300">{item.request?.description}</p>
                         <div className="text-[11px] text-slate-400 pt-1">
-                          👤 Requester: <strong>{item.creatorName}</strong> ({item.creatorPhone || 'Phone via in-app'}) &bull; 📍 {item.request?.location_neighbourhood}
+                          👤 Requester: <strong>{item.creatorName || item.request?.creatorName || 'Citizen'}</strong> ({item.creatorPhone || item.request?.creatorPhone || 'Phone via in-app'}) &bull; 📍 {item.request?.location_neighbourhood}
                         </div>
                       </div>
 
@@ -424,7 +435,7 @@ export const Dashboard: React.FC = () => {
                             Accept Assignment
                           </button>
                         )}
-                        {item.assignment.status === 'accepted' && (
+                        {(item.assignment.status === 'accepted' || item.assignment.status === 'in_progress') && (
                           <button
                             onClick={() => setCompletingTask(item)}
                             className="px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors shadow-md"
@@ -445,7 +456,7 @@ export const Dashboard: React.FC = () => {
               <p className="text-xs text-slate-400">These citizen requests need volunteer assembly or equipment transport.</p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                {volunteerTasks?.availableRequests?.map((req: any) => (
+                {volunteerTasks?.availableRequests?.map(req => (
                   <div key={req.id} className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-teal-300 capitalize">{req.category.replace('_', ' ')}</span>
@@ -618,17 +629,18 @@ export const Dashboard: React.FC = () => {
 
         {/* TASK COMPLETE MODAL */}
         {completingTask && (
-          <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="complete-modal-title">
             <div className="w-full max-w-md bg-[#11181c] border border-slate-800 rounded-2xl p-6 shadow-2xl">
-              <h3 className="text-lg font-bold text-white mb-1 font-display">Mark Task as Completed</h3>
+              <h3 id="complete-modal-title" className="text-lg font-bold text-white mb-1 font-display">Mark Task as Completed</h3>
               <p className="text-xs text-slate-400 mb-4">
                 Record your field notes for request #{completingTask.request?.id.slice(0, 8)}.
               </p>
 
               <form onSubmit={handleCompleteTask} className="space-y-4 text-xs">
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">Work Summary / Notes *</label>
+                  <label htmlFor="task-completion-notes" className="block text-slate-300 font-bold mb-1">Work Summary / Notes *</label>
                   <textarea
+                    id="task-completion-notes"
                     rows={3}
                     value={completionNotes}
                     onChange={e => setCompletionNotes(e.target.value)}
@@ -648,6 +660,7 @@ export const Dashboard: React.FC = () => {
                   </button>
                   <button
                     type="submit"
+                    aria-label="Confirm completion of volunteer assignment"
                     className="px-5 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition-colors"
                   >
                     Complete Task
@@ -660,9 +673,9 @@ export const Dashboard: React.FC = () => {
 
         {/* ADMIN VOLUNTEER MATCH MODAL */}
         {assigningReq && (
-          <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="assign-modal-title">
             <div className="w-full max-w-xl bg-[#11181c] border border-slate-800 rounded-2xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-              <h3 className="text-lg font-bold text-white mb-1 font-display">
+              <h3 id="assign-modal-title" className="text-lg font-bold text-white mb-1 font-display">
                 Matching Volunteers for Request
               </h3>
               <p className="text-xs text-slate-400 mb-4">

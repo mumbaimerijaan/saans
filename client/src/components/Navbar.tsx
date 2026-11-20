@@ -82,6 +82,7 @@ export const Navbar: React.FC = () => {
                 <Link
                   key={link.path}
                   to={link.path}
+                  aria-current={active ? 'page' : undefined}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                     active
                       ? 'bg-slate-800 text-teal-400 font-semibold'
@@ -103,12 +104,13 @@ export const Navbar: React.FC = () => {
             {/* Notification Bell */}
             <button
               onClick={() => setIsOpen(true)}
+              aria-label={`View in-app notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
               className="relative p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors"
               title="View in-app notifications"
             >
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-teal-500 text-slate-950 text-[10px] font-black flex items-center justify-center animate-pulse">
+                <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-teal-500 text-slate-950 text-[10px] font-black flex items-center justify-center animate-pulse" aria-hidden="true">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
@@ -117,6 +119,7 @@ export const Navbar: React.FC = () => {
             {/* Dark / Light Toggle */}
             <button
               onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
               className="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors hidden sm:block"
               title="Toggle color theme"
             >
@@ -128,6 +131,7 @@ export const Navbar: React.FC = () => {
               <div className="flex items-center gap-2 pl-2 border-l border-slate-800">
                 <Link
                   to="/dashboard"
+                  aria-label={`User dashboard: ${user.fullName || (user as any).full_name || 'User'}`}
                   className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors"
                   title="Go to dashboard"
                 >
@@ -140,6 +144,7 @@ export const Navbar: React.FC = () => {
                 </Link>
                 <button
                   onClick={logout}
+                  aria-label="Sign out of SAANS"
                   className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors hidden sm:block"
                   title="Logout"
                 >
@@ -158,6 +163,8 @@ export const Navbar: React.FC = () => {
             {/* Mobile Hamburger Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={mobileMenuOpen}
               className="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 xl:hidden"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

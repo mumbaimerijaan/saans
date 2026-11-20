@@ -174,6 +174,7 @@ export const Facilities: React.FC = () => {
             <input
               type="text"
               value={search}
+              aria-label="Filter clean air sanctuaries by neighbourhood"
               onChange={e => setSearch(e.target.value)}
               placeholder="Filter by neighbourhood (e.g. Bandra, Dadar, Chembur)..."
               className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
@@ -182,6 +183,7 @@ export const Facilities: React.FC = () => {
 
           <select
             value={selectedType}
+            aria-label="Filter clean air sanctuaries by facility type"
             onChange={e => setSelectedType(e.target.value)}
             className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
           >

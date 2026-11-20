@@ -105,6 +105,7 @@ export const AirQualityCentre: React.FC = () => {
           <div className="flex flex-wrap items-center gap-3">
             <select
               value={selectedNeighbourhood.name}
+              aria-label="Select neighbourhood for air quality monitoring"
               onChange={e => {
                 const found = MUMBAI_NEIGHBOURHOODS.find(n => n.name === e.target.value);
                 if (found) setSelectedNeighbourhood(found);
@@ -119,6 +120,7 @@ export const AirQualityCentre: React.FC = () => {
             <button
               onClick={handleUseMyLocation}
               disabled={geoLocating}
+              aria-label="Detect my current coordinates with browser geolocation"
               className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium flex items-center gap-1.5 transition-colors border border-slate-700"
               title="Detect my current coordinates"
             >
@@ -129,6 +131,7 @@ export const AirQualityCentre: React.FC = () => {
             <button
               onClick={() => fetchAqi(selectedNeighbourhood)}
               disabled={refreshing}
+              aria-label="Refresh live air quality data"
               className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors border border-slate-700"
               title="Refresh data"
             >

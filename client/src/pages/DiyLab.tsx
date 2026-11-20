@@ -146,24 +146,28 @@ export const DiyLab: React.FC = () => {
               <form onSubmit={handleCalculate} className="space-y-4 text-xs">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-slate-300 font-semibold mb-1">Room Length (Feet)</label>
+                    <label htmlFor="cadr-length" className="block text-slate-300 font-semibold mb-1">Room Length (Feet)</label>
                     <input
+                      id="cadr-length"
                       type="number"
                       min={6}
                       max={60}
                       value={lengthFt}
+                      aria-label="Room length in feet"
                       onChange={e => setLengthFt(parseFloat(e.target.value))}
                       className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-300 font-semibold mb-1">Room Width (Feet)</label>
+                    <label htmlFor="cadr-width" className="block text-slate-300 font-semibold mb-1">Room Width (Feet)</label>
                     <input
+                      id="cadr-width"
                       type="number"
                       min={6}
                       max={60}
                       value={widthFt}
+                      aria-label="Room width in feet"
                       onChange={e => setWidthFt(parseFloat(e.target.value))}
                       className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
                       required
@@ -173,21 +177,25 @@ export const DiyLab: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-slate-300 font-semibold mb-1">Ceiling Height (Feet)</label>
+                    <label htmlFor="cadr-height" className="block text-slate-300 font-semibold mb-1">Ceiling Height (Feet)</label>
                     <input
+                      id="cadr-height"
                       type="number"
                       min={7}
                       max={20}
                       value={heightFt}
+                      aria-label="Room ceiling height in feet"
                       onChange={e => setHeightFt(parseFloat(e.target.value))}
                       className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-300 font-semibold mb-1">Target ACH (Clean Air Changes)</label>
+                    <label htmlFor="cadr-ach" className="block text-slate-300 font-semibold mb-1">Target ACH (Clean Air Changes)</label>
                     <select
+                      id="cadr-ach"
                       value={targetACH}
+                      aria-label="Target air changes per hour"
                       onChange={e => setTargetACH(parseInt(e.target.value, 10))}
                       className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500"
                     >
