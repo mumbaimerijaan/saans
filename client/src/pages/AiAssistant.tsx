@@ -27,12 +27,12 @@ export const AiAssistant: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: `Hello! I am **SAANS AI**, your community clean air assistant for Mumbai.
+      content: `Hello! I am **SAANS AI**, your community clean air assistant for Mumbai, Delhi, and cities across India.
 
 I can help you:
 - **Build DIY Purifiers:** Step-by-step Corsi-Rosenthal blueprints, CADR sizing & filter compatibility.
 - **Indoor Air Quality Hacks:** Wet mopping protocols, window sealing schedules during thermal smog inversions.
-- **Find Resources:** Equipment loans, clean air sanctuaries & volunteer assistance.
+- **Location-Tailored Guidance:** Dynamic guidance for families, students, and asthmatics across Indian cities.
 - **Languages:** Ask me in English, **हिन्दी**, or **मराठी**!
 
 *Please note: I provide environmental and hardware recommendations based on CPCB guidelines, not medical advice.* How can I help you take action today?`,
@@ -53,11 +53,11 @@ I can help you:
   }, [messages, loading]);
 
   const suggestedPrompts = [
-    { text: 'How do I build a DIY Corsi-Rosenthal box purifier?', lang: 'en' as const },
-    { text: 'स्मॉग के दौरान घर के अंदर वायु प्रदूषण कम करने के घरेलू उपाय?', lang: 'hi' as const },
-    { text: 'मुंबईतील वायू प्रदूषण आणि घरगुती प्युरिफायर उपाय सांगा.', lang: 'mr' as const },
-    { text: 'What daily routines reduce indoor PM2.5 exposure without expensive equipment?', lang: 'en' as const },
-    { text: 'How does CPCB Indian National AQI differ from US EPA AQI?', lang: 'en' as const },
+    { text: 'What daily clean air routines protect a family with elderly & kids at home?', lang: 'en' as const },
+    { text: 'How do students protect cognitive focus during winter exam season?', lang: 'en' as const },
+    { text: 'How do I build a DIY Corsi-Rosenthal box purifier with Indian box fans?', lang: 'en' as const },
+    { text: 'दिल्ली में स्मॉग और इनवर्जन के दौरान घर को सुरक्षित रखने के उपाय?', lang: 'hi' as const },
+    { text: 'मुंबई व पुण्यासाठी घरगुती प्युरिफायर आणि स्वच्छ हवेचे उपाय सांगा.', lang: 'mr' as const },
   ];
 
   const handleSend = async (contentToSend?: string) => {
@@ -70,12 +70,26 @@ I can help you:
     setInput('');
     setLoading(true);
 
+    // Detect target city mentioned in user prompt or fall back to user's registered city
+    let targetCity = user?.city || 'Mumbai';
+    const lowerText = text.toLowerCase();
+    if (lowerText.includes('delhi') || lowerText.includes('ncr')) targetCity = 'Delhi';
+    else if (lowerText.includes('pune')) targetCity = 'Pune';
+    else if (lowerText.includes('bengaluru') || lowerText.includes('bangalore')) targetCity = 'Bengaluru';
+    else if (lowerText.includes('kolkata')) targetCity = 'Kolkata';
+    else if (lowerText.includes('chennai')) targetCity = 'Chennai';
+
+    // Strip leading greeting so messages sent to AI model always begin with user role
+    const outgoingMessages = newHistory
+      .filter((_, idx) => idx > 0 || newHistory[0].role === 'user')
+      .map(m => ({ role: m.role, content: m.content }));
+
     try {
       const res = await api.sendAiChat(
-        newHistory.map(m => ({ role: m.role, content: m.content })),
+        outgoingMessages,
         language,
         185,
-        'Mumbai',
+        targetCity,
         user?.neighbourhood || 'Bandra West'
       );
 

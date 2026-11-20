@@ -66,6 +66,21 @@ export const Facilities: React.FC = () => {
     loadFacilities();
   }, [selectedType, search]);
 
+  const filteredFacilities = facilities.filter(item => {
+    if (selectedType) {
+      const itemType = (item.facility_type || (item as any).facilityType || '').toLowerCase();
+      if (itemType !== selectedType.toLowerCase()) return false;
+    }
+    if (search) {
+      const q = search.toLowerCase();
+      const matchName = item.name?.toLowerCase().includes(q);
+      const matchNeighbourhood = item.neighbourhood?.toLowerCase().includes(q);
+      const matchAddress = item.address?.toLowerCase().includes(q);
+      if (!matchName && !matchNeighbourhood && !matchAddress) return false;
+    }
+    return true;
+  });
+
   const handleSubmitFacility = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !filtrationDetails.trim()) return;
@@ -145,7 +160,7 @@ export const Facilities: React.FC = () => {
             <span className="text-teal-400 font-medium">Click any pin for directions & specs</span>
           </div>
           <InteractiveMap
-            facilities={facilities}
+            facilities={filteredFacilities}
             center={[19.0760, 72.8777]}
             zoom={12}
             height="380px"
@@ -194,14 +209,14 @@ export const Facilities: React.FC = () => {
             <Clock className="w-6 h-6 mx-auto animate-spin text-teal-400 mb-2" />
             <p className="text-xs">Loading clean air spaces...</p>
           </div>
-        ) : facilities.length === 0 ? (
+        ) : filteredFacilities.length === 0 ? (
           <div className="p-12 text-center text-slate-500 bg-[#11181c] rounded-2xl border border-slate-800">
             <Building2 className="w-10 h-10 mx-auto text-slate-600 mb-3" />
             <p className="text-sm font-semibold text-slate-300">No facilities found matching your criteria.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-            {facilities.map(facility => (
+            {filteredFacilities.map(facility => (
               <div
                 key={facility.id}
                 className="p-6 rounded-2xl bg-[#11181c] border border-slate-800 hover:border-slate-700 transition-all shadow-xl flex flex-col justify-between"

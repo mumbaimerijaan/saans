@@ -24,7 +24,7 @@ import {
 import { Link } from 'react-router-dom';
 
 export const Dashboard: React.FC = () => {
-  const { user, household } = useAuth();
+  const { user, household, switchRoleQuick, isLoading: authLoading } = useAuth();
 
   const [aqReport, setAqReport] = useState<AQIReport | null>(null);
   const [requests, setRequests] = useState<AssistanceRequest[]>([]);
@@ -161,10 +161,75 @@ export const Dashboard: React.FC = () => {
     }
   };
 
+  if (authLoading && !user) {
+    return (
+      <div className="min-h-screen bg-[#080c0e] py-24 text-center text-slate-400 flex flex-col items-center justify-center space-y-3">
+        <Clock className="w-8 h-8 animate-spin text-teal-400 mx-auto" />
+        <p className="text-sm font-medium text-slate-300">Loading your community clean air dashboard...</p>
+      </div>
+    );
+  }
+
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#080c0e] py-16 text-center text-slate-400">
-        <p>Please log in or use the role switcher above to view your dashboard.</p>
+      <div className="min-h-screen bg-[#080c0e] py-16 px-4">
+        <div className="max-w-2xl mx-auto rounded-2xl bg-[#11181c] border border-slate-800 p-8 shadow-2xl text-center space-y-6">
+          <div className="w-12 h-12 rounded-2xl bg-teal-500/20 text-teal-400 flex items-center justify-center mx-auto">
+            <LayoutDashboard className="w-6 h-6" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-white font-display">Select Your Community Role</h2>
+            <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+              SAANS features role-specific workflows for citizens, field volunteers, equipment donors, and municipal coordinators. Choose a demo persona to explore:
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+            <button
+              onClick={() => switchRoleQuick('citizen')}
+              className="p-4 rounded-xl bg-slate-900 border border-slate-700 hover:border-teal-500 transition-all text-xs group"
+            >
+              <div className="font-bold text-white flex items-center gap-2 mb-1 group-hover:text-teal-400">
+                <User className="w-4 h-4 text-teal-400" />
+                <span>Priya Sharma (Citizen)</span>
+              </div>
+              <p className="text-[11px] text-slate-400">Kurla West &bull; Requesting air purifier for family near high-traffic corridor</p>
+            </button>
+
+            <button
+              onClick={() => switchRoleQuick('volunteer')}
+              className="p-4 rounded-xl bg-slate-900 border border-slate-700 hover:border-amber-500 transition-all text-xs group"
+            >
+              <div className="font-bold text-white flex items-center gap-2 mb-1 group-hover:text-amber-400">
+                <Wrench className="w-4 h-4 text-amber-400" />
+                <span>Rahul Deshmukh (Volunteer)</span>
+              </div>
+              <p className="text-[11px] text-slate-400">Dadar &bull; Field electrician delivering HEPA units & assembling Corsi boxes</p>
+            </button>
+
+            <button
+              onClick={() => switchRoleQuick('donor')}
+              className="p-4 rounded-xl bg-slate-900 border border-slate-700 hover:border-emerald-500 transition-all text-xs group"
+            >
+              <div className="font-bold text-white flex items-center gap-2 mb-1 group-hover:text-emerald-400">
+                <HeartHandshake className="w-4 h-4 text-emerald-400" />
+                <span>CleanAir Foundation (Donor)</span>
+              </div>
+              <p className="text-[11px] text-slate-400">Andheri &bull; Donating commercial HEPA units & MERV-13 filter rolls</p>
+            </button>
+
+            <button
+              onClick={() => switchRoleQuick('admin')}
+              className="p-4 rounded-xl bg-slate-900 border border-slate-700 hover:border-rose-500 transition-all text-xs group"
+            >
+              <div className="font-bold text-white flex items-center gap-2 mb-1 group-hover:text-rose-400">
+                <ShieldCheck className="w-4 h-4 text-rose-400" />
+                <span>SAANS Team (Coordinator)</span>
+              </div>
+              <p className="text-[11px] text-slate-400">Citywide &bull; Overview metrics, volunteer matching & incident moderation</p>
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

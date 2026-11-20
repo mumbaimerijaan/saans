@@ -76,6 +76,20 @@ export const EquipmentLibrary: React.FC = () => {
     loadEquipment();
   }, [selectedCategory, selectedType, search]);
 
+  const filteredEquipment = equipment.filter(item => {
+    if (selectedType && item.type !== selectedType) return false;
+    if (selectedCategory && item.category !== selectedCategory) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      const matchName = item.name?.toLowerCase().includes(q);
+      const matchDesc = item.description?.toLowerCase().includes(q);
+      const matchModel = item.manufacturer_model?.toLowerCase().includes(q);
+      const matchLoc = item.location_neighbourhood?.toLowerCase().includes(q);
+      if (!matchName && !matchDesc && !matchModel && !matchLoc) return false;
+    }
+    return true;
+  });
+
   const handleRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!requestingItem) return;
@@ -204,7 +218,7 @@ export const EquipmentLibrary: React.FC = () => {
             <Clock className="w-6 h-6 mx-auto animate-spin text-teal-400 mb-2" />
             <p className="text-xs">Loading equipment inventory...</p>
           </div>
-        ) : equipment.length === 0 ? (
+        ) : filteredEquipment.length === 0 ? (
           <div className="p-12 text-center text-slate-500 bg-[#11181c] rounded-2xl border border-slate-800">
             <Package className="w-10 h-10 mx-auto text-slate-600 mb-3" />
             <p className="text-sm font-semibold text-slate-300">No equipment items found matching your filters.</p>
@@ -212,7 +226,7 @@ export const EquipmentLibrary: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {equipment.map(item => (
+            {filteredEquipment.map(item => (
               <div
                 key={item.id}
                 className="rounded-2xl bg-[#11181c] border border-slate-800 hover:border-slate-700 overflow-hidden shadow-xl flex flex-col justify-between transition-all"

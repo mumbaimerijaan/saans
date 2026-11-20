@@ -25,6 +25,7 @@ export const DiyLab: React.FC = () => {
   const [targetACH, setTargetACH] = useState<number>(5);
   const [calcResult, setCalcResult] = useState<any>(null);
   const [calcLoading, setCalcLoading] = useState(false);
+  const [calcError, setCalcError] = useState<string | null>(null);
 
   // Performance Tracking State
   const [preReading, setPreReading] = useState<number>(145);
@@ -41,12 +42,17 @@ export const DiyLab: React.FC = () => {
 
   const handleCalculate = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!lengthFt || lengthFt <= 0 || !widthFt || widthFt <= 0 || !heightFt || heightFt <= 0) {
+      setCalcError('Please enter positive room dimensions (length, width, height must be greater than 0).');
+      return;
+    }
+    setCalcError(null);
     setCalcLoading(true);
     try {
       const data = await api.calculateDiyCadr(lengthFt, widthFt, heightFt, targetACH);
       setCalcResult(data);
     } catch (err: any) {
-      alert(err.message || 'Calculation failed');
+      setCalcError(err.message || 'Calculation failed');
     } finally {
       setCalcLoading(false);
     }
@@ -197,6 +203,13 @@ export const DiyLab: React.FC = () => {
                   Total Room Volume: <strong className="text-slate-200 font-mono">{(lengthFt * widthFt * heightFt).toLocaleString()} cu ft</strong> (~{((lengthFt * widthFt * heightFt) * 0.0283).toFixed(1)} m³)
                 </div>
 
+                {calcError && (
+                  <div className="p-3 rounded-xl bg-rose-950/50 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-rose-400 flex-shrink-0" />
+                    <span>{calcError}</span>
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   disabled={calcLoading}
@@ -221,7 +234,7 @@ export const DiyLab: React.FC = () => {
                       Recommended Hardware Configuration
                     </span>
                     <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-500/20 text-teal-300 border border-teal-500/40">
-                      {calcResult.recommendedSystem}
+                      {calcResult.recommendedSystem || 'Corsi-Rosenthal Box Purifier'}
                     </span>
                   </div>
 
@@ -229,15 +242,15 @@ export const DiyLab: React.FC = () => {
                     <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
                       <div className="text-[11px] text-slate-400">Required CADR</div>
                       <div className="text-2xl font-black text-white font-display mt-0.5">
-                        {calcResult.requiredCadrCfm} <span className="text-xs font-normal text-slate-400">CFM</span>
+                        {calcResult.requiredCadrCfm ?? calcResult.recommendedCadrCfm ?? Math.round((lengthFt * widthFt * heightFt * targetACH) / 60)} <span className="text-xs font-normal text-slate-400">CFM</span>
                       </div>
-                      <div className="text-[10px] text-teal-400 font-mono mt-0.5">{calcResult.requiredCadrM3h} m³/h</div>
+                      <div className="text-[10px] text-teal-400 font-mono mt-0.5">{calcResult.requiredCadrM3h ?? calcResult.recommendedCadrM3h ?? Math.round(((lengthFt * widthFt * heightFt * 0.0283) * targetACH))} m³/h</div>
                     </div>
 
                     <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
                       <div className="text-[11px] text-slate-400">Filters Needed</div>
                       <div className="text-2xl font-black text-emerald-400 font-display mt-0.5">
-                        {calcResult.filterCount}x
+                        {calcResult.filterCount || 4}x
                       </div>
                       <div className="text-[10px] text-slate-400 font-mono mt-0.5">MERV 13 (20"x20")</div>
                     </div>
@@ -247,7 +260,7 @@ export const DiyLab: React.FC = () => {
                       <div className="text-2xl font-black text-cyan-400 font-display mt-0.5">
                         {targetACH} <span className="text-xs font-normal text-slate-400">ACH</span>
                       </div>
-                      <div className="text-[10px] text-slate-400 font-mono mt-0.5">Every 12 mins</div>
+                      <div className="text-[10px] text-slate-400 font-mono mt-0.5">Every {Math.round(60 / targetACH)} mins</div>
                     </div>
                   </div>
 
@@ -256,7 +269,7 @@ export const DiyLab: React.FC = () => {
                       <Fan className="w-4 h-4 text-teal-400" />
                       Fan Specification:
                     </h4>
-                    <p className="text-slate-300">{calcResult.fanRecommendation}</p>
+                    <p className="text-slate-300">{calcResult.fanRecommendation || 'Orient / Crompton 20" High-Flow Box Fan with cardboard shroud'}</p>
                   </div>
 
                   <div className="space-y-2 pt-2">
@@ -265,7 +278,12 @@ export const DiyLab: React.FC = () => {
                       Essential Safety & Fire Protocols
                     </h4>
                     <ul className="space-y-1.5 text-xs text-slate-300">
-                      {calcResult.safetyNotes.map((note: string, idx: number) => (
+                      {(calcResult.safetyNotes || calcResult.safetyGuidelines || [
+                        'Ensure the fan has thermal overload protection before continuous multi-hour runs.',
+                        'Use exclusively genuine MERV 13, MERV 14, or true HEPA filters. Never use ozone-generating ionic purifiers.',
+                        'Always install a cardboard shroud on the fan face (covering outer 10-15%) to eliminate air vortex backflow.',
+                        'Keep purifier intakes at least 6 inches away from walls or curtains for unobstructed airflow.'
+                      ]).map((note: string, idx: number) => (
                         <li key={idx} className="flex items-start gap-2">
                           <CheckCircle2 className="w-3.5 h-3.5 text-teal-400 flex-shrink-0 mt-0.5" />
                           <span>{note}</span>

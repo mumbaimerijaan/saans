@@ -213,7 +213,7 @@ export const CommunityReports: React.FC = () => {
                   </div>
 
                   <div className="p-5 pt-0 text-[11px] text-slate-500 flex items-center justify-between border-t border-slate-800/80 mt-3 pt-3">
-                    <span>Reported: {new Date(r.createdAt).toLocaleDateString()}</span>
+                    <span>Reported: {new Date(r.createdAt || (r as any).created_at || Date.now()).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                     <span className="font-mono text-[10px]">ID: #{r.id.slice(0, 8)}</span>
                   </div>
                 </div>
