@@ -212,7 +212,9 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
         supabase_connected: liveDbOk,
         supabase_error: dbError,
         facilities_in_db: facilitiesCount,
-        has_openrouter_key: !!(env.OPENROUTER_API_KEY || env.VITE_OPENROUTER_API_KEY),
+        has_openrouter_key: !!(env.OPENROUTER_API_KEY || (env as any).VITE_OPENROUTER_API_KEY),
+        has_openai_key: !!(env.OPENAI_API_KEY || (env as any).VITE_OPENAI_API_KEY),
+        ai_provider_active: !!(env.OPENROUTER_API_KEY || (env as any).VITE_OPENROUTER_API_KEY) ? 'openrouter' : !!(env.OPENAI_API_KEY || (env as any).VITE_OPENAI_API_KEY) ? 'openai' : 'offline_fallback',
         env_keys_received: Object.keys(env || {}),
         timestamp: new Date().toISOString()
       });
@@ -324,14 +326,14 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
       });
     }
 
-    // 4. AI Assistant Chat
+    // 4. AI Assistant Chat (OpenRouter & OpenAI with cascading fallback)
     if (path === '/ai/chat' && method === 'POST') {
       const body: any = await request.json();
       const messages = body.messages || [];
       const language = body.language || 'en';
 
-      const apiKey = env.OPENROUTER_API_KEY || (env as any).VITE_OPENROUTER_API_KEY || '';
-      const model = env.OPENROUTER_MODEL || (env as any).VITE_OPENROUTER_MODEL || 'nvidia/nemotron-3.5-lightning:free';
+      const openrouterApiKey = env.OPENROUTER_API_KEY || (env as any).VITE_OPENROUTER_API_KEY || '';
+      const openaiApiKey = env.OPENAI_API_KEY || (env as any).VITE_OPENAI_API_KEY || '';
 
       const systemPrompt = `You are SAANS AI, an intelligent community clean air assistant for Mumbai, India.
 Guidelines:
@@ -340,18 +342,66 @@ Guidelines:
 3. Language: ${language === 'hi' ? 'Respond in Hindi (हिन्दी)' : language === 'mr' ? 'Respond in Marathi (मराठी)' : 'Respond in English'}.
 4. Mention the SAANS community network for borrowing purifiers or requesting volunteer assistance in Mumbai.`;
 
-      if (apiKey) {
+      // Strategy A: OpenRouter with resilient multi-model failover
+      if (openrouterApiKey) {
+        const candidateModels = Array.from(new Set([
+          env.OPENROUTER_MODEL,
+          env.OPENROUTER_FALLBACK_MODEL,
+          'nvidia/nemotron-3.5-lightning:free',
+          'meta-llama/llama-3.3-70b-instruct:free',
+          'google/gemma-2-9b-it:free'
+        ].filter(Boolean)));
+
+        for (const candidate of candidateModels) {
+          try {
+            const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${openrouterApiKey}`,
+                'HTTP-Referer': 'https://saans-dmm.pages.dev',
+                'X-Title': 'SAANS Clean Air Platform'
+              },
+              body: JSON.stringify({
+                model: candidate,
+                messages: [
+                  { role: 'system', content: systemPrompt },
+                  ...messages
+                ],
+                temperature: 0.7,
+                max_tokens: 800
+              })
+            });
+
+            if (response.ok) {
+              const data: any = await response.json();
+              const content = data.choices?.[0]?.message?.content;
+              if (content) {
+                return jsonResponse({
+                  content,
+                  modelUsed: candidate,
+                  isFallback: false,
+                  language
+                });
+              }
+            }
+          } catch (err: any) {
+            // Continue to next candidate model
+          }
+        }
+      }
+
+      // Strategy B: Direct OpenAI API fallback if OPENAI_API_KEY is configured
+      if (openaiApiKey) {
         try {
-          const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${apiKey}`,
-              'HTTP-Referer': 'https://saans.pages.dev',
-              'X-Title': 'SAANS Clean Air Platform'
+              'Authorization': `Bearer ${openaiApiKey}`
             },
             body: JSON.stringify({
-              model,
+              model: 'gpt-4o-mini',
               messages: [
                 { role: 'system', content: systemPrompt },
                 ...messages
@@ -361,15 +411,17 @@ Guidelines:
             })
           });
 
-          const data: any = await response.json();
-          const content = data.choices?.[0]?.message?.content;
-          if (content) {
-            return jsonResponse({
-              content,
-              modelUsed: model,
-              isFallback: false,
-              language
-            });
+          if (response.ok) {
+            const data: any = await response.json();
+            const content = data.choices?.[0]?.message?.content;
+            if (content) {
+              return jsonResponse({
+                content,
+                modelUsed: 'openai/gpt-4o-mini',
+                isFallback: false,
+                language
+              });
+            }
           }
         } catch (err: any) {
           // Fall through to safe offline response
@@ -392,12 +444,12 @@ Guidelines:
     }
 
     // 5. Room CADR Calculator
-    if (path === '/ai/cadr-calculate' && method === 'POST') {
+    if ((path === '/ai/cadr-calculate' || path === '/ai/diy-cadr') && method === 'POST') {
       const body: any = await request.json();
-      const length = parseFloat(body.length || '15');
-      const width = parseFloat(body.width || '12');
-      const height = parseFloat(body.height || '10');
-      const targetAch = parseFloat(body.targetAch || '5');
+      const length = parseFloat(body.lengthFt || body.length || '15');
+      const width = parseFloat(body.widthFt || body.width || '12');
+      const height = parseFloat(body.heightFt || body.height || '10');
+      const targetAch = parseFloat(body.targetACH || body.targetAch || '5');
 
       const volumeCuFt = length * width * height;
       const requiredCfm = Math.round((volumeCuFt * targetAch) / 60);
