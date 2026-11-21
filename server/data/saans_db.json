@@ -73,7 +73,6 @@
     {
       "id": "6da1b22f-dd4f-4241-9043-e7fd28805944",
       "email": "test.citizen.1795192533070@example.com",
-      "password_hash": "$2a$10$sC5WB2F3isDelayGbUm3eOiJyTeHVYj0JSp7HqNL8ScTCPpY15uMO",
       "full_name": "Ananya Deshpande",
       "phone": "+91 98200 99887",
       "city": "Mumbai",
@@ -82,8 +81,23 @@
       "account_type": "citizen",
       "latitude": 19.076,
       "longitude": 72.8777,
-      "created_at": "2026-11-20T16:35:33.158Z",
-      "updated_at": "2026-11-20T16:35:33.158Z"
+      "created_at": "2026-11-20T16:35:33.158+00:00",
+      "updated_at": "2026-11-20T16:35:33.158+00:00"
+    },
+    {
+      "id": "461b5484-77bf-4dda-82fb-1b37e841e0bb",
+      "email": "test.citizen.1795270649782@example.com",
+      "password_hash": "$2a$10$fCfB.vLI1Lnm.jiH7qMdVOIvmnYB9CadwH5Xl9j3ncBHDHHgcF.AW",
+      "full_name": "Ananya Deshpande",
+      "phone": "+91 98200 99887",
+      "city": "Mumbai",
+      "neighbourhood": "Bandra West",
+      "preferred_language": "mr",
+      "account_type": "citizen",
+      "latitude": 19.076,
+      "longitude": 72.8777,
+      "created_at": "2026-11-21T14:17:29.892Z",
+      "updated_at": "2026-11-21T14:17:29.892Z"
     }
   ],
   "user_roles": [
@@ -118,10 +132,16 @@
       "granted_at": "2026-11-20T16:32:27.347+00:00"
     },
     {
-      "id": "8bc93dab-3a14-4a1b-b2ad-85feb90e7fe2",
+      "id": "3de6c0c9-fea8-4452-ab7c-227969c4c2df",
       "user_id": "6da1b22f-dd4f-4241-9043-e7fd28805944",
       "role": "citizen",
-      "granted_at": "2026-11-20T16:35:33.158Z"
+      "granted_at": "2026-11-20T16:35:33.158+00:00"
+    },
+    {
+      "id": "56f7e34d-9a08-4e39-a629-131f089661bc",
+      "user_id": "461b5484-77bf-4dda-82fb-1b37e841e0bb",
+      "role": "citizen",
+      "granted_at": "2026-11-21T14:17:29.892Z"
     }
   ],
   "household_profiles": [
@@ -187,8 +207,21 @@
       "housing_type": "Apartment",
       "room_size_sqft": 320,
       "existing_purifiers": "None",
-      "created_at": "2026-11-20T16:35:33.158Z",
-      "updated_at": "2026-11-20T16:35:33.158Z"
+      "created_at": "2026-11-20T16:35:33.158+00:00",
+      "updated_at": "2026-11-20T16:35:33.158+00:00"
+    },
+    {
+      "id": "8b1de135-fd7b-4814-8eca-ee669ee845f3",
+      "user_id": "461b5484-77bf-4dda-82fb-1b37e841e0bb",
+      "member_count": 4,
+      "elderly_present": true,
+      "children_present": true,
+      "sensitive_persons": true,
+      "housing_type": "Apartment",
+      "room_size_sqft": 320,
+      "existing_purifiers": "None",
+      "created_at": "2026-11-21T14:17:29.892Z",
+      "updated_at": "2026-11-21T14:17:29.892Z"
     }
   ],
   "volunteer_profiles": [
@@ -320,8 +353,26 @@
       "contact_method": "In-app message",
       "consent_shared": true,
       "status": "completed",
-      "created_at": "2026-11-20T16:35:33.167Z",
-      "updated_at": "2026-11-20T16:35:39.877Z"
+      "created_at": "2026-11-20T16:35:33.167+00:00",
+      "updated_at": "2026-11-20T16:35:39.877+00:00"
+    },
+    {
+      "id": "22cb9082-d759-49d5-abab-b9d4654e98b9",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "category": "purifier_loan",
+      "description": "Urgent winter smog assistance for elderly asthmatic parent.",
+      "location_city": "Mumbai",
+      "location_neighbourhood": "Kurla West",
+      "latitude": 19.0657,
+      "longitude": 72.8794,
+      "urgency": "high",
+      "household_type": "Family with elderly",
+      "existing_equipment": "None",
+      "contact_method": "In-app message",
+      "consent_shared": true,
+      "status": "completed",
+      "created_at": "2026-11-21T14:17:33.095Z",
+      "updated_at": "2026-11-21T14:17:39.747Z"
     }
   ],
   "request_assignments": [
@@ -340,8 +391,18 @@
       "request_id": "6b2238c7-4181-4064-b26b-5f41237a7245",
       "volunteer_id": "b0000000-0000-0000-0000-000000000001",
       "status": "assigned",
-      "assigned_at": "2026-11-20T16:35:36.936Z",
-      "updated_at": "2026-11-20T16:35:36.936Z"
+      "assigned_at": "2026-11-20T16:35:36.936+00:00",
+      "updated_at": "2026-11-20T16:35:36.936+00:00",
+      "completion_notes": null,
+      "completion_photo_url": null
+    },
+    {
+      "id": "2c9d55a5-650f-45b6-aec1-b9ed185dcaeb",
+      "request_id": "22cb9082-d759-49d5-abab-b9d4654e98b9",
+      "volunteer_id": "b0000000-0000-0000-0000-000000000001",
+      "status": "assigned",
+      "assigned_at": "2026-11-21T14:17:36.437Z",
+      "updated_at": "2026-11-21T14:17:36.437Z"
     }
   ],
   "equipment": [
@@ -456,6 +517,7 @@
       "name": "Smart Air Squair Clean Air System",
       "category": "hepa_purifier",
       "description": "Energy efficient H12 HEPA purifier for community loan.",
+      "manufacturer_model": null,
       "condition": "like_new",
       "type": "loan",
       "max_loan_duration_days": 30,
@@ -467,8 +529,28 @@
       "status": "reserved",
       "is_verified": true,
       "cadr_rating": 310,
-      "created_at": "2026-11-20T16:35:41.247Z",
-      "updated_at": "2026-11-20T16:35:41.257Z"
+      "created_at": "2026-11-20T16:35:41.247+00:00",
+      "updated_at": "2026-11-20T16:35:41.257+00:00"
+    },
+    {
+      "id": "f7310282-7ad9-4532-a397-ff3b1ce8a49c",
+      "donor_id": "d0000000-0000-0000-0000-000000000004",
+      "name": "Smart Air Squair Clean Air System",
+      "category": "hepa_purifier",
+      "description": "Energy efficient H12 HEPA purifier for community loan.",
+      "condition": "like_new",
+      "type": "loan",
+      "max_loan_duration_days": 30,
+      "location_city": "Mumbai",
+      "location_neighbourhood": "Andheri East",
+      "latitude": 19.1136,
+      "longitude": 72.8697,
+      "image_url": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80",
+      "status": "reserved",
+      "is_verified": true,
+      "cadr_rating": 310,
+      "created_at": "2026-11-21T14:17:41.432Z",
+      "updated_at": "2026-11-21T14:17:41.451Z"
     }
   ],
   "equipment_requests": [
@@ -489,8 +571,18 @@
       "status": "approved",
       "requested_duration_days": 14,
       "purpose": "Winter smog respiratory support for children.",
-      "created_at": "2026-11-20T16:35:41.254Z",
-      "updated_at": "2026-11-20T16:35:41.257Z"
+      "created_at": "2026-11-20T16:35:41.254+00:00",
+      "updated_at": "2026-11-20T16:35:41.257+00:00"
+    },
+    {
+      "id": "270c15a0-b97c-44e5-b38e-4b8f9f2c359c",
+      "equipment_id": "f7310282-7ad9-4532-a397-ff3b1ce8a49c",
+      "requester_id": "c0000000-0000-0000-0000-000000000002",
+      "status": "approved",
+      "requested_duration_days": 14,
+      "purpose": "Winter smog respiratory support for children.",
+      "created_at": "2026-11-21T14:17:41.441Z",
+      "updated_at": "2026-11-21T14:17:41.451Z"
     }
   ],
   "equipment_transactions": [
@@ -515,6 +607,17 @@
       "expected_return_date": "2026-12-04T16:35:41.258Z",
       "notes": "Approved by Admin SAANS",
       "created_at": "2026-11-20T16:35:41.257Z"
+    },
+    {
+      "id": "9d37c3dc-4af0-47d5-b713-f34d54aafe9a",
+      "equipment_id": "f7310282-7ad9-4532-a397-ff3b1ce8a49c",
+      "from_user_id": "d0000000-0000-0000-0000-000000000004",
+      "to_user_id": "c0000000-0000-0000-0000-000000000002",
+      "transaction_type": "loan",
+      "issue_date": "2026-11-21T14:17:41.451Z",
+      "expected_return_date": "2026-12-05T14:17:41.451Z",
+      "notes": "Approved by Admin SAANS",
+      "created_at": "2026-11-21T14:17:41.451Z"
     }
   ],
   "equipment_maintenance": [],
@@ -670,8 +773,23 @@
       "longitude": 72.881,
       "image_url": "https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&w=600&q=80",
       "status": "verified",
-      "created_at": "2026-11-20T16:35:41.734Z",
-      "updated_at": "2026-11-20T16:35:41.737Z",
+      "resolution_notes": "Ward sanitary inspector dispatched notice.",
+      "created_at": "2026-11-20T16:35:41.734+00:00",
+      "updated_at": "2026-11-20T16:35:41.737+00:00"
+    },
+    {
+      "id": "175ad578-15d1-4b84-8c76-43469c086d6e",
+      "reporter_id": "c0000000-0000-0000-0000-000000000002",
+      "category": "garbage_burning",
+      "description": "Thick smoke from open trash burning near local drainage canal.",
+      "city": "Mumbai",
+      "neighbourhood": "Kurla West",
+      "latitude": 19.068,
+      "longitude": 72.881,
+      "image_url": "https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&w=600&q=80",
+      "status": "verified",
+      "created_at": "2026-11-21T14:17:57.981Z",
+      "updated_at": "2026-11-21T14:17:57.994Z",
       "resolution_notes": "Ward sanitary inspector dispatched notice."
     }
   ],
@@ -758,14 +876,14 @@
       "created_at": "2026-11-20T16:32:37.501+00:00"
     },
     {
-      "id": "6e6f7469-662d-3100-0000-000000000000",
+      "id": "f4892f57-64dd-4dda-bcb2-d2ad7e2e02fa",
       "user_id": "c0000000-0000-0000-0000-000000000002",
-      "title": "Assistance Request Approved",
-      "message": "Your air purifier loan request #a1111111-0000-0000-0000-000000000001 has been reviewed and approved. Matching volunteer shortly.",
-      "event_type": "request_approved",
-      "related_entity_id": "a1111111-0000-0000-0000-000000000001",
+      "title": "Assistance Request Submitted",
+      "message": "Your request for purifier loan in Kurla West has been received. Our community review team will verify it shortly.",
+      "event_type": "request_created",
+      "related_entity_id": "bd44da66-48ce-4f41-9a27-1e1535348a92",
       "is_read": false,
-      "created_at": "2026-11-19T08:05:03.625+00:00"
+      "created_at": "2026-11-20T16:32:29.752+00:00"
     },
     {
       "id": "91674ba8-8120-59ab-82db-ba23e63709df",
@@ -776,16 +894,6 @@
       "related_entity_id": "a1111111-0000-0000-0000-000000000001",
       "is_read": false,
       "created_at": "2026-11-19T08:05:03.625+00:00"
-    },
-    {
-      "id": "f4892f57-64dd-4dda-bcb2-d2ad7e2e02fa",
-      "user_id": "c0000000-0000-0000-0000-000000000002",
-      "title": "Assistance Request Submitted",
-      "message": "Your request for purifier loan in Kurla West has been received. Our community review team will verify it shortly.",
-      "event_type": "request_created",
-      "related_entity_id": "bd44da66-48ce-4f41-9a27-1e1535348a92",
-      "is_read": false,
-      "created_at": "2026-11-20T16:32:29.752+00:00"
     },
     {
       "id": "930c7aeb-14f8-4e77-8ca0-f43afe3c74ef",
@@ -828,6 +936,16 @@
       "created_at": "2026-11-20T16:32:34.154+00:00"
     },
     {
+      "id": "6e6f7469-662d-3100-0000-000000000000",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "title": "Assistance Request Approved",
+      "message": "Your air purifier loan request #a1111111-0000-0000-0000-000000000001 has been reviewed and approved. Matching volunteer shortly.",
+      "event_type": "request_approved",
+      "related_entity_id": "a1111111-0000-0000-0000-000000000001",
+      "is_read": false,
+      "created_at": "2026-11-19T08:05:03.625+00:00"
+    },
+    {
       "id": "bbb686b5-c214-445f-95b9-ba8739946dfd",
       "user_id": "c0000000-0000-0000-0000-000000000002",
       "title": "Assistance Request COMPLETED",
@@ -845,7 +963,7 @@
       "event_type": "request_created",
       "related_entity_id": "6b2238c7-4181-4064-b26b-5f41237a7245",
       "is_read": false,
-      "created_at": "2026-11-20T16:35:33.167Z"
+      "created_at": "2026-11-20T16:35:33.167+00:00"
     },
     {
       "id": "1f7cb9aa-7d1f-427b-a4a6-19c67cc79866",
@@ -855,7 +973,7 @@
       "event_type": "request_approved",
       "related_entity_id": "6b2238c7-4181-4064-b26b-5f41237a7245",
       "is_read": false,
-      "created_at": "2026-11-20T16:35:35.426Z"
+      "created_at": "2026-11-20T16:35:35.426+00:00"
     },
     {
       "id": "c0eda200-c017-46f7-8489-37184dabfc18",
@@ -865,7 +983,7 @@
       "event_type": "task_assigned",
       "related_entity_id": "6b2238c7-4181-4064-b26b-5f41237a7245",
       "is_read": false,
-      "created_at": "2026-11-20T16:35:36.936Z"
+      "created_at": "2026-11-20T16:35:36.936+00:00"
     },
     {
       "id": "82ca74d3-276e-4899-9e74-a81ece4d4a29",
@@ -875,7 +993,7 @@
       "event_type": "volunteer_assigned",
       "related_entity_id": "6b2238c7-4181-4064-b26b-5f41237a7245",
       "is_read": false,
-      "created_at": "2026-11-20T16:35:36.936Z"
+      "created_at": "2026-11-20T16:35:36.936+00:00"
     },
     {
       "id": "1270cbc1-89fd-40ac-a851-04ae8043f811",
@@ -885,7 +1003,7 @@
       "event_type": "request_in_progress",
       "related_entity_id": "6b2238c7-4181-4064-b26b-5f41237a7245",
       "is_read": false,
-      "created_at": "2026-11-20T16:35:38.404Z"
+      "created_at": "2026-11-20T16:35:38.404+00:00"
     },
     {
       "id": "a72c6716-48d9-4bc2-ada2-4851ed68e84c",
@@ -895,7 +1013,7 @@
       "event_type": "request_completed",
       "related_entity_id": "6b2238c7-4181-4064-b26b-5f41237a7245",
       "is_read": false,
-      "created_at": "2026-11-20T16:35:39.877Z"
+      "created_at": "2026-11-20T16:35:39.877+00:00"
     },
     {
       "id": "664eedd3-8302-4d77-aa11-4de24d3e78a5",
@@ -905,7 +1023,7 @@
       "event_type": "equipment_requested",
       "related_entity_id": "22f955e8-d199-4048-859f-f687d71a9a32",
       "is_read": false,
-      "created_at": "2026-11-20T16:35:41.254Z"
+      "created_at": "2026-11-20T16:35:41.254+00:00"
     },
     {
       "id": "f5c4d255-7db5-4c8f-b1a3-9874aa25cb47",
@@ -915,7 +1033,7 @@
       "event_type": "equipment_approved",
       "related_entity_id": "e69698e8-bad1-4a22-9004-c7b9ea967d82",
       "is_read": false,
-      "created_at": "2026-11-20T16:35:41.257Z"
+      "created_at": "2026-11-20T16:35:41.257+00:00"
     },
     {
       "id": "1230311c-755d-4d0a-b8b9-14465905e324",
@@ -925,7 +1043,7 @@
       "event_type": "report_submitted",
       "related_entity_id": "ad93962e-840d-4614-b029-3b714c7abe68",
       "is_read": false,
-      "created_at": "2026-11-20T16:35:41.734Z"
+      "created_at": "2026-11-20T16:35:41.734+00:00"
     },
     {
       "id": "82965fe0-ff8e-4f30-835a-fadf3422e7c7",
@@ -935,7 +1053,107 @@
       "event_type": "report_verified",
       "related_entity_id": "ad93962e-840d-4614-b029-3b714c7abe68",
       "is_read": false,
-      "created_at": "2026-11-20T16:35:41.737Z"
+      "created_at": "2026-11-20T16:35:41.737+00:00"
+    },
+    {
+      "id": "4a0c60ad-70e0-45b6-bcbc-d35a58291a44",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "title": "Assistance Request Submitted",
+      "message": "Your request for purifier loan in Kurla West has been received. Our community review team will verify it shortly.",
+      "event_type": "request_created",
+      "related_entity_id": "22cb9082-d759-49d5-abab-b9d4654e98b9",
+      "is_read": false,
+      "created_at": "2026-11-21T14:17:33.095Z"
+    },
+    {
+      "id": "2eb4fc3d-7d83-40f2-b15f-04085b774b10",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "title": "Assistance Request APPROVED",
+      "message": "Verified priority vulnerable household. Approved for volunteer equipment handover.",
+      "event_type": "request_approved",
+      "related_entity_id": "22cb9082-d759-49d5-abab-b9d4654e98b9",
+      "is_read": false,
+      "created_at": "2026-11-21T14:17:34.942Z"
+    },
+    {
+      "id": "765be284-a3fa-4550-86cc-45a3219fca3b",
+      "user_id": "b0000003-0000-0000-0000-000000000003",
+      "title": "New Community Assignment",
+      "message": "You have been assigned to assistance request in Kurla West (purifier loan). Please review and accept.",
+      "event_type": "task_assigned",
+      "related_entity_id": "22cb9082-d759-49d5-abab-b9d4654e98b9",
+      "is_read": false,
+      "created_at": "2026-11-21T14:17:36.437Z"
+    },
+    {
+      "id": "b5ec8064-f0cd-4ca4-941b-381da1c65f3a",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "title": "Volunteer Assigned to Your Request",
+      "message": "A volunteer has been matched to your request. They will review and contact you shortly.",
+      "event_type": "volunteer_assigned",
+      "related_entity_id": "22cb9082-d759-49d5-abab-b9d4654e98b9",
+      "is_read": false,
+      "created_at": "2026-11-21T14:17:36.437Z"
+    },
+    {
+      "id": "911d144b-fd66-4fc4-8e54-3f1d0351501a",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "title": "Assistance Request IN PROGRESS",
+      "message": "Volunteer en-route with Corsi-Rosenthal unit.",
+      "event_type": "request_in_progress",
+      "related_entity_id": "22cb9082-d759-49d5-abab-b9d4654e98b9",
+      "is_read": false,
+      "created_at": "2026-11-21T14:17:38.079Z"
+    },
+    {
+      "id": "540dd205-ebaa-4880-b32c-6d4ff98de790",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "title": "Assistance Request COMPLETED",
+      "message": "Installed Corsi-Rosenthal unit in bedroom. Measured 78% particulate drop.",
+      "event_type": "request_completed",
+      "related_entity_id": "22cb9082-d759-49d5-abab-b9d4654e98b9",
+      "is_read": false,
+      "created_at": "2026-11-21T14:17:39.747Z"
+    },
+    {
+      "id": "9233236e-e4c4-4424-b16c-13a8f6bcc2ed",
+      "user_id": "d0000000-0000-0000-0000-000000000004",
+      "title": "Equipment Requested",
+      "message": "Priya Sharma has requested \"Smart Air Squair Clean Air System\" for: Winter smog respiratory support for children..",
+      "event_type": "equipment_requested",
+      "related_entity_id": "270c15a0-b97c-44e5-b38e-4b8f9f2c359c",
+      "is_read": false,
+      "created_at": "2026-11-21T14:17:41.441Z"
+    },
+    {
+      "id": "8820a6fa-731c-41fa-a3f8-73fdc08018b3",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "title": "Equipment Request Approved!",
+      "message": "Your request for \"Smart Air Squair Clean Air System\" has been approved. You may arrange pickup or delivery.",
+      "event_type": "equipment_approved",
+      "related_entity_id": "f7310282-7ad9-4532-a397-ff3b1ce8a49c",
+      "is_read": false,
+      "created_at": "2026-11-21T14:17:41.451Z"
+    },
+    {
+      "id": "4f0b79c6-df68-469d-a733-3efd59c96831",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "title": "Pollution Report Received",
+      "message": "Your report regarding garbage burning in Kurla West has been received and queued for community moderation.",
+      "event_type": "report_submitted",
+      "related_entity_id": "175ad578-15d1-4b84-8c76-43469c086d6e",
+      "is_read": false,
+      "created_at": "2026-11-21T14:17:57.981Z"
+    },
+    {
+      "id": "975dedb2-7c67-43c8-a7cb-c4b3c406ada7",
+      "user_id": "c0000000-0000-0000-0000-000000000002",
+      "title": "Pollution Report VERIFIED",
+      "message": "Ward sanitary inspector dispatched notice.",
+      "event_type": "report_verified",
+      "related_entity_id": "175ad578-15d1-4b84-8c76-43469c086d6e",
+      "is_read": false,
+      "created_at": "2026-11-21T14:17:57.994Z"
     }
   ],
   "conversations": [],
@@ -8444,27 +8662,1089 @@
       },
       "fetched_at": "2026-11-20T16:35:27.400Z",
       "expires_at": "2026-11-20T16:50:27.400Z"
+    },
+    {
+      "id": "cache-1795270625743",
+      "city": "Mumbai",
+      "neighbourhood": "Bandra West",
+      "latitude": 19.076,
+      "longitude": 72.8777,
+      "data_source": "Open-Meteo Atmospheric Chemistry Regional Model",
+      "aqi_index": 309,
+      "aqi_category": "Very Poor",
+      "pollutants": {
+        "pm2_5": {
+          "code": "pm2_5",
+          "name": "Particulate Matter (PM2.5)",
+          "concentration": 82.4,
+          "unit": "µg/m³",
+          "subIndex": 174,
+          "category": "Moderate",
+          "sourceType": "modelled_forecast"
+        },
+        "pm10": {
+          "code": "pm10",
+          "name": "Particulate Matter (PM10)",
+          "concentration": 86.1,
+          "unit": "µg/m³",
+          "subIndex": 86,
+          "category": "Satisfactory",
+          "sourceType": "modelled_forecast"
+        },
+        "no2": {
+          "code": "no2",
+          "name": "Nitrogen Dioxide (NO2)",
+          "concentration": 25.2,
+          "unit": "µg/m³",
+          "subIndex": 32,
+          "category": "Good",
+          "sourceType": "modelled_forecast"
+        },
+        "so2": {
+          "code": "so2",
+          "name": "Sulphur Dioxide (SO2)",
+          "concentration": 39.2,
+          "unit": "µg/m³",
+          "subIndex": 49,
+          "category": "Good",
+          "sourceType": "modelled_forecast"
+        },
+        "co": {
+          "code": "co",
+          "name": "Carbon Monoxide (CO)",
+          "concentration": 0.68,
+          "unit": "mg/m³",
+          "subIndex": 34,
+          "category": "Good",
+          "sourceType": "modelled_forecast"
+        },
+        "o3": {
+          "code": "o3",
+          "name": "Ozone (O3)",
+          "concentration": 251,
+          "unit": "µg/m³",
+          "subIndex": 309,
+          "category": "Very Poor",
+          "sourceType": "modelled_forecast"
+        }
+      },
+      "forecast": [
+        {
+          "time": "2026-11-21T00:00",
+          "pm25": 52.5,
+          "pm10": 54.8,
+          "no2": 20.1,
+          "predictedIndianAqi": 87
+        },
+        {
+          "time": "2026-11-21T01:00",
+          "pm25": 51,
+          "pm10": 53.2,
+          "no2": 21.2,
+          "predictedIndianAqi": 85
+        },
+        {
+          "time": "2026-11-21T02:00",
+          "pm25": 52.2,
+          "pm10": 54.2,
+          "no2": 22.7,
+          "predictedIndianAqi": 87
+        },
+        {
+          "time": "2026-11-21T03:00",
+          "pm25": 55.2,
+          "pm10": 57.4,
+          "no2": 24.4,
+          "predictedIndianAqi": 92
+        },
+        {
+          "time": "2026-11-21T04:00",
+          "pm25": 59.4,
+          "pm10": 61.9,
+          "no2": 26.5,
+          "predictedIndianAqi": 99
+        },
+        {
+          "time": "2026-11-21T05:00",
+          "pm25": 71,
+          "pm10": 74,
+          "no2": 32,
+          "predictedIndianAqi": 135
+        },
+        {
+          "time": "2026-11-21T06:00",
+          "pm25": 72.9,
+          "pm10": 76.1,
+          "no2": 35.8,
+          "predictedIndianAqi": 142
+        },
+        {
+          "time": "2026-11-21T07:00",
+          "pm25": 75.9,
+          "pm10": 79.4,
+          "no2": 40.9,
+          "predictedIndianAqi": 152
+        },
+        {
+          "time": "2026-11-21T08:00",
+          "pm25": 78.2,
+          "pm10": 81.7,
+          "no2": 43.8,
+          "predictedIndianAqi": 160
+        },
+        {
+          "time": "2026-11-21T09:00",
+          "pm25": 79.2,
+          "pm10": 82.7,
+          "no2": 42.6,
+          "predictedIndianAqi": 163
+        },
+        {
+          "time": "2026-11-21T10:00",
+          "pm25": 81,
+          "pm10": 84.3,
+          "no2": 39.2,
+          "predictedIndianAqi": 169
+        },
+        {
+          "time": "2026-11-21T11:00",
+          "pm25": 84.1,
+          "pm10": 87.5,
+          "no2": 35.6,
+          "predictedIndianAqi": 180
+        },
+        {
+          "time": "2026-11-21T12:00",
+          "pm25": 88.2,
+          "pm10": 91.5,
+          "no2": 31.7,
+          "predictedIndianAqi": 194
+        },
+        {
+          "time": "2026-11-21T13:00",
+          "pm25": 96.4,
+          "pm10": 99.7,
+          "no2": 27.5,
+          "predictedIndianAqi": 219
+        },
+        {
+          "time": "2026-11-21T14:00",
+          "pm25": 101.7,
+          "pm10": 105,
+          "no2": 25.3,
+          "predictedIndianAqi": 238
+        },
+        {
+          "time": "2026-11-21T15:00",
+          "pm25": 99.4,
+          "pm10": 102.7,
+          "no2": 27.2,
+          "predictedIndianAqi": 230
+        },
+        {
+          "time": "2026-11-21T16:00",
+          "pm25": 96.6,
+          "pm10": 100.1,
+          "no2": 31,
+          "predictedIndianAqi": 220
+        },
+        {
+          "time": "2026-11-21T17:00",
+          "pm25": 95.5,
+          "pm10": 99,
+          "no2": 32.8,
+          "predictedIndianAqi": 216
+        },
+        {
+          "time": "2026-11-21T18:00",
+          "pm25": 89.4,
+          "pm10": 93.1,
+          "no2": 30,
+          "predictedIndianAqi": 198
+        },
+        {
+          "time": "2026-11-21T19:00",
+          "pm25": 82.4,
+          "pm10": 86.1,
+          "no2": 25.2,
+          "predictedIndianAqi": 174
+        },
+        {
+          "time": "2026-11-21T20:00",
+          "pm25": 75.4,
+          "pm10": 79.4,
+          "no2": 21.8,
+          "predictedIndianAqi": 150
+        },
+        {
+          "time": "2026-11-21T21:00",
+          "pm25": 69.6,
+          "pm10": 73.6,
+          "no2": 21.5,
+          "predictedIndianAqi": 130
+        },
+        {
+          "time": "2026-11-21T22:00",
+          "pm25": 65.7,
+          "pm10": 69.4,
+          "no2": 22.6,
+          "predictedIndianAqi": 117
+        },
+        {
+          "time": "2026-11-21T23:00",
+          "pm25": 65.9,
+          "pm10": 69.2,
+          "no2": 23.7,
+          "predictedIndianAqi": 118
+        }
+      ],
+      "raw_response": {
+        "city": "Mumbai",
+        "neighbourhood": "Bandra West",
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "timestamp": "2026-11-21T19:30",
+        "sourceAttribution": {
+          "primaryProvider": "Open-Meteo Atmospheric Chemistry Regional Model",
+          "modelOrStationName": "ECMWF CAMS Atmospheric Model with Micro-Climate Spatial Scaling",
+          "isModelledForecast": true,
+          "provenanceNotice": "These figures represent atmospheric dispersion model estimates derived from Open-Meteo regional chemistry data with micro-climate spatial adjustments. They are NOT raw telemetry from physical hardware sensors or statutory CPCB regulatory station measurements. For official legally-binding continuous air monitoring data, visit the Central Pollution Control Board portal at cpcb.nic.in.",
+          "license": "Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)"
+        },
+        "indianAqi": {
+          "index": 309,
+          "category": "Very Poor",
+          "dominantPollutant": "Ozone",
+          "isAvailable": true,
+          "methodology": "Computed strictly following official CPCB (Central Pollution Control Board) 24h breakpoint equations applied to atmospheric dispersion model data with minimum 3-pollutant validation rule."
+        },
+        "foreignIndices": {
+          "europeanAqi": 171,
+          "usAqi": 261,
+          "note": "Foreign indices (US EPA AQI & European CAQI) are shown for comparative perspective only. Do NOT confuse with Indian National AQI."
+        },
+        "pollutants": {
+          "pm2_5": {
+            "code": "pm2_5",
+            "name": "Particulate Matter (PM2.5)",
+            "concentration": 82.4,
+            "unit": "µg/m³",
+            "subIndex": 174,
+            "category": "Moderate",
+            "sourceType": "modelled_forecast"
+          },
+          "pm10": {
+            "code": "pm10",
+            "name": "Particulate Matter (PM10)",
+            "concentration": 86.1,
+            "unit": "µg/m³",
+            "subIndex": 86,
+            "category": "Satisfactory",
+            "sourceType": "modelled_forecast"
+          },
+          "no2": {
+            "code": "no2",
+            "name": "Nitrogen Dioxide (NO2)",
+            "concentration": 25.2,
+            "unit": "µg/m³",
+            "subIndex": 32,
+            "category": "Good",
+            "sourceType": "modelled_forecast"
+          },
+          "so2": {
+            "code": "so2",
+            "name": "Sulphur Dioxide (SO2)",
+            "concentration": 39.2,
+            "unit": "µg/m³",
+            "subIndex": 49,
+            "category": "Good",
+            "sourceType": "modelled_forecast"
+          },
+          "co": {
+            "code": "co",
+            "name": "Carbon Monoxide (CO)",
+            "concentration": 0.68,
+            "unit": "mg/m³",
+            "subIndex": 34,
+            "category": "Good",
+            "sourceType": "modelled_forecast"
+          },
+          "o3": {
+            "code": "o3",
+            "name": "Ozone (O3)",
+            "concentration": 251,
+            "unit": "µg/m³",
+            "subIndex": 309,
+            "category": "Very Poor",
+            "sourceType": "modelled_forecast"
+          }
+        },
+        "hourlyForecast": [
+          {
+            "time": "2026-11-21T00:00",
+            "pm25": 52.5,
+            "pm10": 54.8,
+            "no2": 20.1,
+            "predictedIndianAqi": 87
+          },
+          {
+            "time": "2026-11-21T01:00",
+            "pm25": 51,
+            "pm10": 53.2,
+            "no2": 21.2,
+            "predictedIndianAqi": 85
+          },
+          {
+            "time": "2026-11-21T02:00",
+            "pm25": 52.2,
+            "pm10": 54.2,
+            "no2": 22.7,
+            "predictedIndianAqi": 87
+          },
+          {
+            "time": "2026-11-21T03:00",
+            "pm25": 55.2,
+            "pm10": 57.4,
+            "no2": 24.4,
+            "predictedIndianAqi": 92
+          },
+          {
+            "time": "2026-11-21T04:00",
+            "pm25": 59.4,
+            "pm10": 61.9,
+            "no2": 26.5,
+            "predictedIndianAqi": 99
+          },
+          {
+            "time": "2026-11-21T05:00",
+            "pm25": 71,
+            "pm10": 74,
+            "no2": 32,
+            "predictedIndianAqi": 135
+          },
+          {
+            "time": "2026-11-21T06:00",
+            "pm25": 72.9,
+            "pm10": 76.1,
+            "no2": 35.8,
+            "predictedIndianAqi": 142
+          },
+          {
+            "time": "2026-11-21T07:00",
+            "pm25": 75.9,
+            "pm10": 79.4,
+            "no2": 40.9,
+            "predictedIndianAqi": 152
+          },
+          {
+            "time": "2026-11-21T08:00",
+            "pm25": 78.2,
+            "pm10": 81.7,
+            "no2": 43.8,
+            "predictedIndianAqi": 160
+          },
+          {
+            "time": "2026-11-21T09:00",
+            "pm25": 79.2,
+            "pm10": 82.7,
+            "no2": 42.6,
+            "predictedIndianAqi": 163
+          },
+          {
+            "time": "2026-11-21T10:00",
+            "pm25": 81,
+            "pm10": 84.3,
+            "no2": 39.2,
+            "predictedIndianAqi": 169
+          },
+          {
+            "time": "2026-11-21T11:00",
+            "pm25": 84.1,
+            "pm10": 87.5,
+            "no2": 35.6,
+            "predictedIndianAqi": 180
+          },
+          {
+            "time": "2026-11-21T12:00",
+            "pm25": 88.2,
+            "pm10": 91.5,
+            "no2": 31.7,
+            "predictedIndianAqi": 194
+          },
+          {
+            "time": "2026-11-21T13:00",
+            "pm25": 96.4,
+            "pm10": 99.7,
+            "no2": 27.5,
+            "predictedIndianAqi": 219
+          },
+          {
+            "time": "2026-11-21T14:00",
+            "pm25": 101.7,
+            "pm10": 105,
+            "no2": 25.3,
+            "predictedIndianAqi": 238
+          },
+          {
+            "time": "2026-11-21T15:00",
+            "pm25": 99.4,
+            "pm10": 102.7,
+            "no2": 27.2,
+            "predictedIndianAqi": 230
+          },
+          {
+            "time": "2026-11-21T16:00",
+            "pm25": 96.6,
+            "pm10": 100.1,
+            "no2": 31,
+            "predictedIndianAqi": 220
+          },
+          {
+            "time": "2026-11-21T17:00",
+            "pm25": 95.5,
+            "pm10": 99,
+            "no2": 32.8,
+            "predictedIndianAqi": 216
+          },
+          {
+            "time": "2026-11-21T18:00",
+            "pm25": 89.4,
+            "pm10": 93.1,
+            "no2": 30,
+            "predictedIndianAqi": 198
+          },
+          {
+            "time": "2026-11-21T19:00",
+            "pm25": 82.4,
+            "pm10": 86.1,
+            "no2": 25.2,
+            "predictedIndianAqi": 174
+          },
+          {
+            "time": "2026-11-21T20:00",
+            "pm25": 75.4,
+            "pm10": 79.4,
+            "no2": 21.8,
+            "predictedIndianAqi": 150
+          },
+          {
+            "time": "2026-11-21T21:00",
+            "pm25": 69.6,
+            "pm10": 73.6,
+            "no2": 21.5,
+            "predictedIndianAqi": 130
+          },
+          {
+            "time": "2026-11-21T22:00",
+            "pm25": 65.7,
+            "pm10": 69.4,
+            "no2": 22.6,
+            "predictedIndianAqi": 117
+          },
+          {
+            "time": "2026-11-21T23:00",
+            "pm25": 65.9,
+            "pm10": 69.2,
+            "no2": 23.7,
+            "predictedIndianAqi": 118
+          }
+        ],
+        "nearbyStations": [
+          {
+            "id": "station-bandra-cpcb",
+            "name": "Bandra Kalanagar Spatial Reference Grid",
+            "distanceKm": 2.8,
+            "latitude": 19.0607,
+            "longitude": 72.848,
+            "stationType": "micro_climate_spatial_estimate",
+            "provenance": "Model-derived micro-climate dispersion estimate anchored to Bandra Kalanagar geographic coordinates",
+            "lastUpdated": "2026-11-21T14:17:05.741Z",
+            "measurements": {
+              "pm2_5": 87,
+              "pm10": 88,
+              "no2": 28,
+              "so2": 39
+            }
+          },
+          {
+            "id": "station-kurla-mpcb",
+            "name": "Kurla CST Industrial Corridor Grid",
+            "distanceKm": 4.1,
+            "latitude": 19.0726,
+            "longitude": 72.8845,
+            "stationType": "micro_climate_spatial_estimate",
+            "provenance": "Model-derived micro-climate dispersion estimate anchored to Kurla industrial corridor coordinates",
+            "lastUpdated": "2026-11-21T14:17:05.743Z",
+            "measurements": {
+              "pm2_5": 95,
+              "pm10": 102,
+              "no2": 30,
+              "so2": 41
+            }
+          },
+          {
+            "id": "station-worli-iitb",
+            "name": "Worli Coastal Boundary Reference Grid",
+            "distanceKm": 6.4,
+            "latitude": 19.0166,
+            "longitude": 72.8166,
+            "stationType": "micro_climate_spatial_estimate",
+            "provenance": "Model-derived coastal dispersion estimate anchored to Worli Sea Face geographic coordinates",
+            "lastUpdated": "2026-11-21T14:17:05.743Z",
+            "measurements": {
+              "pm2_5": 73,
+              "pm10": 77,
+              "no2": 21,
+              "so2": 35
+            }
+          }
+        ]
+      },
+      "fetched_at": "2026-11-21T14:17:03.894Z",
+      "expires_at": "2026-11-21T14:32:03.894Z"
+    },
+    {
+      "id": "cache-1795270650686",
+      "city": "Mumbai",
+      "neighbourhood": "Bandra West",
+      "latitude": 19.0596,
+      "longitude": 72.8295,
+      "data_source": "Open-Meteo Atmospheric Chemistry Regional Model",
+      "aqi_index": 309,
+      "aqi_category": "Very Poor",
+      "pollutants": {
+        "pm2_5": {
+          "code": "pm2_5",
+          "name": "Particulate Matter (PM2.5)",
+          "concentration": 82.4,
+          "unit": "µg/m³",
+          "subIndex": 174,
+          "category": "Moderate",
+          "sourceType": "modelled_forecast"
+        },
+        "pm10": {
+          "code": "pm10",
+          "name": "Particulate Matter (PM10)",
+          "concentration": 86.1,
+          "unit": "µg/m³",
+          "subIndex": 86,
+          "category": "Satisfactory",
+          "sourceType": "modelled_forecast"
+        },
+        "no2": {
+          "code": "no2",
+          "name": "Nitrogen Dioxide (NO2)",
+          "concentration": 25.2,
+          "unit": "µg/m³",
+          "subIndex": 32,
+          "category": "Good",
+          "sourceType": "modelled_forecast"
+        },
+        "so2": {
+          "code": "so2",
+          "name": "Sulphur Dioxide (SO2)",
+          "concentration": 39.2,
+          "unit": "µg/m³",
+          "subIndex": 49,
+          "category": "Good",
+          "sourceType": "modelled_forecast"
+        },
+        "co": {
+          "code": "co",
+          "name": "Carbon Monoxide (CO)",
+          "concentration": 0.39,
+          "unit": "mg/m³",
+          "subIndex": 20,
+          "category": "Good",
+          "sourceType": "modelled_forecast"
+        },
+        "o3": {
+          "code": "o3",
+          "name": "Ozone (O3)",
+          "concentration": 251,
+          "unit": "µg/m³",
+          "subIndex": 309,
+          "category": "Very Poor",
+          "sourceType": "modelled_forecast"
+        }
+      },
+      "forecast": [
+        {
+          "time": "2026-11-21T00:00",
+          "pm25": 52.5,
+          "pm10": 54.8,
+          "no2": 20.1,
+          "predictedIndianAqi": 87
+        },
+        {
+          "time": "2026-11-21T01:00",
+          "pm25": 51,
+          "pm10": 53.2,
+          "no2": 21.2,
+          "predictedIndianAqi": 85
+        },
+        {
+          "time": "2026-11-21T02:00",
+          "pm25": 52.2,
+          "pm10": 54.2,
+          "no2": 22.7,
+          "predictedIndianAqi": 87
+        },
+        {
+          "time": "2026-11-21T03:00",
+          "pm25": 55.2,
+          "pm10": 57.4,
+          "no2": 24.4,
+          "predictedIndianAqi": 92
+        },
+        {
+          "time": "2026-11-21T04:00",
+          "pm25": 59.4,
+          "pm10": 61.9,
+          "no2": 26.5,
+          "predictedIndianAqi": 99
+        },
+        {
+          "time": "2026-11-21T05:00",
+          "pm25": 71,
+          "pm10": 74,
+          "no2": 32,
+          "predictedIndianAqi": 135
+        },
+        {
+          "time": "2026-11-21T06:00",
+          "pm25": 72.9,
+          "pm10": 76.1,
+          "no2": 35.8,
+          "predictedIndianAqi": 142
+        },
+        {
+          "time": "2026-11-21T07:00",
+          "pm25": 75.9,
+          "pm10": 79.4,
+          "no2": 40.9,
+          "predictedIndianAqi": 152
+        },
+        {
+          "time": "2026-11-21T08:00",
+          "pm25": 78.2,
+          "pm10": 81.7,
+          "no2": 43.8,
+          "predictedIndianAqi": 160
+        },
+        {
+          "time": "2026-11-21T09:00",
+          "pm25": 79.2,
+          "pm10": 82.7,
+          "no2": 42.6,
+          "predictedIndianAqi": 163
+        },
+        {
+          "time": "2026-11-21T10:00",
+          "pm25": 81,
+          "pm10": 84.3,
+          "no2": 39.2,
+          "predictedIndianAqi": 169
+        },
+        {
+          "time": "2026-11-21T11:00",
+          "pm25": 84.1,
+          "pm10": 87.5,
+          "no2": 35.6,
+          "predictedIndianAqi": 180
+        },
+        {
+          "time": "2026-11-21T12:00",
+          "pm25": 88.2,
+          "pm10": 91.5,
+          "no2": 31.7,
+          "predictedIndianAqi": 194
+        },
+        {
+          "time": "2026-11-21T13:00",
+          "pm25": 96.4,
+          "pm10": 99.7,
+          "no2": 27.5,
+          "predictedIndianAqi": 219
+        },
+        {
+          "time": "2026-11-21T14:00",
+          "pm25": 101.7,
+          "pm10": 105,
+          "no2": 25.3,
+          "predictedIndianAqi": 238
+        },
+        {
+          "time": "2026-11-21T15:00",
+          "pm25": 99.4,
+          "pm10": 102.7,
+          "no2": 27.2,
+          "predictedIndianAqi": 230
+        },
+        {
+          "time": "2026-11-21T16:00",
+          "pm25": 96.6,
+          "pm10": 100.1,
+          "no2": 31,
+          "predictedIndianAqi": 220
+        },
+        {
+          "time": "2026-11-21T17:00",
+          "pm25": 95.5,
+          "pm10": 99,
+          "no2": 32.8,
+          "predictedIndianAqi": 216
+        },
+        {
+          "time": "2026-11-21T18:00",
+          "pm25": 89.4,
+          "pm10": 93.1,
+          "no2": 30,
+          "predictedIndianAqi": 198
+        },
+        {
+          "time": "2026-11-21T19:00",
+          "pm25": 82.4,
+          "pm10": 86.1,
+          "no2": 25.2,
+          "predictedIndianAqi": 174
+        },
+        {
+          "time": "2026-11-21T20:00",
+          "pm25": 75.4,
+          "pm10": 79.4,
+          "no2": 21.8,
+          "predictedIndianAqi": 150
+        },
+        {
+          "time": "2026-11-21T21:00",
+          "pm25": 69.6,
+          "pm10": 73.6,
+          "no2": 21.5,
+          "predictedIndianAqi": 130
+        },
+        {
+          "time": "2026-11-21T22:00",
+          "pm25": 65.7,
+          "pm10": 69.4,
+          "no2": 22.6,
+          "predictedIndianAqi": 117
+        },
+        {
+          "time": "2026-11-21T23:00",
+          "pm25": 65.9,
+          "pm10": 69.2,
+          "no2": 23.7,
+          "predictedIndianAqi": 118
+        }
+      ],
+      "raw_response": {
+        "city": "Mumbai",
+        "neighbourhood": "Bandra West",
+        "latitude": 19.0596,
+        "longitude": 72.8295,
+        "timestamp": "2026-11-21T19:30",
+        "sourceAttribution": {
+          "primaryProvider": "Open-Meteo Atmospheric Chemistry Regional Model",
+          "modelOrStationName": "ECMWF CAMS Atmospheric Model with Micro-Climate Spatial Scaling",
+          "isModelledForecast": true,
+          "provenanceNotice": "These figures represent atmospheric dispersion model estimates derived from Open-Meteo regional chemistry data with micro-climate spatial adjustments. They are NOT raw telemetry from physical hardware sensors or statutory CPCB regulatory station measurements. For official legally-binding continuous air monitoring data, visit the Central Pollution Control Board portal at cpcb.nic.in.",
+          "license": "Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)"
+        },
+        "indianAqi": {
+          "index": 309,
+          "category": "Very Poor",
+          "dominantPollutant": "Ozone",
+          "isAvailable": true,
+          "methodology": "Computed strictly following official CPCB (Central Pollution Control Board) 24h breakpoint equations applied to atmospheric dispersion model data with minimum 3-pollutant validation rule."
+        },
+        "foreignIndices": {
+          "europeanAqi": 171,
+          "usAqi": 261,
+          "note": "Foreign indices (US EPA AQI & European CAQI) are shown for comparative perspective only. Do NOT confuse with Indian National AQI."
+        },
+        "pollutants": {
+          "pm2_5": {
+            "code": "pm2_5",
+            "name": "Particulate Matter (PM2.5)",
+            "concentration": 82.4,
+            "unit": "µg/m³",
+            "subIndex": 174,
+            "category": "Moderate",
+            "sourceType": "modelled_forecast"
+          },
+          "pm10": {
+            "code": "pm10",
+            "name": "Particulate Matter (PM10)",
+            "concentration": 86.1,
+            "unit": "µg/m³",
+            "subIndex": 86,
+            "category": "Satisfactory",
+            "sourceType": "modelled_forecast"
+          },
+          "no2": {
+            "code": "no2",
+            "name": "Nitrogen Dioxide (NO2)",
+            "concentration": 25.2,
+            "unit": "µg/m³",
+            "subIndex": 32,
+            "category": "Good",
+            "sourceType": "modelled_forecast"
+          },
+          "so2": {
+            "code": "so2",
+            "name": "Sulphur Dioxide (SO2)",
+            "concentration": 39.2,
+            "unit": "µg/m³",
+            "subIndex": 49,
+            "category": "Good",
+            "sourceType": "modelled_forecast"
+          },
+          "co": {
+            "code": "co",
+            "name": "Carbon Monoxide (CO)",
+            "concentration": 0.39,
+            "unit": "mg/m³",
+            "subIndex": 20,
+            "category": "Good",
+            "sourceType": "modelled_forecast"
+          },
+          "o3": {
+            "code": "o3",
+            "name": "Ozone (O3)",
+            "concentration": 251,
+            "unit": "µg/m³",
+            "subIndex": 309,
+            "category": "Very Poor",
+            "sourceType": "modelled_forecast"
+          }
+        },
+        "hourlyForecast": [
+          {
+            "time": "2026-11-21T00:00",
+            "pm25": 52.5,
+            "pm10": 54.8,
+            "no2": 20.1,
+            "predictedIndianAqi": 87
+          },
+          {
+            "time": "2026-11-21T01:00",
+            "pm25": 51,
+            "pm10": 53.2,
+            "no2": 21.2,
+            "predictedIndianAqi": 85
+          },
+          {
+            "time": "2026-11-21T02:00",
+            "pm25": 52.2,
+            "pm10": 54.2,
+            "no2": 22.7,
+            "predictedIndianAqi": 87
+          },
+          {
+            "time": "2026-11-21T03:00",
+            "pm25": 55.2,
+            "pm10": 57.4,
+            "no2": 24.4,
+            "predictedIndianAqi": 92
+          },
+          {
+            "time": "2026-11-21T04:00",
+            "pm25": 59.4,
+            "pm10": 61.9,
+            "no2": 26.5,
+            "predictedIndianAqi": 99
+          },
+          {
+            "time": "2026-11-21T05:00",
+            "pm25": 71,
+            "pm10": 74,
+            "no2": 32,
+            "predictedIndianAqi": 135
+          },
+          {
+            "time": "2026-11-21T06:00",
+            "pm25": 72.9,
+            "pm10": 76.1,
+            "no2": 35.8,
+            "predictedIndianAqi": 142
+          },
+          {
+            "time": "2026-11-21T07:00",
+            "pm25": 75.9,
+            "pm10": 79.4,
+            "no2": 40.9,
+            "predictedIndianAqi": 152
+          },
+          {
+            "time": "2026-11-21T08:00",
+            "pm25": 78.2,
+            "pm10": 81.7,
+            "no2": 43.8,
+            "predictedIndianAqi": 160
+          },
+          {
+            "time": "2026-11-21T09:00",
+            "pm25": 79.2,
+            "pm10": 82.7,
+            "no2": 42.6,
+            "predictedIndianAqi": 163
+          },
+          {
+            "time": "2026-11-21T10:00",
+            "pm25": 81,
+            "pm10": 84.3,
+            "no2": 39.2,
+            "predictedIndianAqi": 169
+          },
+          {
+            "time": "2026-11-21T11:00",
+            "pm25": 84.1,
+            "pm10": 87.5,
+            "no2": 35.6,
+            "predictedIndianAqi": 180
+          },
+          {
+            "time": "2026-11-21T12:00",
+            "pm25": 88.2,
+            "pm10": 91.5,
+            "no2": 31.7,
+            "predictedIndianAqi": 194
+          },
+          {
+            "time": "2026-11-21T13:00",
+            "pm25": 96.4,
+            "pm10": 99.7,
+            "no2": 27.5,
+            "predictedIndianAqi": 219
+          },
+          {
+            "time": "2026-11-21T14:00",
+            "pm25": 101.7,
+            "pm10": 105,
+            "no2": 25.3,
+            "predictedIndianAqi": 238
+          },
+          {
+            "time": "2026-11-21T15:00",
+            "pm25": 99.4,
+            "pm10": 102.7,
+            "no2": 27.2,
+            "predictedIndianAqi": 230
+          },
+          {
+            "time": "2026-11-21T16:00",
+            "pm25": 96.6,
+            "pm10": 100.1,
+            "no2": 31,
+            "predictedIndianAqi": 220
+          },
+          {
+            "time": "2026-11-21T17:00",
+            "pm25": 95.5,
+            "pm10": 99,
+            "no2": 32.8,
+            "predictedIndianAqi": 216
+          },
+          {
+            "time": "2026-11-21T18:00",
+            "pm25": 89.4,
+            "pm10": 93.1,
+            "no2": 30,
+            "predictedIndianAqi": 198
+          },
+          {
+            "time": "2026-11-21T19:00",
+            "pm25": 82.4,
+            "pm10": 86.1,
+            "no2": 25.2,
+            "predictedIndianAqi": 174
+          },
+          {
+            "time": "2026-11-21T20:00",
+            "pm25": 75.4,
+            "pm10": 79.4,
+            "no2": 21.8,
+            "predictedIndianAqi": 150
+          },
+          {
+            "time": "2026-11-21T21:00",
+            "pm25": 69.6,
+            "pm10": 73.6,
+            "no2": 21.5,
+            "predictedIndianAqi": 130
+          },
+          {
+            "time": "2026-11-21T22:00",
+            "pm25": 65.7,
+            "pm10": 69.4,
+            "no2": 22.6,
+            "predictedIndianAqi": 117
+          },
+          {
+            "time": "2026-11-21T23:00",
+            "pm25": 65.9,
+            "pm10": 69.2,
+            "no2": 23.7,
+            "predictedIndianAqi": 118
+          }
+        ],
+        "nearbyStations": [
+          {
+            "id": "station-bandra-cpcb",
+            "name": "Bandra Kalanagar Spatial Reference Grid",
+            "distanceKm": 2.8,
+            "latitude": 19.0607,
+            "longitude": 72.848,
+            "stationType": "micro_climate_spatial_estimate",
+            "provenance": "Model-derived micro-climate dispersion estimate anchored to Bandra Kalanagar geographic coordinates",
+            "lastUpdated": "2026-11-21T14:17:30.686Z",
+            "measurements": {
+              "pm2_5": 87,
+              "pm10": 88,
+              "no2": 28,
+              "so2": 39
+            }
+          },
+          {
+            "id": "station-kurla-mpcb",
+            "name": "Kurla CST Industrial Corridor Grid",
+            "distanceKm": 4.1,
+            "latitude": 19.0726,
+            "longitude": 72.8845,
+            "stationType": "micro_climate_spatial_estimate",
+            "provenance": "Model-derived micro-climate dispersion estimate anchored to Kurla industrial corridor coordinates",
+            "lastUpdated": "2026-11-21T14:17:30.686Z",
+            "measurements": {
+              "pm2_5": 95,
+              "pm10": 102,
+              "no2": 30,
+              "so2": 41
+            }
+          },
+          {
+            "id": "station-worli-iitb",
+            "name": "Worli Coastal Boundary Reference Grid",
+            "distanceKm": 6.4,
+            "latitude": 19.0166,
+            "longitude": 72.8166,
+            "stationType": "micro_climate_spatial_estimate",
+            "provenance": "Model-derived coastal dispersion estimate anchored to Worli Sea Face geographic coordinates",
+            "lastUpdated": "2026-11-21T14:17:30.686Z",
+            "measurements": {
+              "pm2_5": 73,
+              "pm10": 77,
+              "no2": 21,
+              "so2": 35
+            }
+          }
+        ]
+      },
+      "fetched_at": "2026-11-21T14:17:29.899Z",
+      "expires_at": "2026-11-21T14:32:29.899Z"
     }
   ],
   "impact_records": [
-    {
-      "id": "696d702d-3200-0000-0000-000000000000",
-      "metric_type": "equipment_loaned",
-      "value": 34,
-      "related_entity_type": null,
-      "related_entity_id": null,
-      "recorded_at": "2026-11-19T08:05:03.625+00:00",
-      "methodology_notes": "Active and completed air purifier loans with signed handovers."
-    },
-    {
-      "id": "696d702d-3300-0000-0000-000000000000",
-      "metric_type": "diy_assembled",
-      "value": 52,
-      "related_entity_type": null,
-      "related_entity_id": null,
-      "recorded_at": "2026-11-19T08:05:03.625+00:00",
-      "methodology_notes": "Completed DIY Corsi-Rosenthal purifiers recorded via community workshops."
-    },
     {
       "id": "696d702d-3400-0000-0000-000000000000",
       "metric_type": "requests_fulfilled",
@@ -8633,7 +9913,7 @@
       "value": 1,
       "related_entity_type": "assistance_request",
       "related_entity_id": "6b2238c7-4181-4064-b26b-5f41237a7245",
-      "recorded_at": "2026-11-20T16:35:39.877Z",
+      "recorded_at": "2026-11-20T16:35:39.877+00:00",
       "methodology_notes": "Direct fulfillment of purifier_loan request in Kurla West."
     },
     {
@@ -8642,7 +9922,43 @@
       "value": 1,
       "related_entity_type": "equipment",
       "related_entity_id": "e69698e8-bad1-4a22-9004-c7b9ea967d82",
-      "recorded_at": "2026-11-20T16:35:41.257Z",
+      "recorded_at": "2026-11-20T16:35:41.257+00:00",
+      "methodology_notes": "Air purifier loaned for 14 days to citizen in Andheri East."
+    },
+    {
+      "id": "696d702d-3200-0000-0000-000000000000",
+      "metric_type": "equipment_loaned",
+      "value": 34,
+      "related_entity_type": null,
+      "related_entity_id": null,
+      "recorded_at": "2026-11-19T08:05:03.625+00:00",
+      "methodology_notes": "Active and completed air purifier loans with signed handovers."
+    },
+    {
+      "id": "696d702d-3300-0000-0000-000000000000",
+      "metric_type": "diy_assembled",
+      "value": 52,
+      "related_entity_type": null,
+      "related_entity_id": null,
+      "recorded_at": "2026-11-19T08:05:03.625+00:00",
+      "methodology_notes": "Completed DIY Corsi-Rosenthal purifiers recorded via community workshops."
+    },
+    {
+      "id": "37b2c1d9-db44-4dfb-a898-d18683984694",
+      "metric_type": "requests_fulfilled",
+      "value": 1,
+      "related_entity_type": "assistance_request",
+      "related_entity_id": "22cb9082-d759-49d5-abab-b9d4654e98b9",
+      "recorded_at": "2026-11-21T14:17:39.747Z",
+      "methodology_notes": "Direct fulfillment of purifier_loan request in Kurla West."
+    },
+    {
+      "id": "7a2dbccd-45f8-46a9-9704-e3dc2f9afc72",
+      "metric_type": "equipment_loaned",
+      "value": 1,
+      "related_entity_type": "equipment",
+      "related_entity_id": "f7310282-7ad9-4532-a397-ff3b1ce8a49c",
+      "recorded_at": "2026-11-21T14:17:41.451Z",
       "methodology_notes": "Air purifier loaned for 14 days to citizen in Andheri East."
     }
   ],

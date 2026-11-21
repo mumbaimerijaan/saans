@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { api } from '../services/api';
 import { AQIReport, Facility } from '../types';
 import { AqiBadge } from '../components/AqiBadge';
+import { LandingVideoIntro } from '../components/LandingVideoIntro';
 import {
   Wind,
   Shield,
@@ -19,7 +20,8 @@ import {
   Clock,
   Layers,
   AlertTriangle,
-  Bot
+  Bot,
+  Play
 } from 'lucide-react';
 
 export const Home: React.FC = () => {
@@ -27,6 +29,12 @@ export const Home: React.FC = () => {
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [impactData, setImpactData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showIntro, setShowIntro] = useState<boolean>(() => {
+    // Show intro on first landing or if explicitly requested via ?intro=1
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('intro') === '1') return true;
+    return !sessionStorage.getItem('saans_intro_seen');
+  });
 
   useEffect(() => {
     async function loadData() {
@@ -51,6 +59,9 @@ export const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#080c0e] text-slate-100">
       
+      {/* LANDING VIDEO INTRO MODAL */}
+      <LandingVideoIntro isOpen={showIntro} onClose={() => setShowIntro(false)} />
+
       {/* 1. HERO SECTION */}
       <section className="relative pt-12 pb-20 md:pt-20 md:pb-32 overflow-hidden bg-airflow-glow border-b border-slate-800/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -91,6 +102,15 @@ export const Home: React.FC = () => {
                   <Wrench className="w-4 h-4 text-teal-400" />
                   <span>DIY Purifier Lab</span>
                 </Link>
+
+                <button
+                  onClick={() => setShowIntro(true)}
+                  className="px-5 py-3.5 rounded-xl bg-slate-900/90 border border-teal-500/30 hover:border-teal-400 hover:bg-slate-800 text-teal-300 font-semibold text-sm transition-all flex items-center gap-2 group shadow-sm cursor-pointer"
+                  aria-label="Watch winter smog intro video"
+                >
+                  <Play className="w-4 h-4 fill-teal-400 text-teal-400 group-hover:scale-110 transition-transform" />
+                  <span>Watch Intro Story</span>
+                </button>
 
                 <Link
                   to="/dashboard"
