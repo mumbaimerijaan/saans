@@ -8,8 +8,10 @@
     "build:server": "cd server && npm run build",
     "build:client": "cd client && npm run build",
     "build": "npm run build:client && npm run build:server",
-    "start": "cd server && npm start",
-    "test": "cd server && npm test"
+    "test:client": "cd client && npm test",
+    "test:server": "cd server && npm test",
+    "test": "npm run test:client && npm run test:server",
+    "start": "cd server && npm start"
   },
   "keywords": ["clean-air", "ai", "aqi", "community", "purifier", "mumbai"],
   "author": "SAANS Community Team",

@@ -140,7 +140,7 @@ export const LandingVideoIntro: React.FC<LandingVideoIntroProps> = ({ isOpen, on
         <div className="absolute -bottom-[20%] -right-[10%] w-[60vw] h-[60vw] rounded-full bg-emerald-500/10 blur-[120px] animate-pulse" />
       </div>
 
-      <div className="relative z-10 w-full max-w-4xl bg-[#0f171c]/90 border border-slate-800 rounded-3xl p-5 sm:p-8 shadow-2xl shadow-black/80 flex flex-col items-center">
+      <div className={`relative z-10 w-full ${status === 'playing' ? 'max-w-5xl lg:max-w-6xl' : 'max-w-4xl'} bg-[#0f171c]/90 border border-slate-800 rounded-3xl p-4 sm:p-7 shadow-2xl shadow-black/80 flex flex-col items-center transition-all duration-300`}>
         
         {/* Top bar with quick exit */}
         <div className="w-full flex items-center justify-between pb-4 border-b border-slate-800/80 mb-6">

@@ -8,7 +8,12 @@ export const NotificationDrawer: React.FC = () => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden flex justify-end">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="drawer-title"
+      className="fixed inset-0 z-50 overflow-hidden flex justify-end"
+    >
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
@@ -20,7 +25,7 @@ export const NotificationDrawer: React.FC = () => {
         <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-[#162024]">
           <div className="flex items-center gap-2">
             <Bell className="w-5 h-5 text-teal-400" />
-            <h3 className="font-semibold text-slate-100">Notifications</h3>
+            <h3 id="drawer-title" className="font-semibold text-slate-100">Notifications</h3>
             {notifications.filter(n => !n.is_read).length > 0 && (
               <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30">
                 {notifications.filter(n => !n.is_read).length} new
@@ -33,6 +38,7 @@ export const NotificationDrawer: React.FC = () => {
                 onClick={markAllAsRead}
                 className="text-xs text-slate-400 hover:text-teal-400 flex items-center gap-1 transition-colors px-2 py-1 rounded hover:bg-slate-800"
                 title="Mark all as read"
+                aria-label="Mark all notifications as read"
               >
                 <CheckCheck className="w-3.5 h-3.5" />
                 Mark all read
@@ -41,6 +47,7 @@ export const NotificationDrawer: React.FC = () => {
             <button
               onClick={() => setIsOpen(false)}
               className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              aria-label="Close notifications panel"
             >
               <X className="w-5 h-5" />
             </button>
