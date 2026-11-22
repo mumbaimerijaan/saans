@@ -11,6 +11,8 @@ interface Env {
   OPENROUTER_MODEL?: string;
   OPENROUTER_FALLBACK_MODEL?: string;
   OPENAQ_API_KEY?: string;
+  OPENAI_API_KEY?: string;
+  NODE_ENV?: string;
 }
 
 // CPCB Breakpoints
@@ -954,7 +956,7 @@ Key Directives:
           const { data } = await supabase.from('community_reports').select('*');
           if (data && data.length > 0) list = data;
         }
-        const formatted = list.map(r => ({
+        const formatted = list.map((r: any) => ({
           ...r,
           createdAt: r.createdAt || r.created_at || new Date().toISOString(),
           created_at: r.created_at || r.createdAt || new Date().toISOString(),

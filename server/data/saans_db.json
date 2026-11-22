@@ -9742,6 +9742,546 @@
       },
       "fetched_at": "2026-11-21T14:17:29.899Z",
       "expires_at": "2026-11-21T14:32:29.899Z"
+    },
+    {
+      "id": "cache-1795311787313",
+      "city": "Mumbai",
+      "neighbourhood": "Bandra West",
+      "latitude": 19.076,
+      "longitude": 72.8777,
+      "data_source": "Open-Meteo Atmospheric Chemistry Regional Model",
+      "aqi_index": 193,
+      "aqi_category": "Moderate",
+      "pollutants": {
+        "pm2_5": {
+          "code": "pm2_5",
+          "name": "Particulate Matter (PM2.5)",
+          "concentration": 88,
+          "unit": "µg/m³",
+          "subIndex": 193,
+          "category": "Moderate",
+          "sourceType": "modelled_forecast"
+        },
+        "pm10": {
+          "code": "pm10",
+          "name": "Particulate Matter (PM10)",
+          "concentration": 91.3,
+          "unit": "µg/m³",
+          "subIndex": 91,
+          "category": "Satisfactory",
+          "sourceType": "modelled_forecast"
+        },
+        "no2": {
+          "code": "no2",
+          "name": "Nitrogen Dioxide (NO2)",
+          "concentration": 24.7,
+          "unit": "µg/m³",
+          "subIndex": 31,
+          "category": "Good",
+          "sourceType": "modelled_forecast"
+        },
+        "so2": {
+          "code": "so2",
+          "name": "Sulphur Dioxide (SO2)",
+          "concentration": 47.8,
+          "unit": "µg/m³",
+          "subIndex": 60,
+          "category": "Satisfactory",
+          "sourceType": "modelled_forecast"
+        },
+        "co": {
+          "code": "co",
+          "name": "Carbon Monoxide (CO)",
+          "concentration": 0.94,
+          "unit": "mg/m³",
+          "subIndex": 47,
+          "category": "Good",
+          "sourceType": "modelled_forecast"
+        },
+        "o3": {
+          "code": "o3",
+          "name": "Ozone (O3)",
+          "concentration": 118,
+          "unit": "µg/m³",
+          "subIndex": 126,
+          "category": "Moderate",
+          "sourceType": "modelled_forecast"
+        }
+      },
+      "forecast": [
+        {
+          "time": "2026-11-22T00:00",
+          "pm25": 95.2,
+          "pm10": 100.4,
+          "no2": 23.5,
+          "predictedIndianAqi": 215
+        },
+        {
+          "time": "2026-11-22T01:00",
+          "pm25": 95.9,
+          "pm10": 100.6,
+          "no2": 24.1,
+          "predictedIndianAqi": 218
+        },
+        {
+          "time": "2026-11-22T02:00",
+          "pm25": 96.4,
+          "pm10": 100.6,
+          "no2": 24.4,
+          "predictedIndianAqi": 219
+        },
+        {
+          "time": "2026-11-22T03:00",
+          "pm25": 95.2,
+          "pm10": 99.2,
+          "no2": 23.5,
+          "predictedIndianAqi": 215
+        },
+        {
+          "time": "2026-11-22T04:00",
+          "pm25": 93.1,
+          "pm10": 97.1,
+          "no2": 22.3,
+          "predictedIndianAqi": 208
+        },
+        {
+          "time": "2026-11-22T05:00",
+          "pm25": 90.3,
+          "pm10": 93.8,
+          "no2": 22.1,
+          "predictedIndianAqi": 199
+        },
+        {
+          "time": "2026-11-22T06:00",
+          "pm25": 88,
+          "pm10": 91.3,
+          "no2": 24.7,
+          "predictedIndianAqi": 193
+        },
+        {
+          "time": "2026-11-22T07:00",
+          "pm25": 88.2,
+          "pm10": 91.5,
+          "no2": 28.5,
+          "predictedIndianAqi": 194
+        },
+        {
+          "time": "2026-11-22T08:00",
+          "pm25": 88.7,
+          "pm10": 91.7,
+          "no2": 30.1,
+          "predictedIndianAqi": 196
+        },
+        {
+          "time": "2026-11-22T09:00",
+          "pm25": 90.1,
+          "pm10": 93.1,
+          "no2": 27.6,
+          "predictedIndianAqi": 198
+        },
+        {
+          "time": "2026-11-22T10:00",
+          "pm25": 93.1,
+          "pm10": 96.2,
+          "no2": 23,
+          "predictedIndianAqi": 208
+        },
+        {
+          "time": "2026-11-22T11:00",
+          "pm25": 96.9,
+          "pm10": 99.9,
+          "no2": 19,
+          "predictedIndianAqi": 221
+        },
+        {
+          "time": "2026-11-22T12:00",
+          "pm25": 100.8,
+          "pm10": 103.8,
+          "no2": 16.1,
+          "predictedIndianAqi": 234
+        },
+        {
+          "time": "2026-11-22T13:00",
+          "pm25": 100.1,
+          "pm10": 103.1,
+          "no2": 13.7,
+          "predictedIndianAqi": 232
+        },
+        {
+          "time": "2026-11-22T14:00",
+          "pm25": 93.6,
+          "pm10": 96.6,
+          "no2": 12.8,
+          "predictedIndianAqi": 210
+        },
+        {
+          "time": "2026-11-22T15:00",
+          "pm25": 86.4,
+          "pm10": 89.6,
+          "no2": 14.6,
+          "predictedIndianAqi": 188
+        },
+        {
+          "time": "2026-11-22T16:00",
+          "pm25": 79.6,
+          "pm10": 83.1,
+          "no2": 17.9,
+          "predictedIndianAqi": 164
+        },
+        {
+          "time": "2026-11-22T17:00",
+          "pm25": 74,
+          "pm10": 78.2,
+          "no2": 20,
+          "predictedIndianAqi": 145
+        },
+        {
+          "time": "2026-11-22T18:00",
+          "pm25": 71.2,
+          "pm10": 75.9,
+          "no2": 19.5,
+          "predictedIndianAqi": 136
+        },
+        {
+          "time": "2026-11-22T19:00",
+          "pm25": 69.4,
+          "pm10": 74.5,
+          "no2": 17.8,
+          "predictedIndianAqi": 130
+        },
+        {
+          "time": "2026-11-22T20:00",
+          "pm25": 70.5,
+          "pm10": 75.7,
+          "no2": 17.1,
+          "predictedIndianAqi": 133
+        },
+        {
+          "time": "2026-11-22T21:00",
+          "pm25": 72.6,
+          "pm10": 77.8,
+          "no2": 18.7,
+          "predictedIndianAqi": 141
+        },
+        {
+          "time": "2026-11-22T22:00",
+          "pm25": 78.9,
+          "pm10": 83.4,
+          "no2": 21.3,
+          "predictedIndianAqi": 162
+        },
+        {
+          "time": "2026-11-22T23:00",
+          "pm25": 84.5,
+          "pm10": 88.2,
+          "no2": 23.1,
+          "predictedIndianAqi": 181
+        }
+      ],
+      "raw_response": {
+        "city": "Mumbai",
+        "neighbourhood": "Bandra West",
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "timestamp": "2026-11-22T06:30",
+        "sourceAttribution": {
+          "primaryProvider": "Open-Meteo Atmospheric Chemistry Regional Model",
+          "modelOrStationName": "ECMWF CAMS Atmospheric Model with Micro-Climate Spatial Scaling",
+          "isModelledForecast": true,
+          "provenanceNotice": "These figures represent atmospheric dispersion model estimates derived from Open-Meteo regional chemistry data with micro-climate spatial adjustments. They are NOT raw telemetry from physical hardware sensors or statutory CPCB regulatory station measurements. For official legally-binding continuous air monitoring data, visit the Central Pollution Control Board portal at cpcb.nic.in.",
+          "license": "Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)"
+        },
+        "indianAqi": {
+          "index": 193,
+          "category": "Moderate",
+          "dominantPollutant": "PM2.5",
+          "isAvailable": true,
+          "methodology": "Computed strictly following official CPCB (Central Pollution Control Board) 24h breakpoint equations applied to atmospheric dispersion model data with minimum 3-pollutant validation rule."
+        },
+        "foreignIndices": {
+          "europeanAqi": 79,
+          "usAqi": 176,
+          "note": "Foreign indices (US EPA AQI & European CAQI) are shown for comparative perspective only. Do NOT confuse with Indian National AQI."
+        },
+        "pollutants": {
+          "pm2_5": {
+            "code": "pm2_5",
+            "name": "Particulate Matter (PM2.5)",
+            "concentration": 88,
+            "unit": "µg/m³",
+            "subIndex": 193,
+            "category": "Moderate",
+            "sourceType": "modelled_forecast"
+          },
+          "pm10": {
+            "code": "pm10",
+            "name": "Particulate Matter (PM10)",
+            "concentration": 91.3,
+            "unit": "µg/m³",
+            "subIndex": 91,
+            "category": "Satisfactory",
+            "sourceType": "modelled_forecast"
+          },
+          "no2": {
+            "code": "no2",
+            "name": "Nitrogen Dioxide (NO2)",
+            "concentration": 24.7,
+            "unit": "µg/m³",
+            "subIndex": 31,
+            "category": "Good",
+            "sourceType": "modelled_forecast"
+          },
+          "so2": {
+            "code": "so2",
+            "name": "Sulphur Dioxide (SO2)",
+            "concentration": 47.8,
+            "unit": "µg/m³",
+            "subIndex": 60,
+            "category": "Satisfactory",
+            "sourceType": "modelled_forecast"
+          },
+          "co": {
+            "code": "co",
+            "name": "Carbon Monoxide (CO)",
+            "concentration": 0.94,
+            "unit": "mg/m³",
+            "subIndex": 47,
+            "category": "Good",
+            "sourceType": "modelled_forecast"
+          },
+          "o3": {
+            "code": "o3",
+            "name": "Ozone (O3)",
+            "concentration": 118,
+            "unit": "µg/m³",
+            "subIndex": 126,
+            "category": "Moderate",
+            "sourceType": "modelled_forecast"
+          }
+        },
+        "hourlyForecast": [
+          {
+            "time": "2026-11-22T00:00",
+            "pm25": 95.2,
+            "pm10": 100.4,
+            "no2": 23.5,
+            "predictedIndianAqi": 215
+          },
+          {
+            "time": "2026-11-22T01:00",
+            "pm25": 95.9,
+            "pm10": 100.6,
+            "no2": 24.1,
+            "predictedIndianAqi": 218
+          },
+          {
+            "time": "2026-11-22T02:00",
+            "pm25": 96.4,
+            "pm10": 100.6,
+            "no2": 24.4,
+            "predictedIndianAqi": 219
+          },
+          {
+            "time": "2026-11-22T03:00",
+            "pm25": 95.2,
+            "pm10": 99.2,
+            "no2": 23.5,
+            "predictedIndianAqi": 215
+          },
+          {
+            "time": "2026-11-22T04:00",
+            "pm25": 93.1,
+            "pm10": 97.1,
+            "no2": 22.3,
+            "predictedIndianAqi": 208
+          },
+          {
+            "time": "2026-11-22T05:00",
+            "pm25": 90.3,
+            "pm10": 93.8,
+            "no2": 22.1,
+            "predictedIndianAqi": 199
+          },
+          {
+            "time": "2026-11-22T06:00",
+            "pm25": 88,
+            "pm10": 91.3,
+            "no2": 24.7,
+            "predictedIndianAqi": 193
+          },
+          {
+            "time": "2026-11-22T07:00",
+            "pm25": 88.2,
+            "pm10": 91.5,
+            "no2": 28.5,
+            "predictedIndianAqi": 194
+          },
+          {
+            "time": "2026-11-22T08:00",
+            "pm25": 88.7,
+            "pm10": 91.7,
+            "no2": 30.1,
+            "predictedIndianAqi": 196
+          },
+          {
+            "time": "2026-11-22T09:00",
+            "pm25": 90.1,
+            "pm10": 93.1,
+            "no2": 27.6,
+            "predictedIndianAqi": 198
+          },
+          {
+            "time": "2026-11-22T10:00",
+            "pm25": 93.1,
+            "pm10": 96.2,
+            "no2": 23,
+            "predictedIndianAqi": 208
+          },
+          {
+            "time": "2026-11-22T11:00",
+            "pm25": 96.9,
+            "pm10": 99.9,
+            "no2": 19,
+            "predictedIndianAqi": 221
+          },
+          {
+            "time": "2026-11-22T12:00",
+            "pm25": 100.8,
+            "pm10": 103.8,
+            "no2": 16.1,
+            "predictedIndianAqi": 234
+          },
+          {
+            "time": "2026-11-22T13:00",
+            "pm25": 100.1,
+            "pm10": 103.1,
+            "no2": 13.7,
+            "predictedIndianAqi": 232
+          },
+          {
+            "time": "2026-11-22T14:00",
+            "pm25": 93.6,
+            "pm10": 96.6,
+            "no2": 12.8,
+            "predictedIndianAqi": 210
+          },
+          {
+            "time": "2026-11-22T15:00",
+            "pm25": 86.4,
+            "pm10": 89.6,
+            "no2": 14.6,
+            "predictedIndianAqi": 188
+          },
+          {
+            "time": "2026-11-22T16:00",
+            "pm25": 79.6,
+            "pm10": 83.1,
+            "no2": 17.9,
+            "predictedIndianAqi": 164
+          },
+          {
+            "time": "2026-11-22T17:00",
+            "pm25": 74,
+            "pm10": 78.2,
+            "no2": 20,
+            "predictedIndianAqi": 145
+          },
+          {
+            "time": "2026-11-22T18:00",
+            "pm25": 71.2,
+            "pm10": 75.9,
+            "no2": 19.5,
+            "predictedIndianAqi": 136
+          },
+          {
+            "time": "2026-11-22T19:00",
+            "pm25": 69.4,
+            "pm10": 74.5,
+            "no2": 17.8,
+            "predictedIndianAqi": 130
+          },
+          {
+            "time": "2026-11-22T20:00",
+            "pm25": 70.5,
+            "pm10": 75.7,
+            "no2": 17.1,
+            "predictedIndianAqi": 133
+          },
+          {
+            "time": "2026-11-22T21:00",
+            "pm25": 72.6,
+            "pm10": 77.8,
+            "no2": 18.7,
+            "predictedIndianAqi": 141
+          },
+          {
+            "time": "2026-11-22T22:00",
+            "pm25": 78.9,
+            "pm10": 83.4,
+            "no2": 21.3,
+            "predictedIndianAqi": 162
+          },
+          {
+            "time": "2026-11-22T23:00",
+            "pm25": 84.5,
+            "pm10": 88.2,
+            "no2": 23.1,
+            "predictedIndianAqi": 181
+          }
+        ],
+        "nearbyStations": [
+          {
+            "id": "station-bandra-cpcb",
+            "name": "Bandra Kalanagar Spatial Reference Grid",
+            "distanceKm": 2.8,
+            "latitude": 19.0607,
+            "longitude": 72.848,
+            "stationType": "micro_climate_spatial_estimate",
+            "provenance": "Model-derived micro-climate dispersion estimate anchored to Bandra Kalanagar geographic coordinates",
+            "lastUpdated": "2026-11-22T01:43:07.312Z",
+            "measurements": {
+              "pm2_5": 92,
+              "pm10": 93,
+              "no2": 27,
+              "so2": 48
+            }
+          },
+          {
+            "id": "station-kurla-mpcb",
+            "name": "Kurla CST Industrial Corridor Grid",
+            "distanceKm": 4.1,
+            "latitude": 19.0726,
+            "longitude": 72.8845,
+            "stationType": "micro_climate_spatial_estimate",
+            "provenance": "Model-derived micro-climate dispersion estimate anchored to Kurla industrial corridor coordinates",
+            "lastUpdated": "2026-11-22T01:43:07.313Z",
+            "measurements": {
+              "pm2_5": 101,
+              "pm10": 108,
+              "no2": 30,
+              "so2": 50
+            }
+          },
+          {
+            "id": "station-worli-iitb",
+            "name": "Worli Coastal Boundary Reference Grid",
+            "distanceKm": 6.4,
+            "latitude": 19.0166,
+            "longitude": 72.8166,
+            "stationType": "micro_climate_spatial_estimate",
+            "provenance": "Model-derived coastal dispersion estimate anchored to Worli Sea Face geographic coordinates",
+            "lastUpdated": "2026-11-22T01:43:07.313Z",
+            "measurements": {
+              "pm2_5": 77,
+              "pm10": 82,
+              "no2": 21,
+              "so2": 43
+            }
+          }
+        ]
+      },
+      "fetched_at": "2026-11-22T01:43:06.401Z",
+      "expires_at": "2026-11-22T01:58:06.401Z"
     }
   ],
   "impact_records": [

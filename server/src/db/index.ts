@@ -108,7 +108,7 @@ export interface AssistanceRequest {
   existing_equipment?: string;
   contact_method: string;
   consent_shared: boolean;
-  status: 'submitted' | 'under_review' | 'approved' | 'assigned' | 'in_progress' | 'completed' | 'rejected' | 'cancelled' | 'on_hold';
+  status: 'submitted' | 'under_review' | 'approved' | 'assigned' | 'in_progress' | 'completed' | 'rejected' | 'cancelled' | 'on_hold' | 'matched';
   created_at: string;
   updated_at: string;
 }

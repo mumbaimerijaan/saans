@@ -21,6 +21,7 @@ export interface AQIReport {
     primaryProvider: string;
     modelOrStationName: string;
     isModelledForecast: boolean;
+    provenanceNotice?: string;
     license: string;
   };
   indianAqi: {
